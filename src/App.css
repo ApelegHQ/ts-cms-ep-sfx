@@ -1,0 +1,148 @@
+/* Copyright © 2024 Exact Realty Limited. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License") with LLVM
+ * exceptions; you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ *
+ * http://llvm.org/foundation/relicensing/LICENSE.txt
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #f2f0f0;
+}
+
+#FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ #LOADING_ANIMATION_ELEMENT__ {
+	display: flex;
+	position: relative;
+	height: 100%;
+}
+
+#FALLBACK_CONTENT_ELEMENT__
+	#LOADING_ELEMENT__
+	#LOADING_ANIMATION_ELEMENT__::after {
+	content: '';
+	font-size: 6rem;
+	border-radius: 9999px;
+	border: 0 solid transparent;
+	padding: 0.75rem;
+	margin: 0 auto;
+	background-image: linear-gradient(white, white),
+		linear-gradient(to left, #743ad5, #d53a9d);
+	background-origin: border-box;
+	background-clip: content-box, border-box;
+	color: transparent;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 1.2em;
+	height: 1.2em;
+	transform: translate(-50%, -50%);
+	animation: 5s ease-out 0s infinite loading-animation-bg-KF_;
+}
+
+@keyframes loading-animation-bg-KF_ {
+	0% {
+		transform: translate(-50%, -50%) rotate(0deg);
+	}
+	50% {
+		transform: translate(-50%, -50%) rotate(270deg);
+	}
+	100% {
+		transform: translate(-50%, -50%) rotate(360deg);
+	}
+}
+
+#FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ #LOADING_TEXT_ELEMENT__ {
+	font-size: 2.5rem;
+	padding: 2rem 0;
+	display: block;
+	margin: 0 auto 2rem auto;
+	text-align: center;
+	height: 50%;
+	text-transform: uppercase;
+	font-family:
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		'Open Sans',
+		'Helvetica Neue',
+		sans-serif;
+	color: #111;
+}
+
+#ERROR_WARNING_CONTAINER_ELEMENT__,
+#NOSCRIPT_WARNING_CONTAINER_ELEMENT__ {
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 9999;
+	margin: 0;
+	padding: 0;
+	background: #ffffff;
+}
+
+#ERROR_WARNING_TEXT_CONTAINER_ELEMENT__,
+#NOSCRIPT_WARNING_TEXT_CONTAINER_ELEMENT__ {
+	display: block;
+	background-color: #ffffde;
+	border-bottom: 2px solid #8c8475;
+	margin: 0;
+	padding: 2rem;
+	width: 100%;
+}
+
+#ERROR_WARNING_TEXT_ELEMENT__,
+#NOSCRIPT_WARNING_TEXT_ELEMENT__ {
+	display: block;
+	color: #333;
+	width: 1024px;
+	max-width: 100%;
+	font-size: 2.5rem;
+	margin: 0 auto;
+	font-family:
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		'Open Sans',
+		'Helvetica Neue',
+		sans-serif;
+}
+
+#error {
+	display: none;
+}
+
+/* Needed to make footer stick to the bottom */
+.app-container {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}

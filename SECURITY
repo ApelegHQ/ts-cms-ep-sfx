@@ -1,0 +1,24 @@
+Security Policy
+===============
+
+We value your contributions and feedback, and we want to ensure the security and
+reliability of our software for all users. As part of our commitment to
+security, we have established this security policy to help you report any
+vulnerabilities that you may discover.
+
+If you believe you have found a security vulnerability in our software, please
+let us know immediately. You may find our contact information at
+<https://exact.realty/.well-known/security.txt>. Please include the following
+information in your report:
+
+  * A brief description of the vulnerability
+  * Steps to reproduce the vulnerability
+  * The version of our software affected by the vulnerability
+  * Your contact information (email or other means of communication)
+
+We kindly ask that you do not disclose the vulnerability to anyone else until we
+have had the opportunity to investigate and address it. We will respond to your
+report as soon as possible and work with you to resolve the issue. We may also
+provide credit to you in our release notes or other public acknowledgments.
+
+Thank you for helping to keep our software secure!

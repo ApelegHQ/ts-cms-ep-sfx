@@ -1,0 +1,45 @@
+diff --git a/node_modules/svelte/compiler.cjs b/node_modules/svelte/compiler.cjs
+index 2bcf321..5767413 100644
+--- a/node_modules/svelte/compiler.cjs
++++ b/node_modules/svelte/compiler.cjs
+@@ -39153,6 +39153,11 @@ function Element (node, renderer, options) {
+ 			options = { ...options, has_added_svelte_hash: true };
+ 		}
+ 	}
++	// XHTML compat
++	if (is_void(/** @type {string} */ (node.tag_expr.node.value))) {
++		renderer.add_string('/');
++	}
++	// /XHTML compat
+ 	renderer.add_string('>');
+ 	if (node_contents !== undefined) {
+ 		if (contenteditable) {
+diff --git a/node_modules/svelte/src/compiler/compile/render_ssr/handlers/Element.js b/node_modules/svelte/src/compiler/compile/render_ssr/handlers/Element.js
+index 41f2abf..0f7355b 100644
+--- a/node_modules/svelte/src/compiler/compile/render_ssr/handlers/Element.js
++++ b/node_modules/svelte/src/compiler/compile/render_ssr/handlers/Element.js
+@@ -189,6 +189,11 @@ export default function (node, renderer, options) {
+ 			options = { ...options, has_added_svelte_hash: true };
+ 		}
+ 	}
++	// XHTML compat
++	if (is_void(/** @type {string} */ (node.tag_expr.node.value))) {
++		renderer.add_string('/');
++	}
++	// /XHTML compat
+ 	renderer.add_string('>');
+ 	if (node_contents !== undefined) {
+ 		if (contenteditable) {
+diff --git a/node_modules/svelte/src/runtime/internal/dom.js b/node_modules/svelte/src/runtime/internal/dom.js
+index 37cbb31..62894df 100644
+--- a/node_modules/svelte/src/runtime/internal/dom.js
++++ b/node_modules/svelte/src/runtime/internal/dom.js
+@@ -51,7 +51,7 @@ function init_hydrate(target) {
+ 
+ 	let children = /** @type {ArrayLike<NodeEx2>} */ (target.childNodes);
+ 	// If target is <head>, there may be children without claim_order
+-	if (target.nodeName === 'HEAD') {
++	if (target.nodeName === 'head') { // XHTML compat
+ 		const my_children = [];
+ 		for (let i = 0; i < children.length; i++) {
+ 			const node = children[i];

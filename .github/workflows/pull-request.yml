@@ -1,0 +1,93 @@
+name: Run tests before merging
+
+on:
+    pull_request:
+        types:
+            - opened
+            - synchronize
+            - reopened
+        branches:
+            - master
+
+jobs:
+    run-tests-macos-18:
+        name: 'macOS (Node 18, Java 11)'
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+            - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
+              with:
+                  node-version: '18'
+            - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+              with:
+                  distribution: 'microsoft'
+                  java-version: '11'
+            - run: npm ci
+            - run: npm run lint
+            - run: npm test
+
+    run-tests-windows-18:
+        name: 'Windows (Node 18, Java 11)'
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+            - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
+              with:
+                  node-version: '18'
+            - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+              with:
+                  distribution: 'semeru'
+                  java-version: '11'
+            - run: npm ci
+            - run: npm run lint
+            - run: npm test
+
+    run-tests-ubuntu-18:
+        name: 'Ubuntu (Node 18, Java 11)'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+            - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
+              with:
+                  node-version: '18'
+            - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+              with:
+                  distribution: 'dragonwell'
+                  java-version: '11'
+            - run: npm ci
+            - run: npm run lint
+            - run: npm run start:dev &
+            - run: npm test
+
+    run-tests-ubuntu-20:
+        name: 'Ubuntu (Node 20, Java 11)'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+            - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
+              with:
+                  node-version: '20'
+            - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+              with:
+                  distribution: 'dragonwell'
+                  java-version: '11'
+            - run: npm ci
+            - run: npm run lint
+            - run: npm test
+
+    run-tests-ubuntu-22:
+        name: 'Ubuntu (Node 22, Java 11)'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+            - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
+              with:
+                  node-version: '22'
+            - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+              with:
+                  distribution: 'dragonwell'
+                  java-version: '11'
+            - run: npm ci
+            - run: npm run lint
+            - run: npm run start:dev &
+            - run: npm test

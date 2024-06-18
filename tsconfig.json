@@ -1,0 +1,30 @@
+{
+	"compilerOptions": {
+		"target": "es2020",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"outDir": "build",
+		"strict": true,
+		"strictNullChecks": true,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"paths": {
+			"*": ["./build/types/*", "./build/schema/*"],
+			"~/*": ["./src/*"]
+		},
+		"esModuleInterop": true,
+		"skipLibCheck": false,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"allowJs": true,
+		"checkJs": true,
+		"lib": ["ES2020", "ES2019.object", "ES2019.array", "dom"],
+		"typeRoots": ["./node_modules/@types", "./@types"]
+	},
+	"ts-node": {
+		"experimentalResolver": true
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "**/*.spec.ts", "**/*.proto.js"],
+	"types": ["node", "svelte"]
+}

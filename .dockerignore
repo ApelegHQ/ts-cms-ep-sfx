@@ -1,0 +1,13 @@
+Dockerfile
+mangle_table.json
+**/*.proto.d.ts
+**/*.proto.js
+**/*.schema.d.ts
+.git
+**/.gitignore
+**/node_modules
+**/obj
+**/bin
+**/build
+**/typings
+

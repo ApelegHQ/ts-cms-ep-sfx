@@ -1,0 +1,179 @@
+/* Copyright © 2024 Exact Realty Limited. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License") with LLVM
+ * exceptions; you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ *
+ * http://llvm.org/foundation/relicensing/LICENSE.txt
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
+
+.page-title {
+	font-size: 1.5em;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin-bottom: 0.5em;
+}
+
+.main {
+	width: 100%;
+	background-color: #f2f0f0;
+	color: #333;
+	padding: 1em;
+	flex-grow: 1;
+}
+
+.inner {
+	display: block;
+	width: 100%;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.fieldset {
+	display: block;
+	padding-block-start: 0.25em;
+	padding-block-end: 0.25em;
+}
+
+.fieldset + .fieldset::before {
+	display: block;
+	content: '';
+	width: 100%;
+	height: 2px;
+	margin-bottom: 0.125em;
+	background: transparent;
+}
+
+.label,
+.checkbox {
+	display: block;
+	padding-block-start: 0.25em;
+	padding-block-end: 0.25em;
+}
+
+.label span,
+.checkbox span {
+	display: block;
+	font-size: 0.875em;
+	text-transform: uppercase;
+	color: #a26135;
+}
+
+.checkbox input {
+	/* Make it visible for tab navigation */
+	position: absolute;
+	transform: scale(0);
+}
+
+.checkbox input + span::before {
+	content: '☐ ';
+	color: #431c01;
+}
+
+.checkbox input:checked + span::before {
+	content: '☑ ';
+	color: #006400;
+}
+
+.checkbox input:focus + span {
+	outline: auto;
+}
+
+.checkbox input:active + span {
+	color: #333;
+}
+
+.label input,
+.label textarea {
+	display: block;
+	padding: 0.25em;
+	background-color: #fff;
+	color: #431c01;
+	border-style: solid;
+	border-width: 2px;
+	border-color: currentColor;
+	width: 24em;
+	max-width: 85%;
+	max-width: calc(100vw - 2rem);
+	font-size: 0.8em;
+	transition: font-size 0.2s ease-out;
+}
+
+.label input:focus,
+.label textarea:focus {
+	font-size: 1em;
+	transition: font-size 0.2s ease-in;
+}
+
+.label input:disabled,
+.label textarea:disabled {
+	cursor: not-allowed;
+	color: #333;
+	background-color: #ddd;
+}
+
+.label textarea {
+	height: 5em;
+}
+
+.label input:invalid {
+	border-color: red;
+}
+
+.primary-button {
+	display: inline-block;
+	padding: 0.25em;
+	margin: 0.5em 1%;
+	text-transform: uppercase;
+	max-width: 48%;
+	width: 48%;
+	cursor: pointer;
+	border: 2px solid currentColor;
+	color: #fff;
+	background-color: #431c01;
+	appearance: button;
+	user-select: none;
+}
+
+.primary-button:disabled {
+	cursor: not-allowed;
+	color: #fff;
+	background-color: #61574f;
+}
+
+.secondary-button {
+	display: inline-block;
+	padding: 0.25em;
+	margin: 0.5em 1%;
+	max-width: 48%;
+	width: 48%;
+	text-transform: uppercase;
+	cursor: pointer;
+	border: 2px solid currentColor;
+	color: #a26135;
+	background-color: white;
+	user-select: none;
+}
+
+.secondary-button:disabled {
+	cursor: not-allowed;
+	background-color: #ddd;
+}
