@@ -1,20 +1,20 @@
 platforms:
-  - os: Windows
-    osVersion: 11
-    browserName: Edge
-    browserVersion: latest
-  - os: Windows
-    osVersion: 10
-    browserName: Chrome
-    browserVersion: 120.0
-  #- os: OS X
-  #  osVersion: Monterey
-  #  browserName: Safari
-  #  browserVersion: 15.6
-  #- deviceName: iPhone 13
-  #  osVersion: 15
-  #  browserName: Chromium
-  #  deviceOrientation: portrait
+    - os: Windows
+      osVersion: 11
+      browserName: Edge
+      browserVersion: latest
+    - os: Windows
+      osVersion: 10
+      browserName: Chrome
+      browserVersion: 120.0
+    #- os: OS X
+    #  osVersion: Monterey
+    #  browserName: Safari
+    #  browserVersion: 15.6
+    #- deviceName: iPhone 13
+    #  osVersion: 15
+    #  browserName: Chromium
+    #  deviceOrientation: portrait
 buildIdentifier: ${BUILD_NUMBER}
 browserstackLocal: true
 debug: true

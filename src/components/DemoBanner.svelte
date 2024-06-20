@@ -15,29 +15,14 @@
 -->
 
 <script lang="typescript">
-	import DemoBanner from '~/components/DemoBanner.svelte';
-	import Disclaimer from '~/components/Disclaimer.svelte';
-	import Footer from '~/components/Footer.svelte';
-	import Header from '~/components/Header.svelte';
-	import Decrypt from './decrypt.svelte';
-	import Encrypt from './encrypt.svelte';
-
-	const hasCmsData = (() => {
-		const cmsData$ = document.getElementById('CMS_DATA_ELEMENT__');
-		if (cmsData$ && cmsData$ instanceof HTMLScriptElement) {
-			return true;
-		} else {
-			return false;
-		}
-	})();
+	import isCI from '~/lib/isCI.js';
+	import './DemoBanner.css';
 </script>
 
-<DemoBanner />
-<Header />
-{#if hasCmsData}
-	<Decrypt />
-{:else}
-	<Encrypt />
+{#if isCI}
+	<aside class="demo-banner" lang="en">
+		<div class="demo-banner-inner">
+			<p>&#x26a0;&#xfe0f; Testing mode &#x26a0;&#xfe0f;</p>
+		</div>
+	</aside>
 {/if}
-<Disclaimer />
-<Footer />

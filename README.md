@@ -1,11 +1,11 @@
 # 🔒 Secure File Sharing Utility 🔒
 
- [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
- [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
- [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
- [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
- [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
- [![License](https://img.shields.io/badge/License-Apache%202.0%20with%20llvm%20exception-blue.svg)](https://github.com/Exact-Realty/ts-ts-cms-ep-sfx/blob/master/LICENSE)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
+[![License](https://img.shields.io/badge/License-Apache%202.0%20with%20llvm%20exception-blue.svg)](https://github.com/Exact-Realty/ts-ts-cms-ep-sfx/blob/master/LICENSE)
 
 Welcome to our secure file sharing utility! This HTML-based tool allows you to
 easily encrypt, share, and decrypt files using the CMS (Cryptographic Message
@@ -13,49 +13,53 @@ Syntax) standard, PWRI (password recipient info) and AES-256-GCM encryption.
 
 ## 🔐 Features
 
-- **Encrypt Files**: Select a file, enter a password, and the tool will generate
-  a standalone HTML file that contains the encrypted data.
-- **Share Securely**: Share the generated HTML file with your recipient, who can
-  then decrypt the file using the same password.
-- **Decrypt Files**: The recipient can use the standalone HTML file to decrypt
-  the CMS payload and access the original file.
-- **Local Processing**: All encryption and decryption operations are performed
-  locally in the browser, ensuring your data never leaves your device.
-- **Standalone HTML**: The encrypted and decrypted files are self-contained HTML
-  files, making them easy to share and use.
-- **AES-256-GCM**: The utility uses the secure AES-256-GCM cipher to encrypt
-  your files, providing strong protection for your data.
-- **Standards-based**: By using the CMS standard, this tool avoids "reinventing
-  the wheel" and allows interoperability with other file encryption tools.
-- **No Installation Required**: This utility can be used directly in your web
-  browser, without the need for any additional software installation.
+-   **Encrypt Files**: Select a file, enter a password, and the tool will generate
+    a standalone HTML file that contains the encrypted data.
+-   **Share Securely**: Share the generated HTML file with your recipient, who can
+    then decrypt the file using the same password.
+-   **Decrypt Files**: The recipient can use the standalone HTML file to decrypt
+    the CMS payload and access the original file.
+-   **Local Processing**: All encryption and decryption operations are performed
+    locally in the browser, ensuring your data never leaves your device.
+-   **Standalone HTML**: The encrypted and decrypted files are self-contained HTML
+    files, making them easy to share and use.
+-   **AES-256-GCM**: The utility uses the secure AES-256-GCM cipher to encrypt
+    your files, providing strong protection for your data.
+-   **Standards-based**: By using the CMS standard, this tool avoids "reinventing
+    the wheel" and allows interoperability with other file encryption tools.
+-   **No Installation Required**: This utility can be used directly in your web
+    browser, without the need for any additional software installation.
 
 ## 🚀 Getting Started
 
 Using this secure file sharing utility is simple:
 
 1. **Encrypt a File**:
-   - Open the HTML file in your browser.
-   - Select the file you want to encrypt.
-   - Enter a password to protect the file.
-   - Click the "&#x1f4be;&#xfe0e; Save" button.
-   - The tool will generate a new HTML file containing the encrypted data.
+
+    - Open the HTML file in your browser.
+    - Select the file you want to encrypt.
+    - Enter a password to protect the file.
+    - Click the "&#x1f4be;&#xfe0e; Save" button.
+    - The tool will generate a new HTML file containing the encrypted data.
 
 2. **Share the Encrypted File**:
-   - Share the generated HTML file with your recipient.
+
+    - Share the generated HTML file with your recipient.
 
 3. **Decrypt the File**:
-   - Your recipient can open the HTML file in their browser.
-   - They will be prompted to enter the password you provided and will need to
-     click on the "Next &#x2192;" button to decrypt the file and confirm details
-     before downloading.
-   - Clicking on the "&#x1f4be;&#xfe0e; Download" button will download the
-     original file.
+    - Your recipient can open the HTML file in their browser.
+    - They will be prompted to enter the password you provided and will need to
+      click on the "Next &#x2192;" button to decrypt the file and confirm details
+      before downloading.
+    - Clicking on the "&#x1f4be;&#xfe0e; Download" button will download the
+      original file.
 
 That's it! Your file is now securely shared, and the recipient can access the
 decrypted content.
 
 ## 🎥 Demo
+
+![Screencast showing file encryption and decryption in action](assets/demo.gif)
 
 Want to see how it works? Check out the live demo at
 <https://cms-sfx-demo.exact.realty>.
