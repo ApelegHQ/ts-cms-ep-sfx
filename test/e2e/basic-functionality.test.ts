@@ -14,9 +14,9 @@
  */
 
 import assert from 'node:assert/strict';
-import { after, before, test } from 'node:test';
+import { test } from 'node:test';
 import type { WebDriver } from 'selenium-webdriver';
-import { Builder, By, Capabilities, until } from 'selenium-webdriver';
+import { Browser, Builder, By, until } from 'selenium-webdriver';
 import EFormFields from '../../src/lib/EFormFields.js';
 import dragAndDropFile from './lib/dragAndDropFile.js';
 import getRandomFileContents from './lib/getRandomFileContents.js';
@@ -25,26 +25,47 @@ import getRandomPassword from './lib/getRandomPassword.js';
 import interceptDownload from './lib/interceptDownload.js';
 import navigateToFile from './lib/navigateToFile.js';
 
-test('Basic functionality', async () => {
-	let driver: WebDriver;
+const baseUrl = new URL(process.env.BASE_URL || 'http://localhost:20741/');
 
-	before(async () => {
-		driver = await new Builder()
-			.withCapabilities(Capabilities.chrome())
-			.build();
+test('Basic functionality', async (t) => {
+	let driver: WebDriver = undefined as unknown as WebDriver;
+
+	t.before(async () => {
+		try {
+			driver = await new Builder()
+				.forBrowser(process.env.BROWSER || Browser.CHROME)
+				.build();
+		} catch (e) {
+			if (
+				e &&
+				e instanceof Error &&
+				(e.message.includes('Unable to obtain browser driver') ||
+					(e.name === 'WebDriverError' &&
+						e.message.includes('unknown error: cannot find')) ||
+					e.name === 'SessionNotCreatedError')
+			) {
+				t.skip();
+				return;
+			}
+			throw e;
+		}
 	});
 
-	after(async () => {
-		await driver.quit();
+	t.after(async () => {
+		await driver?.quit();
 	});
 
 	const fileName = getRandomFileName();
 	const contents = getRandomFileContents();
 	const password = getRandomPassword();
-	let file: File;
+	let file: File | undefined = undefined;
 
-	await test('Can encrypt a file', async () => {
-		await driver.get('http://localhost:20741/');
+	await t.test('Can encrypt a file', async (t) => {
+		if (typeof driver === 'undefined') {
+			return t.skip();
+		}
+
+		await driver.get(baseUrl.toString());
 
 		// Encrypt a file
 		await driver.wait(until.elementLocated(By.css('form')));
@@ -105,8 +126,8 @@ test('Basic functionality', async () => {
 		assert.equal(file.name, fileName + '.html');
 	});
 
-	await test('Can decrypt a file', async () => {
-		navigateToFile(driver, new URL('http://localhost:20741/'), file);
+	await t.test('Can decrypt a file', { ['skip']: !file }, async () => {
+		navigateToFile(driver, baseUrl, file as File);
 
 		await driver.wait(until.elementLocated(By.css('form')));
 

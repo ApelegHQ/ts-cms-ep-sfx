@@ -1,0 +1,58 @@
+name: 'Integration Tests (BrowserStack)'
+
+on:
+    push:
+    pull_request:
+        types:
+            - opened
+            - synchronize
+            - reopened
+        branches:
+            - master
+
+jobs:
+    test:
+        name: 'BrowserStack Test on Ubuntu'
+        runs-on: ubuntu-latest
+        steps:
+            - name: 'BrowserStack Env Setup'
+              uses: browserstack/github-actions/setup-env@master
+              with:
+                  username: ${{ secrets.BROWSERSTACK_USERNAME }}
+                  access-key: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+            - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+            - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
+              with:
+                  node-version: '22'
+            - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+              with:
+                  distribution: 'dragonwell'
+                  java-version: '21'
+            - name: Setup cloudflared
+              uses: AnimMouse/setup-cloudflared@625fcfcf71f57a4f00b9656a3b94ee0bbdbd593f
+              with:
+                  cloudflare_tunnel_credential: ${{ secrets.CLOUDFLARE_TUNNEL_CREDENTIAL }}
+                  cloudflare_tunnel_configuration: ${{ secrets.CLOUDFLARE_TUNNEL_CONFIGURATION }}
+                  cloudflare_tunnel_id: ${{ secrets.CLOUDFLARE_TUNNEL_ID }}
+            - run: npm ci
+            - run: npm run lint
+            - run: npm run build
+            - run: npm install -g browserstack-node-sdk
+            - uses: JarvusInnovations/background-action@2428e7b970a846423095c79d43f759abf979a635
+              name: 'Starting dev server'
+              with:
+                  run: npm run start:dev &
+                  wait-on: |
+                      http://localhost:20741/.well-known/time
+                  tail: true
+                  log-output-resume: stderr
+                  wait-for: 1m
+                  log-output: true
+                  log-output-if: failure
+            - name: 'Running test on BrowserStack'
+              run: npx browserstack-node-sdk node scripts/ci-tests-launcher.cjs
+              env:
+                  BASE_URL: ${{ secrets.BASE_URL }}
+            - name: Shutdown and view logs of cloudflared
+              if: always()
+              uses: AnimMouse/setup-cloudflared/shutdown@625fcfcf71f57a4f00b9656a3b94ee0bbdbd593f

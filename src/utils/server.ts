@@ -56,6 +56,10 @@ const server = http.createServer((req, res) => {
 		}
 	};
 
+	if (req.url === '/.well-known/time') {
+		res.writeHead(204).end();
+	}
+
 	if (req.method === 'GET' && ['/', '/index.html'].includes(req.url || '')) {
 		const bundlePath = path.resolve(
 			__dirname,

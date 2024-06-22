@@ -13,11 +13,16 @@
  * limitations under the License.
  */
 
-import type { WebDriver } from 'selenium-webdriver';
+import type { WebDriver, WebElement } from 'selenium-webdriver';
+import { until } from 'selenium-webdriver';
+import waitUntilReadyStateComplete from './waitUntilReadyStateComplete.js';
 
-const x_ = async (driver: WebDriver, url: URL, file: File) => {
+const navigateToFile_ = async (driver: WebDriver, url: URL, file: File) => {
 	driver.get('about:blank');
-	await driver.wait(driver.executeScript('document.readyState==="complete"'));
+	await waitUntilReadyStateComplete(driver);
+	const document$: WebElement = await driver.executeScript(
+		'return document.documentElement;',
+	);
 	await driver.executeScript(
 		`
         const ns = 'http://www.w3.org/1999/xhtml';
@@ -29,7 +34,7 @@ const x_ = async (driver: WebDriver, url: URL, file: File) => {
         textarea$.setAttribute('name', '__TEXT__');
         textarea$.value = arguments[1];
         form$.appendChild(textarea$);
-        form$.style.setProperty('display', 'none', 'important');
+        form$.style.setProperty('transform', 'scale(0)', 'important');
         document.body.appendChild(form$);
         form$.submit();
     `,
@@ -37,6 +42,8 @@ const x_ = async (driver: WebDriver, url: URL, file: File) => {
 		Buffer.from(await file.arrayBuffer()).toString('utf-8'),
 		file.type,
 	);
+	// Wait until navigation happens
+	await driver.wait(until.stalenessOf(document$));
 };
 
-export default x_;
+export default navigateToFile_;

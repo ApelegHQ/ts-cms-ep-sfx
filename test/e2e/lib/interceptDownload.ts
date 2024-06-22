@@ -25,19 +25,19 @@ const interceptDownload_ = async (driver: WebDriver) => {
             for (const mutation of mutationList) {
                 for (const child of mutation.addedNodes) {
                     if (
-                        String(child.tagName).toLowerCase() === 'a' &&
+                        child instanceof HTMLAnchorElement &&
                         child.hasAttribute('download') &&
                         child.hasAttribute('href')
                     ) {
                         observer.disconnect();
-        
+
                         const download = child.getAttribute('download');
                         const href = child.getAttribute('href');
                         child.removeAttribute('download');
                         child.removeAttribute('href');
                         child.onclick = (e) => {
                             e.preventDefault();
-        
+
                             Object.defineProperty(window, key, {
                                 configurable: true,
                                 value: fetch(href).then(async (res) => {
@@ -69,10 +69,10 @@ const interceptDownload_ = async (driver: WebDriver) => {
 			`
         const key = arguments[0];
         const callback = arguments[arguments.length - 1];
-        const result = window[key];
-        if (!result) {
+        if (!Object.prototype.hasOwnProperty.call(window, key)) {
             throw new Error('Missing download object');
         }
+        const result = window[key];
         delete window[key];
         result.then((v) => callback([true, v]), (e) => callback([false, e?.message || e]));
         `,
@@ -88,7 +88,7 @@ const interceptDownload_ = async (driver: WebDriver) => {
 		const name = result[1][1];
 		const encryptedFileContents = Buffer.from(result[1][2]);
 
-		return new File([encryptedFileContents], name, { type: type });
+		return new File([encryptedFileContents], name, { ['type']: type });
 	};
 };
 

@@ -1,0 +1,62 @@
+name: 'Integration Tests (GitHub Actions)'
+
+on:
+    push:
+    pull_request:
+        types:
+            - opened
+            - synchronize
+            - reopened
+        branches:
+            - master
+
+jobs:
+    test:
+        strategy:
+            matrix:
+                os:
+                    - macos-latest
+                    - ubuntu-latest
+                    - windows-latest
+                browser:
+                    - chrome
+                    - firefox
+                    - MicrosoftEdge
+                # include:
+                #     # TODO: Currently, testing on Safari doesn't work. It seems
+                #     # like the the 'about:blank' form submission could be the
+                #     # issue.
+                #     - os: macos-latest
+                #      browser: safari
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+            - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
+              with:
+                  node-version: '22'
+            - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+              with:
+                  distribution: 'microsoft'
+                  java-version: '21'
+            - run: npm ci
+            - run: npm run lint
+            - run: npm run build
+            - uses: JarvusInnovations/background-action@2428e7b970a846423095c79d43f759abf979a635
+              name: 'Starting dev server'
+              with:
+                  run: npm run start:dev &
+                  wait-on: |
+                      http://localhost:20741/.well-known/time
+                  tail: true
+                  log-output-resume: stderr
+                  wait-for: 1m
+                  log-output: true
+                  log-output-if: failure
+            - name: 'Starting Xvfb'
+              if: matrix.os == 'ubuntu-latest'
+              run: Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+            - name: 'Running test'
+              run: node scripts/ci-tests-launcher.cjs
+              env:
+                  BROWSER: ${{ matrix.browser }}
+                  DISPLAY: :99

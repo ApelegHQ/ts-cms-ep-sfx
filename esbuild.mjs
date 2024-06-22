@@ -242,7 +242,7 @@ const exactRealtyBuilderPlugin = (
 
 	console.log('Built client');
 
-	const clientBuild1 = await esbuild.build({
+	const generateHtmlBuild = await esbuild.build({
 		entryPoints: ['src/utils/generateHtml.ts'],
 		mainFields: ['module', 'main'],
 		outdir: OUTDIR_CLIENT,
@@ -251,14 +251,24 @@ const exactRealtyBuilderPlugin = (
 		write: false,
 	});
 
-	const outputPath = Object.entries(clientBuild1.metafile.outputs).find(
+	/**
+	 * @param {esbuild.OutputFile[]} files
+	 * @param {string} path
+	 */
+	const findPath = (files, path) => {
+		return files.find(
+			(x) =>
+				x.path.endsWith(path) ||
+				x.path.endsWith(path.replace(/\//g, '\\')),
+		);
+	};
+
+	const outputPath = Object.entries(generateHtmlBuild.metafile.outputs).find(
 		([, v]) => {
 			return v.entryPoint === 'src/utils/generateHtml.ts';
 		},
 	)[0];
-	const text = clientBuild1.outputFiles.find((x) =>
-		x.path.endsWith(outputPath),
-	).text;
+	const text = findPath(generateHtmlBuild.outputFiles, outputPath).text;
 
 	function requireFromString(src) {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -273,13 +283,11 @@ const exactRealtyBuilderPlugin = (
 		return v.entryPoint?.endsWith(ENTRY_FILE_CLIENT);
 	});
 
-	const scriptText = clientBuild.outputFiles.find((x) =>
-		x.path.endsWith(scriptOutputPath),
+	const scriptText = findPath(
+		clientBuild.outputFiles,
+		scriptOutputPath,
 	).contents;
-
-	const cssText = clientBuild.outputFiles.find((x) =>
-		x.path.endsWith(cssBundlePath),
-	).contents;
+	const cssText = findPath(clientBuild.outputFiles, cssBundlePath).contents;
 
 	await fs
 		.access(TARGET_DIR, fs.constants.W_OK)

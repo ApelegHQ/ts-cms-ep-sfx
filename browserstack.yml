@@ -6,17 +6,22 @@ platforms:
     - os: Windows
       osVersion: 10
       browserName: Chrome
-      browserVersion: 120.0
-    #- os: OS X
-    #  osVersion: Monterey
-    #  browserName: Safari
-    #  browserVersion: 15.6
-    #- deviceName: iPhone 13
-    #  osVersion: 15
-    #  browserName: Chromium
-    #  deviceOrientation: portrait
+      browserVersion: latest
+    - os: Windows
+      osVersion: 7
+      browserName: Firefox
+      browserVersion: 115.0
+    - deviceName: iPhone 14
+      osVersion: 16
+      browserName: safari
+      deviceOrientation: portrait
+    - deviceName: Google Pixel 8
+      osVersion: 14.0
+      browserName: chrome
+      deviceOrientation: portrait
+parallelsPerPlatform: 1
+browserstackLocal: false
 buildIdentifier: ${BUILD_NUMBER}
-browserstackLocal: true
 debug: true
 networkLogs: true
 interactiveDebugging: false
