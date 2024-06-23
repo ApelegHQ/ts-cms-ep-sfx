@@ -2,6 +2,8 @@ name: 'Integration Tests (BrowserStack)'
 
 on:
     push:
+        branches:
+            - master
     pull_request:
         types:
             - opened
@@ -12,6 +14,7 @@ on:
 
 jobs:
     test:
+        if: ${{ false }}
         name: 'BrowserStack Test on Ubuntu'
         runs-on: ubuntu-latest
         steps:

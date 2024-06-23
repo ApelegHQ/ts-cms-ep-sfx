@@ -2,6 +2,8 @@ name: 'Integration Tests (GitHub Actions)'
 
 on:
     push:
+        branches:
+            - master
     pull_request:
         types:
             - opened
