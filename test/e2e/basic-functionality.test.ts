@@ -127,7 +127,7 @@ test('Basic functionality', async (t) => {
 	});
 
 	await t.test('Can decrypt a file', { ['skip']: !file }, async () => {
-		navigateToFile(driver, baseUrl, file as File);
+		await navigateToFile(driver, baseUrl, file as File);
 
 		await driver.wait(until.elementLocated(By.css('form')));
 

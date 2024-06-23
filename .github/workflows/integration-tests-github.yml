@@ -22,12 +22,9 @@ jobs:
                     - chrome
                     - firefox
                     - MicrosoftEdge
-                # include:
-                #     # TODO: Currently, testing on Safari doesn't work. It seems
-                #     # like the the 'about:blank' form submission could be the
-                #     # issue.
-                #     - os: macos-latest
-                #      browser: safari
+                include:
+                    - os: macos-latest
+                      browser: safari
         runs-on: ${{ matrix.os }}
         steps:
             - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29

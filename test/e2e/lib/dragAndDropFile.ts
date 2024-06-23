@@ -19,30 +19,30 @@ import type { WebElement } from 'selenium-webdriver';
 // Based on:
 // * <https://stackoverflow.com/questions/38829153/selenium-drag-and-drop-from-file-system-to-webdriver>,
 // * <https://gist.github.com/florentbr/349b1ab024ca9f3de56e6bf8af2ac69e>
-const JS_DROP_FILE = `const element = arguments[0],
+const JS_DROP_FILE = `const target$ = arguments[0],
 contents = new Uint8Array(arguments[1]),
 filename = arguments[2],
 type = arguments[3],
 offsetX = arguments[4],
 offsetY = arguments[5];
 
-const doc = element.ownerDocument || document;
+const doc = target$.ownerDocument || document;
 
 let target, clientX, clientY;
 
 for (let i = 0; ; ) {
-const box = element.getBoundingClientRect(),
+const box = target$.getBoundingClientRect(),
     clientX = box.left + (offsetX || box.width / 2),
     clientY = box.top + (offsetY || box.height / 2);
 target = doc.elementFromPoint(clientX, clientY);
 
-if (target && element.contains(target)) break;
+if (target && target$.contains(target)) break;
 
 if (++i > 1) {
     throw new Error('Element not interactable');
 }
 
-element.scrollIntoView({
+target$.scrollIntoView({
     behavior: 'instant',
     block: 'center',
     inline: 'center',

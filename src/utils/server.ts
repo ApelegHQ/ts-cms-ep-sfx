@@ -21,6 +21,9 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const boundaryMatchRegex =
+	/;\s*boundary=(?:"([0-9a-zA-Z'()+_,\-./:=? ]{0,69}[0-9a-zA-Z'()+_,\-./:=?])"|([0-9a-zA-Z'+_\-.]{0,69}[0-9a-zA-Z'+_\-.]))/;
+
 const server = http.createServer((req, res) => {
 	const okHandler = (data: Buffer) => {
 		const firstScriptIndex = Buffer.from(data).indexOf('<script');
@@ -31,7 +34,7 @@ const server = http.createServer((req, res) => {
 			['content-type', 'text/html; charset=UTF-8'],
 			[
 				'content-security-policy',
-				"default-src 'none'; script-src 'self' 'unsafe-eval' data:; script-src-elem blob: data:; script-src-attr 'none'; style-src data:; child-src blob:; connect-src blob: data:; frame-ancestors 'self'; form-action data:",
+				"default-src 'none'; script-src 'self' 'unsafe-eval' data:; script-src-elem blob: data:; script-src-attr 'none'; style-src data:; child-src blob:; connect-src blob: data:; frame-ancestors 'self'; form-action 'self' data:",
 			],
 			[
 				'permissions-policy',
@@ -92,7 +95,7 @@ const server = http.createServer((req, res) => {
 				),
 			);
 		} catch (e) {
-			console.error('Error sending index', e);
+			console.error('Error sending /blank', e);
 			res.writeHead(
 				500,
 				(e instanceof Error && e?.message) ||
@@ -102,7 +105,53 @@ const server = http.createServer((req, res) => {
 		} finally {
 			res.end();
 		}
-	} else if (req.method === 'POST' && req.url === '/') {
+	} else if (req.method === 'GET' && req.url === '/echo-document') {
+		try {
+			okHandler(
+				Buffer.from(
+					'<!DOCTYPE html>' +
+						'<html xml:lang="zxx" xmlns="http://www.w3.org/1999/xhtml" lang="zxx">' +
+						'<head>' +
+						'<meta charset="UTF-8"/>' +
+						'<title>Echo document</title>' +
+						'</head>' +
+						'<body>' +
+						'<form enctype="multipart/form-data" method="POST">' +
+						'<input type="file" name="__TEXT__"/>' +
+						'<button type="submit">Submit</button>' +
+						'</form>' +
+						'</body>' +
+						'</html>',
+				),
+			);
+		} catch (e) {
+			console.error('Error sending /echo-document', e);
+			res.writeHead(
+				500,
+				(e instanceof Error && e?.message) ||
+					String(e) ||
+					'Unknown error',
+			);
+		} finally {
+			res.end();
+		}
+	} else if (req.method === 'POST' && req.url === '/echo-document') {
+		if (
+			!req.headers['content-type'] ||
+			!req.headers['content-type'].startsWith('multipart/form-data;')
+		) {
+			res.writeHead(415).end();
+			return;
+		}
+
+		const boundaryMatch =
+			req.headers['content-type'].match(boundaryMatchRegex);
+		if (!boundaryMatch || (!boundaryMatch[1] && !boundaryMatch[2])) {
+			res.writeHead(422).end();
+			return;
+		}
+		const boundary = boundaryMatch[1] || boundaryMatch[2];
+
 		new Promise<Buffer>((resolve) => {
 			const chunks: Buffer[] = [];
 			req.on('data', (chunk: Buffer) => {
@@ -111,18 +160,25 @@ const server = http.createServer((req, res) => {
 			req.on('end', () => {
 				const result = Buffer.concat(chunks);
 
-				// Special handling to allow 'text/plain' form submissions
-				if (req.headers['content-type'] === 'text/plain') {
-					const idx = result.indexOf('__TEXT__=');
-					if (idx >= 0) {
-						resolve(result.subarray(idx + '__TEXT__='.length));
-						return;
-					}
-				}
-
 				resolve(result);
 			});
 		})
+			.then((buffer) => {
+				const startMultipartBody = buffer.indexOf('--' + boundary);
+				const startMultipartData = buffer.indexOf(
+					'\r\n\r\n',
+					startMultipartBody + 2 + boundary.length,
+				);
+				const endMultipartData = buffer.indexOf(
+					'\r\n--' + boundary + '--',
+					startMultipartData,
+				);
+
+				return buffer.subarray(
+					startMultipartData + 4,
+					endMultipartData,
+				);
+			})
 			.then(okHandler)
 			.catch((e) => {
 				console.error('Error sending index', e);

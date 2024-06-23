@@ -14,34 +14,36 @@
  */
 
 import type { WebDriver, WebElement } from 'selenium-webdriver';
-import { until } from 'selenium-webdriver';
+import { By, until } from 'selenium-webdriver';
 import waitUntilReadyStateComplete from './waitUntilReadyStateComplete.js';
 
 const navigateToFile_ = async (driver: WebDriver, url: URL, file: File) => {
-	driver.get('about:blank');
+	driver.get(new URL('echo-document', url).toString());
+	await driver.executeScript(
+		'document.documentElement.style.setProperty("display", "none", "important");',
+	);
 	await waitUntilReadyStateComplete(driver);
 	const document$: WebElement = await driver.executeScript(
 		'return document.documentElement;',
 	);
+	const fileInput$ = await driver.findElement(By.css('input[type="file"]'));
 	await driver.executeScript(
 		`
-        const ns = 'http://www.w3.org/1999/xhtml';
-        const form$ = document.createElementNS(ns, 'form');
-        form$.setAttribute('action', arguments[0]);
-        form$.setAttribute('enctype', 'text/plain');
-        form$.setAttribute('method', 'POST');
-        const textarea$ = document.createElementNS(ns, 'textarea');
-        textarea$.setAttribute('name', '__TEXT__');
-        textarea$.value = arguments[1];
-        form$.appendChild(textarea$);
-        form$.style.setProperty('transform', 'scale(0)', 'important');
-        document.body.appendChild(form$);
-        form$.submit();
-    `,
-		url.toString(),
-		Buffer.from(await file.arrayBuffer()).toString('utf-8'),
+    const target$ = arguments[0],
+      contents = new Uint8Array(arguments[1]),
+      filename = arguments[2],
+      type = arguments[3];
+    const dataTransfer = new DataTransfer();
+    dataTransfer.effectAllowed = 'all';
+    dataTransfer.items.add(new File([contents], filename, { type }));
+    target$.files = dataTransfer.files;
+	`,
+		fileInput$,
+		Array.from(new Uint8Array(await file.arrayBuffer())),
+		file.name,
 		file.type,
 	);
+	await driver.findElement(By.css('form')).submit();
 	// Wait until navigation happens
 	await driver.wait(until.stalenessOf(document$));
 };
