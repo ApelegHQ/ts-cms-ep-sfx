@@ -29,6 +29,18 @@ import sveltePreprocess from 'svelte-preprocess';
 import tailwindcss from 'tailwindcss';
 import packageJson from './package.json' with { type: 'json' };
 import tailwindConfig from './tailwind.config.mjs';
+import childProcess from 'node:child_process';
+
+const gitCommitHash = (() => {
+	try {
+		const result = childProcess.spawnSync('git', ['rev-parse', 'HEAD']);
+		if (result.status === 0 && result.stdout.byteLength) {
+			return Buffer.from(result.stdout).toString().trim();
+		}
+	} catch {
+		/* empty */
+	}
+})();
 
 const ENTRY_FILE_CLIENT = 'src/index.ts';
 const MODE = process.env['NODE_ENV'] || 'production';
@@ -115,6 +127,8 @@ const exactRealtyBuilderPlugin = (
 					options.buildTarget,
 				),
 				'__buildtimeSettings__.enableFramebusting': 'true',
+				'__buildtimeSettings__.gitCommitHash':
+					JSON.stringify(gitCommitHash) || 'undefined',
 				'__buildtimeSettings__.package.name':
 					JSON.stringify(Reflect.get(packageJson, 'name')) ||
 					'undefined',
@@ -222,8 +236,9 @@ const exactRealtyBuilderPlugin = (
 		}),
 		exactRealtyBuilderPlugin({ buildTarget: 'client', jsOnly: false }),
 		cc({
-			compilation_level: 'SIMPLE', // TODO: Make 'ADVANCED' work
+			compilation_level: 'ADVANCED',
 			language_out: 'ECMASCRIPT_2020',
+			externs: './closure-externs.js',
 		}),
 	];
 

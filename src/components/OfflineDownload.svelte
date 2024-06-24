@@ -15,23 +15,21 @@
 -->
 
 <script lang="typescript">
-	import './Header.css';
-	import OfflineDownload from './OfflineDownload.svelte';
+	import downloadArchive from '~/lib/downloadArchive.js';
+	import './OfflineDownload.css';
 
 	let mainScript$_: HTMLScriptElement | undefined;
 	let mainStylesheet$_: HTMLLinkElement | undefined;
 
+	const handleClick = () => {
+		downloadArchive(mainScript$_!, mainStylesheet$_!, 'encrypt.html');
+	};
+
 	export { mainScript$_ as mainScript$, mainStylesheet$_ as mainStylesheet$ };
 </script>
 
-<header class="header">
-	<div class="header-inner">
-		<h1 class="header-title">
-			HTML&#x2010;based file encryption and decryption utility
-		</h1>
-		<OfflineDownload
-			mainScript$={mainScript$_}
-			mainStylesheet$={mainStylesheet$_}
-		/>
-	</div>
-</header>
+{#if mainScript$_ && mainStylesheet$_}
+	<button on:click={handleClick} class="offline-download-button"
+		>&#x2b07;&#xfe0e; Download for offline use</button
+	>
+{/if}

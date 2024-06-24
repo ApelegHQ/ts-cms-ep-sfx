@@ -24,6 +24,7 @@ declare namespace __buildtimeSettings__ {
 	const buildTarget: 'client' | 'server' | 'worker';
 	const ssr: boolean;
 	const enableFramebusting: boolean;
+	const gitCommitHash: string | undefined;
 	const package: Readonly<{
 		name?: string;
 		version?: string;
@@ -39,6 +40,11 @@ declare namespace __buildtimeSettings__ {
 					email?: string;
 					url?: string;
 			  };
-		repository?: string;
+		repository?:
+			| string
+			| {
+					type: string;
+					url: string;
+			  };
 	}>;
 }

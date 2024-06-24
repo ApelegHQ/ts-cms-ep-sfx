@@ -26,8 +26,7 @@
 	import ErrorModal from '~/components/ErrorModal.svelte';
 	import Loading from '~/components/Loading.svelte';
 	import EFormFields from '~/lib/EFormFields.js';
-	import downloadBlob from '~/lib/downloadBlob.js';
-	import generateHtml from '~/lib/generateHtml.js';
+	import downloadArchive from '~/lib/downloadArchive.js';
 	import isTrustedEvent from '~/lib/isTrustedEvent.js';
 	import prepareDownloadableCmsPayload from '~/lib/prepareDownloadableCmsPayload.js';
 	import setupConstructCmsSandbox from '~/lib/setupConstructCmsSandbox.js';
@@ -56,8 +55,8 @@
 		| undefined;
 	let abort: { (): void } | undefined;
 
-	let mainScript$: HTMLScriptElement | undefined;
-	let mainStylesheet$: HTMLLinkElement | undefined;
+	let mainScript$_: HTMLScriptElement | undefined;
+	let mainStylesheet$_: HTMLLinkElement | undefined;
 	let passwordInput$: HTMLInputElement;
 	let passwordConfirmInput$: HTMLInputElement;
 	let instance: Record<never, never>;
@@ -81,25 +80,12 @@
 	};
 
 	onMount(() => {
-		const _mainScript$ = document.getElementById('MAIN_SCRIPT_ELEMENT__');
-		const _mainStylesheet$ = document.getElementById(
-			'MAIN_STYLESHEET_ELEMENT__',
-		);
-		if (
-			!_mainScript$ ||
-			!(_mainScript$ instanceof HTMLScriptElement) ||
-			!_mainStylesheet$ ||
-			!(_mainStylesheet$ instanceof HTMLLinkElement)
-		) {
+		if (!mainScript$_ || !mainStylesheet$_) {
 			const message = 'Unable to locate main script and style elements';
-			console.error(message, _mainScript$, _mainStylesheet$);
 			encryptionSandbox = new Error(message);
 
 			return;
 		}
-
-		mainScript$ = _mainScript$;
-		mainStylesheet$ = _mainStylesheet$;
 
 		const abortController = new AbortController();
 		const _abort = () => {
@@ -305,28 +291,12 @@
 					return;
 				}
 
-				const handleResponseText = (r: Response) => {
-					if (!r.ok) throw new Error('Invalid response code');
-					return r.arrayBuffer();
-				};
-
-				const [scriptSrc, styleSrc] = await Promise.all([
-					fetch(mainScript$!.src).then(handleResponseText),
-					fetch(mainStylesheet$!.href).then(handleResponseText),
-				]);
-
-				const htmlDocument = await generateHtml(
-					scriptSrc,
-					styleSrc,
+				await downloadArchive(
+					mainScript$_!,
+					mainStylesheet$_!,
+					_archiveName,
 					cms,
 					_hint,
-				);
-
-				downloadBlob(
-					new Blob([htmlDocument], {
-						['type']: 'text/html',
-					}),
-					_archiveName,
 				);
 			} finally {
 				if (instance === _instance) {
@@ -353,6 +323,8 @@
 				working = false;
 			});
 	};
+
+	export { mainScript$_ as mainScript$, mainStylesheet$_ as mainStylesheet$ };
 </script>
 
 <svelte:head>

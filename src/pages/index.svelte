@@ -22,6 +22,25 @@
 	import Decrypt from './decrypt.svelte';
 	import Encrypt from './encrypt.svelte';
 
+	const [mainScript$, mainStylesheet$] = (():
+		| [HTMLScriptElement, HTMLLinkElement]
+		| [] => {
+		const _mainScript$ = document.getElementById('MAIN_SCRIPT_ELEMENT__');
+		const _mainStylesheet$ = document.getElementById(
+			'MAIN_STYLESHEET_ELEMENT__',
+		);
+		if (
+			!_mainScript$ ||
+			!(_mainScript$ instanceof HTMLScriptElement) ||
+			!_mainStylesheet$ ||
+			!(_mainStylesheet$ instanceof HTMLLinkElement)
+		) {
+			return [];
+		}
+
+		return [_mainScript$, _mainStylesheet$];
+	})();
+
 	const hasCmsData = (() => {
 		const cmsData$ = document.getElementById('CMS_DATA_ELEMENT__');
 		if (cmsData$ && cmsData$ instanceof HTMLScriptElement) {
@@ -33,11 +52,11 @@
 </script>
 
 <DemoBanner />
-<Header />
+<Header {mainScript$} {mainStylesheet$} />
 {#if hasCmsData}
 	<Decrypt />
 {:else}
-	<Encrypt />
+	<Encrypt {mainScript$} {mainStylesheet$} />
 {/if}
 <Disclaimer />
 <Footer />

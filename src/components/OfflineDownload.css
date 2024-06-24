@@ -1,0 +1,13 @@
+.offline-download-button {
+	display: block;
+	padding: 0.4em;
+	margin: 0.5em;
+	float: right;
+	font-size: 0.8em;
+	text-transform: uppercase;
+	cursor: pointer;
+	border: 2px solid currentColor;
+	color: #a26135;
+	background-color: white;
+	user-select: none;
+}

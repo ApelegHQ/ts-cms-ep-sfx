@@ -16,11 +16,26 @@
 
 <script lang="typescript">
 	import {
+		gitCommitHash_ as gitCommitHash,
+		packageHomepage_ as packageHomepage,
+		packageRepository_ as packageRepository,
 		packageName_ as packageName,
 		packageVersion_ as packageVersion,
 	} from '~/lib/packageInfo.js';
 	import './Footer.css';
 	import Logo from './Logo.svelte';
+
+	const repository = (() => {
+		if (!packageRepository) {
+			return;
+		}
+		const url =
+			typeof packageRepository === 'string'
+				? packageRepository
+				: packageRepository.url;
+
+		return url.replace(/^git\+/, '');
+	})();
 </script>
 
 <footer class="footer">
@@ -37,6 +52,29 @@
 				Build information:{' '}
 				{packageName}
 				{#if packageVersion}{' '}v{packageVersion}{/if}
+				{#if gitCommitHash}
+					{' '}(<data value={gitCommitHash}
+						>{gitCommitHash.slice(0, 7)}</data
+					>)
+				{/if}
+				{#if packageHomepage}
+					{' | '}<a
+						href={packageHomepage}
+						rel="noopener noreferrer nofollow"
+						target="_blank"
+					>
+						Home
+					</a>
+				{/if}
+				{#if repository}
+					{' | '}<a
+						href={repository}
+						rel="noopener noreferrer nofollow"
+						target="_blank"
+					>
+						Source
+					</a>
+				{/if}
 			</p>
 		{/if}
 	</div>

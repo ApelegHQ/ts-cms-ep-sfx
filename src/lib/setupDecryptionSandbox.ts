@@ -26,8 +26,15 @@ const setupDecryptionSandbox_ = (
 ) => {
 	const wrappedCryptoFunctions = getWrappedCryptoFunctions();
 
+	// These keys are here to prevent them from being renamed. Compilation
+	// should inline them.
+	const key$deriveKEK = 'deriveKEK';
+	const key$external$decrypt = 'external$decrypt';
+	const key$external$deriveKey = 'external$deriveKey';
+	const key$external$importKey = 'external$importKey';
+
 	return browserSandbox<{
-		['deriveKEK']: {
+		[key$deriveKEK]: {
 			(
 				password: string,
 				iterationCount: number,
@@ -43,8 +50,8 @@ const setupDecryptionSandbox_ = (
 		deriveKEK.default,
 		null,
 		{
-			['external$deriveKey']: wrappedCryptoFunctions.deriveKey_,
-			['external$importKey']: wrappedCryptoFunctions.importKey_,
+			[key$external$deriveKey]: wrappedCryptoFunctions.deriveKey_,
+			[key$external$importKey]: wrappedCryptoFunctions.importKey_,
 		},
 		signal,
 	).then((sandbox) =>
@@ -67,9 +74,9 @@ const setupDecryptionSandbox_ = (
 			fileDecryptionCms.default,
 			null,
 			{
-				['deriveKEK']: async () => {
+				[key$deriveKEK]: async () => {
 					const [KEK] = await sandbox(
-						'deriveKEK',
+						key$deriveKEK,
 						passwordGetter(),
 						iterationCountGetter(),
 						'decrypt',
@@ -78,8 +85,8 @@ const setupDecryptionSandbox_ = (
 
 					return KEK;
 				},
-				['external$decrypt']: wrappedCryptoFunctions.decrypt_,
-				['external$importKey']: wrappedCryptoFunctions.importKey_,
+				[key$external$decrypt]: wrappedCryptoFunctions.decrypt_,
+				[key$external$importKey]: wrappedCryptoFunctions.importKey_,
 			},
 			signal,
 		),

@@ -13,8 +13,54 @@
  * limitations under the License.
  */
 
-export const gitCommitHash_ = __buildtimeSettings__.gitCommitHash;
-export const packageName_ = __buildtimeSettings__.package.name;
-export const packageVersion_ = __buildtimeSettings__.package.version;
-export const packageHomepage_ = __buildtimeSettings__.package.homepage;
-export const packageRepository_ = __buildtimeSettings__.package.repository;
+/**
+ * @externs
+ */
+
+/**
+ * @type {string | null | undefined}
+ */
+Object.prototype.class;
+
+/**
+ * @type {Object}
+ */
+Object.prototype.$$;
+
+/**
+ * @param {*} arg1
+ * @return {undefined}
+ */
+Object.prototype.$$set = function (arg1) {
+	void arg1;
+};
+
+/**
+ *
+ * @type {Object}
+ */
+Object.prototype.$$props;
+
+/**
+ *
+ * @type {Object}
+ */
+Object.prototype.$$restProps;
+
+/**
+ *
+ * @type {Object}
+ */
+Object.prototype.$$new_props;
+
+/**
+ *
+ * @type {Object}
+ */
+Object.prototype.$$scope;
+
+/**
+ *
+ * @type {Object}
+ */
+Object.prototype.$$slots;
