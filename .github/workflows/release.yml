@@ -7,7 +7,7 @@ on:
 
 jobs:
     release:
-        runs-on: windows-latest
+        runs-on: ubuntu-latest
         permissions:
             contents: write
             id-token: write
@@ -24,6 +24,7 @@ jobs:
             - run: npm run build
               env:
                   BUILD_TYPE: release
+                  NODE_ENV: production
             - run: |
                   cd build
                   cp index.html encrypt.html

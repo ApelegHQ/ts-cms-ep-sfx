@@ -21,7 +21,7 @@ import inlineScripts from '@exact-realty/esbuild-plugin-inline-js';
 import autoprefixer from 'autoprefixer';
 import esbuild from 'esbuild';
 import sveltePlugin from 'esbuild-svelte';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, webcrypto } from 'node:crypto';
 import fs from 'node:fs/promises';
 import { join } from 'node:path';
 import vm from 'node:vm';
@@ -272,7 +272,12 @@ const exactRealtyBuilderPlugin = (
 
 	function requireFromString(src) {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		const ctx = vm.createContext({ exports: {}, btoa, atob, crypto });
+		const ctx = vm.createContext({
+			exports: {},
+			btoa,
+			atob,
+			crypto: webcrypto,
+		});
 		vm.runInContext(src, ctx);
 		return { ...ctx.exports };
 	}

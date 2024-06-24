@@ -6,5 +6,5 @@ tar -xzf 'OpenJDK21U-jdk_x64_linux_hotspot_21.0.3_9.tar.gz'
 export JAVA_HOME="$(pwd)/jdk-21.0.3+9"
 export PATH="$JAVA_HOME/bin:$PATH"
 export NODE_ENV="production"
+export BUILD_TYPE="release"
 npm run build
-
