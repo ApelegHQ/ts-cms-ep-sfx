@@ -1,13 +1,12 @@
-name: Attach release file
+name: Generate GitHub release
 
 on:
     push:
         tags:
-            - "v*.*.*"
+            - 'v*.*.*'
 
 jobs:
-    attach-release-file:
-        name: Attach release file
+    release:
         runs-on: windows-latest
         permissions:
             contents: write
@@ -26,10 +25,9 @@ jobs:
               env:
                   BUILD_TYPE: release
             - run: |
-                cd build
-                cp index.html encrypt.html
+                  cd build
+                  cp index.html encrypt.html
             - name: Release
               uses: softprops/action-gh-release@a74c6b72af54cfa997e81df42d94703d6313a2d0
               with:
                   files: build/encrypt.html
-

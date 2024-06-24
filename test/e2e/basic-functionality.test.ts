@@ -79,7 +79,7 @@ test('Basic functionality', async (t) => {
 			),
 		);
 
-		assert.ok(!(await password$.isEnabled()));
+		assert.ok(!(await password$.isEnabled()), 'password input not enabled');
 
 		await driver
 			.findElement(
@@ -120,10 +120,18 @@ test('Basic functionality', async (t) => {
 					),
 				),
 			);
-		assert.equal((await driver.findElements(By.css('dialog'))).length, 0);
+		assert.equal(
+			(await driver.findElements(By.css('dialog'))).length,
+			0,
+			'`<dialog>` elements found',
+		);
 
 		file = await getDownload();
-		assert.equal(file.name, fileName + '.html');
+		assert.equal(
+			file.name,
+			fileName + '.html',
+			'unexpected download file name',
+		);
 	});
 
 	await t.test('Can decrypt a file', { ['skip']: !file }, async () => {
@@ -160,7 +168,11 @@ test('Basic functionality', async (t) => {
 					),
 				),
 			);
-		assert.equal((await driver.findElements(By.css('dialog'))).length, 0);
+		assert.equal(
+			(await driver.findElements(By.css('dialog'))).length,
+			0,
+			'`<dialog>` elements found',
+		);
 
 		const getDownload = await interceptDownload(driver);
 
@@ -173,10 +185,14 @@ test('Basic functionality', async (t) => {
 				return $.click();
 			});
 
-		assert.equal((await driver.findElements(By.css('dialog'))).length, 0);
+		assert.equal(
+			(await driver.findElements(By.css('dialog'))).length,
+			0,
+			'`<dialog>` elements found',
+		);
 
 		file = await getDownload();
-		assert.equal(file.name, fileName);
+		assert.equal(file.name, fileName, 'unexpected download file name');
 		assert.deepEqual(new Uint8Array(await file.arrayBuffer()), contents);
 	});
 });

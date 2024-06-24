@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import type { WebDriver, WebElement } from 'selenium-webdriver';
+import type { WebDriver } from 'selenium-webdriver';
 import { By, until } from 'selenium-webdriver';
 import waitUntilReadyStateComplete from './waitUntilReadyStateComplete.js';
 
@@ -23,8 +23,8 @@ const navigateToFile_ = async (driver: WebDriver, url: URL, file: File) => {
 		'document.documentElement.style.setProperty("display", "none", "important");',
 	);
 	await waitUntilReadyStateComplete(driver);
-	const document$: WebElement = await driver.executeScript(
-		'return document.documentElement;',
+	const document$ = await driver.findElement(
+		By.js('return document.documentElement;'),
 	);
 	const fileInput$ = await driver.findElement(By.css('input[type="file"]'));
 	await driver.executeScript(

@@ -375,6 +375,7 @@
 			<form
 				on:submit|preventDefault={handleFormSubmit}
 				on:reset={handleFormReset}
+				aria-busy={working ? 'true' : 'false'}
 				action="about:blank"
 				method="POST"
 			>

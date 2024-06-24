@@ -18,4 +18,4 @@
 	import './Spinner.css';
 </script>
 
-<span class="spinner"></span>
+<span class="spinner" role="progressbar"></span>

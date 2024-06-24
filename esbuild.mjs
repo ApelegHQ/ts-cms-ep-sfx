@@ -79,10 +79,10 @@ const exactRealtyBuilderPlugin = (
 		}[options.buildTarget];
 
 		const legalComments = {
-			['client']: 'linked',
+			['client']: 'eof',
 			['server']: 'inline',
 			['worker']: 'eof',
-			['iso']: 'linked',
+			['iso']: 'eof',
 		}[options.buildTarget];
 
 		const mangleCache = {};
@@ -222,7 +222,7 @@ const exactRealtyBuilderPlugin = (
 		}),
 		exactRealtyBuilderPlugin({ buildTarget: 'client', jsOnly: false }),
 		cc({
-			compilation_level: 'SIMPLE',
+			compilation_level: 'SIMPLE', // TODO: Make 'ADVANCED' work
 			language_out: 'ECMASCRIPT_2020',
 		}),
 	];
