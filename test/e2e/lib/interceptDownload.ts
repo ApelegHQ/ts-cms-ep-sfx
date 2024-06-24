@@ -23,6 +23,7 @@ const interceptDownload_ = async (driver: WebDriver) => {
         const callback = arguments[arguments.length - 1];
         const observer = new MutationObserver((mutationList) => {
             for (const mutation of mutationList) {
+                if (mutation.type !== 'childList') continue;
                 for (const child of mutation.addedNodes) {
                     if (
                         child instanceof HTMLAnchorElement &&

@@ -26,7 +26,8 @@ const navigateToFile_ = async (driver: WebDriver, url: URL, file: File) => {
 	const document$ = await driver.findElement(
 		By.js('return document.documentElement;'),
 	);
-	const fileInput$ = await driver.findElement(By.css('input[type="file"]'));
+	const form$ = await driver.findElement(By.css('form'));
+	const fileInput$ = await form$.findElement(By.css('input[type="file"]'));
 	await driver.executeScript(
 		`
     const target$ = arguments[0],
@@ -43,7 +44,7 @@ const navigateToFile_ = async (driver: WebDriver, url: URL, file: File) => {
 		file.name,
 		file.type,
 	);
-	await driver.findElement(By.css('form')).submit();
+	await form$.submit();
 	// Wait until navigation happens
 	await driver.wait(until.stalenessOf(document$));
 };

@@ -5,7 +5,8 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ts-cms-ep-sfx&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ts-cms-ep-sfx)
-[![License](https://img.shields.io/badge/License-Apache%202.0%20with%20llvm%20exception-blue.svg)](https://github.com/Exact-Realty/ts-ts-cms-ep-sfx/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0%20with%20llvm%20exception-blue.svg)](https://github.com/Exact-Realty/ts-cms-ep-sfx/blob/master/LICENSE)
+[![Integration Tests (GitHub Actions)](https://github.com/Exact-Realty/ts-cms-ep-sfx/actions/workflows/integration-tests-github.yml/badge.svg?event=push)](https://github.com/Exact-Realty/ts-cms-ep-sfx/actions/workflows/integration-tests-github.yml)
 
 Welcome to our secure file sharing utility! This HTML-based tool allows you to
 easily encrypt, share, and decrypt files using the CMS (Cryptographic Message

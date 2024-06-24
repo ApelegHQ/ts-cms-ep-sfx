@@ -24,6 +24,7 @@ import getRandomFileName from './lib/getRandomFileName.js';
 import getRandomPassword from './lib/getRandomPassword.js';
 import interceptDownload from './lib/interceptDownload.js';
 import navigateToFile from './lib/navigateToFile.js';
+import waitUntilNotBusy from './lib/waitUtilNotBusy.js';
 
 const baseUrl = new URL(process.env.BASE_URL || 'http://localhost:20741/');
 
@@ -73,17 +74,16 @@ test('Basic functionality', async (t) => {
 		await driver.findElement(By.css('h1')).isDisplayed();
 		await driver.findElement(By.css('h2')).isDisplayed();
 
-		const password$ = await driver.findElement(
-			By.css(
-				`form input[name="${EFormFields.PASSWORD}"][type="password"]`,
-			),
+		const form$ = await driver.findElement(By.css('main form'));
+		const password$ = await form$.findElement(
+			By.css(`input[name="${EFormFields.PASSWORD}"][type="password"]`),
 		);
 
 		assert.ok(!(await password$.isEnabled()), 'password input not enabled');
 
-		await driver
+		await form$
 			.findElement(
-				By.css(`form input[name="${EFormFields.FILE}"][type="file"]`),
+				By.css(`input[name="${EFormFields.FILE}"][type="file"]`),
 			)
 			.findElement(By.xpath('./ancestor::fieldset'))
 			.then((dropzone) => dragAndDropFile(dropzone, contents, fileName));
@@ -92,17 +92,17 @@ test('Basic functionality', async (t) => {
 
 		await password$.sendKeys(password);
 
-		await driver
+		await form$
 			.findElement(
 				By.css(
-					`form input[name="${EFormFields.PASSWORD_CONFIRM}"][type="password"]`,
+					`input[name="${EFormFields.PASSWORD_CONFIRM}"][type="password"]`,
 				),
 			)
 			.sendKeys(password);
 
 		const getDownload = await interceptDownload(driver);
 
-		await driver
+		await form$
 			.findElement(By.css('button[type="submit"]'))
 			.then(async ($) => {
 				if (!(await $.isEnabled())) {
@@ -110,16 +110,7 @@ test('Basic functionality', async (t) => {
 				}
 				return $.click();
 			});
-
-		await driver
-			.findElements(By.css('.loading-text'))
-			.then((loadingText$) =>
-				Promise.all(
-					loadingText$.map(($) =>
-						driver.wait(until.stalenessOf($), 120000),
-					),
-				),
-			);
+		await waitUntilNotBusy(driver, form$);
 		assert.equal(
 			(await driver.findElements(By.css('dialog'))).length,
 			0,
@@ -142,15 +133,16 @@ test('Basic functionality', async (t) => {
 		await driver.findElement(By.css('h1')).isDisplayed();
 		await driver.findElement(By.css('h2')).isDisplayed();
 
-		await driver
+		const form$ = await driver.findElement(By.css('main form'));
+		await form$
 			.findElement(
 				By.css(
-					`form input[name="${EFormFields.PASSWORD}"][type="password"]`,
+					`input[name="${EFormFields.PASSWORD}"][type="password"]`,
 				),
 			)
 			.sendKeys(password);
 
-		await driver
+		await form$
 			.findElement(By.css('button[type="submit"]'))
 			.then(async ($) => {
 				if (!(await $.isEnabled())) {
@@ -159,15 +151,7 @@ test('Basic functionality', async (t) => {
 				return $.click();
 			});
 
-		await driver
-			.findElements(By.css('.loading-text'))
-			.then((loadingText$) =>
-				Promise.all(
-					loadingText$.map(($) =>
-						driver.wait(until.stalenessOf($), 120000),
-					),
-				),
-			);
+		await waitUntilNotBusy(driver, form$);
 		assert.equal(
 			(await driver.findElements(By.css('dialog'))).length,
 			0,
@@ -176,7 +160,7 @@ test('Basic functionality', async (t) => {
 
 		const getDownload = await interceptDownload(driver);
 
-		await driver
+		await form$
 			.findElement(By.css('button[type="submit"]'))
 			.then(async ($) => {
 				if (!(await $.isEnabled())) {
