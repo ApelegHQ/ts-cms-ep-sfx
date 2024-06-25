@@ -13,9 +13,15 @@
  * limitations under the License.
  */
 
-import '~/lib/fixBrokenSandboxSecureContext.js';
+export const constructCmsData$SEP_ = 'constructCmsData';
+export const deriveKEK$SEP_ = 'deriveKEK';
+export const fileDecryptionCms$SEP_ = 'fileDecryptionCms';
+export const fileEncryptionCms$SEP_ = 'fileEncryptionCms';
+export const parseCmsData$SEP_ = 'parseCmsData';
 
-import deriveKEK from '~/lib/deriveKEK.js';
-import { deriveKEK$SEP_ } from '~/lib/sandboxEntrypoints.js';
-
-exports[deriveKEK$SEP_] = deriveKEK;
+export const external$decrypt$SEP_ = 'external$decrypt';
+export const external$deriveKey$SEP_ = 'external$deriveKey';
+export const external$encrypt$SEP_ = 'external$encrypt';
+export const external$exportKey$SEP_ = 'external$exportKey';
+export const external$generateKey$SEP_ = 'external$generateKey';
+export const external$importKey$SEP_ = 'external$importKey';

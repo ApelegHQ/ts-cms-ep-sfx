@@ -14,6 +14,7 @@
  */
 
 import constructCmsData from '~/lib/constructCmsData.js';
+import { constructCmsData$SEP_ } from '~/lib/sandboxEntrypoints.js';
 
 const entrypoint_ = (
 	salt: AllowSharedBufferSource,
@@ -33,4 +34,4 @@ const entrypoint_ = (
 	).derEncode();
 };
 
-export { entrypoint_ as constructCmsData };
+exports[constructCmsData$SEP_] = entrypoint_;

@@ -17,6 +17,13 @@ import browserSandbox from '@exact-realty/lot/browser';
 import * as deriveKEK from 'inline:~/sandbox/deriveKEK.js';
 import * as fileDecryptionCms from 'inline:~/sandbox/fileDecryptionCms.js';
 import getWrappedCryptoFunctions from './getWrappedCryptoFunctions.js';
+import type { fileDecryptionCms$SEP_ } from './sandboxEntrypoints.js';
+import {
+	deriveKEK$SEP_,
+	external$decrypt$SEP_,
+	external$deriveKey$SEP_,
+	external$importKey$SEP_,
+} from './sandboxEntrypoints.js';
 
 const setupDecryptionSandbox_ = (
 	passwordGetter: { (): string },
@@ -26,15 +33,8 @@ const setupDecryptionSandbox_ = (
 ) => {
 	const wrappedCryptoFunctions = getWrappedCryptoFunctions();
 
-	// These keys are here to prevent them from being renamed. Compilation
-	// should inline them.
-	const key$deriveKEK = 'deriveKEK';
-	const key$external$decrypt = 'external$decrypt';
-	const key$external$deriveKey = 'external$deriveKey';
-	const key$external$importKey = 'external$importKey';
-
 	return browserSandbox<{
-		[key$deriveKEK]: {
+		[deriveKEK$SEP_]: {
 			(
 				password: string,
 				iterationCount: number,
@@ -50,13 +50,13 @@ const setupDecryptionSandbox_ = (
 		deriveKEK.default,
 		null,
 		{
-			[key$external$deriveKey]: wrappedCryptoFunctions.deriveKey_,
-			[key$external$importKey]: wrappedCryptoFunctions.importKey_,
+			[external$deriveKey$SEP_]: wrappedCryptoFunctions.deriveKey_,
+			[external$importKey$SEP_]: wrappedCryptoFunctions.importKey_,
 		},
 		signal,
 	).then((sandbox) =>
 		browserSandbox<{
-			['fileDecryptionCms']: {
+			[fileDecryptionCms$SEP_]: {
 				(
 					noncePWRI: AllowSharedBufferSource,
 					encryptedKey: AllowSharedBufferSource,
@@ -74,9 +74,9 @@ const setupDecryptionSandbox_ = (
 			fileDecryptionCms.default,
 			null,
 			{
-				[key$deriveKEK]: async () => {
+				[deriveKEK$SEP_]: async () => {
 					const [KEK] = await sandbox(
-						key$deriveKEK,
+						deriveKEK$SEP_,
 						passwordGetter(),
 						iterationCountGetter(),
 						'decrypt',
@@ -85,8 +85,8 @@ const setupDecryptionSandbox_ = (
 
 					return KEK;
 				},
-				[key$external$decrypt]: wrappedCryptoFunctions.decrypt_,
-				[key$external$importKey]: wrappedCryptoFunctions.importKey_,
+				[external$decrypt$SEP_]: wrappedCryptoFunctions.decrypt_,
+				[external$importKey$SEP_]: wrappedCryptoFunctions.importKey_,
 			},
 			signal,
 		),

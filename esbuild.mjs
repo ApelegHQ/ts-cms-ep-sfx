@@ -195,7 +195,31 @@ const exactRealtyBuilderPlugin = (
 
 (async () => {
 	const plugins = [
-		inlineScripts({ target: 'es2015', format: 'cjs' }),
+		inlineScripts(
+			{
+				target: 'es2015',
+				format: 'iife',
+				plugins: [
+					cc({
+						env: 'BROWSER',
+						compilation_level: 'ADVANCED',
+						language_out: 'ECMASCRIPT5',
+					}),
+				],
+			},
+			/^legacy:/,
+		),
+		inlineScripts({
+			target: 'es2020',
+			format: 'cjs',
+			plugins: [
+				cc({
+					env: 'BROWSER',
+					compilation_level: 'ADVANCED',
+					language_out: 'ECMASCRIPT_2020',
+				}),
+			],
+		}),
 		sveltePlugin({
 			preprocess: sveltePreprocess({
 				typescript: {},

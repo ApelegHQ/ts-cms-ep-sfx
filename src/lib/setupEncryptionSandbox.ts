@@ -17,6 +17,15 @@ import browserSandbox from '@exact-realty/lot/browser';
 import * as deriveKEK from 'inline:~/sandbox/deriveKEK.js';
 import * as fileEncryptionCms from 'inline:~/sandbox/fileEncryptionCms.js';
 import getWrappedCryptoFunctions from './getWrappedCryptoFunctions.js';
+import type { fileEncryptionCms$SEP_ } from './sandboxEntrypoints.js';
+import {
+	deriveKEK$SEP_,
+	external$deriveKey$SEP_,
+	external$encrypt$SEP_,
+	external$exportKey$SEP_,
+	external$generateKey$SEP_,
+	external$importKey$SEP_,
+} from './sandboxEntrypoints.js';
 
 const setupEncryptionSandbox_ = (
 	passwordGetter: { (): string },
@@ -25,17 +34,8 @@ const setupEncryptionSandbox_ = (
 ) => {
 	const wrappedCryptoFunctions = getWrappedCryptoFunctions();
 
-	// These keys are here to prevent them from being renamed. Compilation
-	// should inline them.
-	const key$deriveKEK = 'deriveKEK';
-	const key$external$deriveKey = 'external$deriveKey';
-	const key$external$encrypt = 'external$encrypt';
-	const key$external$exportKey = 'external$exportKey';
-	const key$external$generateKey = 'external$generateKey';
-	const key$external$importKey = 'external$importKey';
-
 	return browserSandbox<{
-		[key$deriveKEK]: {
+		[deriveKEK$SEP_]: {
 			(
 				password: string,
 				iterationCount: number,
@@ -47,13 +47,13 @@ const setupEncryptionSandbox_ = (
 		deriveKEK.default,
 		null,
 		{
-			[key$external$deriveKey]: wrappedCryptoFunctions.deriveKey_,
-			[key$external$importKey]: wrappedCryptoFunctions.importKey_,
+			[external$deriveKey$SEP_]: wrappedCryptoFunctions.deriveKey_,
+			[external$importKey$SEP_]: wrappedCryptoFunctions.importKey_,
 		},
 		signal,
 	).then((sandbox) =>
 		browserSandbox<{
-			['fileEncryptionCms']: {
+			[fileEncryptionCms$SEP_]: {
 				(
 					data: AllowSharedBufferSource,
 					filename: string,
@@ -74,17 +74,18 @@ const setupEncryptionSandbox_ = (
 			fileEncryptionCms.default,
 			null,
 			{
-				[key$deriveKEK]: () => {
+				[deriveKEK$SEP_]: () => {
 					return sandbox(
-						key$deriveKEK,
+						deriveKEK$SEP_,
 						passwordGetter(),
 						iterationCountGetter(),
 						'encrypt',
 					);
 				},
-				[key$external$encrypt]: wrappedCryptoFunctions.encrypt_,
-				[key$external$exportKey]: wrappedCryptoFunctions.exportKey_,
-				[key$external$generateKey]: wrappedCryptoFunctions.generateKey_,
+				[external$encrypt$SEP_]: wrappedCryptoFunctions.encrypt_,
+				[external$exportKey$SEP_]: wrappedCryptoFunctions.exportKey_,
+				[external$generateKey$SEP_]:
+					wrappedCryptoFunctions.generateKey_,
 			},
 			signal,
 		),

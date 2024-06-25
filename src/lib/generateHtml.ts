@@ -13,13 +13,14 @@
  * limitations under the License.
  */
 
-import * as fallbackMessage from 'inline:~/fallbackMessage.inline.js';
-import * as loader from 'inline:~/loader.inline.js';
+import * as fallbackMessage from 'legacy:~/fallbackMessage.inline.js';
+import * as loader from 'legacy:~/loader.inline.js';
 import chunkString from './chunkString.js';
 import {
 	CMS_DATA_ELEMENT_ID_,
 	CMS_FILENAME_ELEMENT_ID_,
 	CMS_HINT_ELEMENT_ID_,
+	ERROR_ELEMENT_ID_,
 	MAIN_SCRIPT_SRC_ELEMENT_ID_,
 	MAIN_STYLESHEET_ELEMENT_ID_,
 } from './elementIds.js';
@@ -132,7 +133,7 @@ const generateHtml_ = async (
 		'</div>' +
 		'</div>' +
 		'</div>' +
-		'<div id="error">' +
+		`<div id="${xmlEscapeAttr(ERROR_ELEMENT_ID_)}">` +
 		'<div id="ERROR_WARNING_CONTAINER_ELEMENT__">' +
 		'<div id="ERROR_WARNING_TEXT_CONTAINER_ELEMENT__">' +
 		'<p id="ERROR_WARNING_TEXT_ELEMENT__" lang="en" xml:lang="en">' +

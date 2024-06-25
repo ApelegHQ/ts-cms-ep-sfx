@@ -15,10 +15,11 @@
 
 import browserSandbox from '@exact-realty/lot/browser';
 import * as parseCmsData from 'inline:~/sandbox/parseCmsData.js';
+import type { parseCmsData$SEP_ } from './sandboxEntrypoints.js';
 
 const setupParseCmsDataSandbox_ = (signal?: AbortSignal) =>
 	browserSandbox<{
-		['parseCmsData']: {
+		[parseCmsData$SEP_]: {
 			(
 				buf: AllowSharedBufferSource,
 			): [

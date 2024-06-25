@@ -30,6 +30,10 @@
 		MAIN_CONTENT_ELEMENT_ID_,
 	} from '~/lib/elementIds.js';
 	import isTrustedEvent from '~/lib/isTrustedEvent.js';
+	import {
+		fileDecryptionCms$SEP_,
+		parseCmsData$SEP_,
+	} from '~/lib/sandboxEntrypoints.js';
 	import setupDecryptionSandbox from '~/lib/setupDecryptionSandbox.js';
 	import setupParseCmsDataSandbox from '~/lib/setupParseCmsSandbox.js';
 	import './common.css';
@@ -110,7 +114,7 @@
 
 				try {
 					dataAttributes = await sandbox(
-						'parseCmsData',
+						parseCmsData$SEP_,
 						cmsPemToDer(cmsData$.text),
 					);
 
@@ -120,7 +124,7 @@
 					) {
 						try {
 							filenameAttributes = await sandbox(
-								'parseCmsData',
+								parseCmsData$SEP_,
 								cmsPemToDer(cmsFilename$.text),
 							);
 
@@ -282,7 +286,7 @@
 				try {
 					const [data, _filename] = await (filenameAttributes
 						? sandbox(
-								'fileDecryptionCms',
+								fileDecryptionCms$SEP_,
 								dataAttributes[2],
 								dataAttributes[3],
 								dataAttributes[4],
@@ -293,7 +297,7 @@
 								filenameAttributes[5],
 							)
 						: sandbox(
-								'fileDecryptionCms',
+								fileDecryptionCms$SEP_,
 								dataAttributes[2],
 								dataAttributes[3],
 								dataAttributes[4],

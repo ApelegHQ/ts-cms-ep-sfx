@@ -16,10 +16,13 @@
 import '~/lib/fixBrokenSandboxSecureContext.js';
 
 import fileEncryptionCms from '~/lib/fileEncryptionCms.js';
+import { fileEncryptionCms$SEP_ } from '~/lib/sandboxEntrypoints.js';
 
 declare function deriveKEK(): Promise<
 	[KEK: CryptoKey, salt: Uint8Array, iterationCount: number]
 >;
+
+if (typeof deriveKEK !== 'function') throw new Error('Missing deriveKEK');
 
 const entrypoint_ = async (
 	data: AllowSharedBufferSource,
@@ -83,4 +86,4 @@ const entrypoint_ = async (
 	];
 };
 
-export { entrypoint_ as fileEncryptionCms };
+exports[fileEncryptionCms$SEP_] = entrypoint_;

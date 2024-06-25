@@ -16,8 +16,11 @@
 import '~/lib/fixBrokenSandboxSecureContext.js';
 
 import fileDecryptionCms from '~/lib/fileDecryptionCms.js';
+import { fileDecryptionCms$SEP_ } from '~/lib/sandboxEntrypoints.js';
 
 declare function deriveKEK(): Promise<CryptoKey>;
+
+if (typeof deriveKEK !== 'function') throw new Error('Missing deriveKEK');
 
 const entrypoint_ = async (
 	noncePWRI: AllowSharedBufferSource,
@@ -102,4 +105,4 @@ const entrypoint_ = async (
 	}
 };
 
-export { entrypoint_ as fileDecryptionCms };
+exports[fileDecryptionCms$SEP_] = entrypoint_;

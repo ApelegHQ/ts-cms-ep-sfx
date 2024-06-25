@@ -1,6 +1,6 @@
 {
 	"name": "@exact-realty/cms-ep-sfx",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "Secure File Sharing Utility",
 	"type": "module",
 	"main": "-",
@@ -13,7 +13,7 @@
 		"@exact-realty/asn1-der": "^1.0.1",
 		"@exact-realty/cms-classes": "^1.0.0",
 		"@exact-realty/crypto-oids": "^20240221.0.0",
-		"@exact-realty/esbuild-plugin-closure-compiler": "^1.0.4",
+		"@exact-realty/esbuild-plugin-closure-compiler": "^1.0.5",
 		"@exact-realty/esbuild-plugin-inline-js": "^1.1.7",
 		"@exact-realty/lot": "^0.0.26",
 		"@exact-realty/routemate": "^1.0.5",

@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+import { ERROR_ELEMENT_ID_ } from '~/lib/elementIds.js';
+
 type CSSProperty = keyof Omit<
 	Partial<CSSStyleDeclaration>,
 	| 'length'
@@ -24,7 +26,7 @@ type CSSProperty = keyof Omit<
 	| 'setProperty'
 >;
 
-onerror = function (
+self.onerror = function (
 	event: ErrorEvent | string,
 	_document: Document,
 	_e$: HTMLElement | null,
@@ -36,7 +38,7 @@ onerror = function (
 	void _paragraph$;
 
 	_document = document;
-	_e$ = _document.getElementById('error');
+	_e$ = _document.getElementById(ERROR_ELEMENT_ID_);
 	if (_e$) {
 		_e$.style['display'] = 'block';
 		if (event) {
@@ -62,10 +64,10 @@ onerror = function (
 		}
 	}
 	return false;
-} as unknown as typeof onerror;
+} as unknown as Window['onerror'];
 
 if (typeof Reflect === [] + [][0])
-	onload = function (
+	self.onload = function (
 		_document: Document,
 		_body$: HTMLElement,
 		_createElement: Document['createElement'],
@@ -110,4 +112,4 @@ if (typeof Reflect === [] + [][0])
 		);
 		_div$.appendChild(_paragraph$);
 		_body$.insertBefore(_div$, _body$.firstChild);
-	} as unknown as typeof onload;
+	} as unknown as Window['onload'];

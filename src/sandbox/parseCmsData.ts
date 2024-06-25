@@ -13,4 +13,7 @@
  * limitations under the License.
  */
 
-export { default as parseCmsData } from '~/lib/parseCmsData.js';
+import parseCmsData from '~/lib/parseCmsData.js';
+import { parseCmsData$SEP_ } from '~/lib/sandboxEntrypoints.js';
+
+exports[parseCmsData$SEP_] = parseCmsData;

@@ -14,6 +14,10 @@
  */
 
 import chunkString from './chunkString.js';
+import {
+	constructCmsData$SEP_,
+	fileEncryptionCms$SEP_,
+} from './sandboxEntrypoints.js';
 import type setupConstructCmsSandbox from './setupConstructCmsSandbox.js';
 import type setupEncryptionSandbox from './setupEncryptionSandbox.js';
 import uint8ArrayToBase64 from './uint8ArrayToBase64.js';
@@ -55,12 +59,16 @@ const prepareDownloadableCmsPayload_ = async (
 		throw new TypeError('sandbox is not a function');
 	}
 
-	const data = await encryptionSandbox('fileEncryptionCms', buffer, filename);
+	const data = await encryptionSandbox(
+		fileEncryptionCms$SEP_,
+		buffer,
+		filename,
+	);
 
 	return (
 		await Promise.all([
 			cmsSandbox(
-				'constructCmsData',
+				constructCmsData$SEP_,
 				data[0],
 				data[1],
 				data[2],
@@ -69,7 +77,7 @@ const prepareDownloadableCmsPayload_ = async (
 				data[5],
 			),
 			cmsSandbox(
-				'constructCmsData',
+				constructCmsData$SEP_,
 				data[0],
 				data[1],
 				data[6],

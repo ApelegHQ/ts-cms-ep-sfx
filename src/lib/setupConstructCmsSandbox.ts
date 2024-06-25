@@ -15,10 +15,11 @@
 
 import browserSandbox from '@exact-realty/lot/browser';
 import * as constructCmsData from 'inline:~/sandbox/constructCmsData.js';
+import type { constructCmsData$SEP_ } from './sandboxEntrypoints.js';
 
 const setupConstructCmsDataSandbox_ = (signal?: AbortSignal) =>
 	browserSandbox<{
-		['constructCmsData']: {
+		[constructCmsData$SEP_]: {
 			(
 				salt: AllowSharedBufferSource,
 				iterationCount: number,
