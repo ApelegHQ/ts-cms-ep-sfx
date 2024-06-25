@@ -32,7 +32,6 @@ class Cache<TV> {
 		if (Object.prototype.hasOwnProperty.call(this.keyCache_, key)) {
 			return this.keyCache_[key];
 		}
-		console.error('XXX', key);
 		throw new RangeError('Non-existent key');
 	}
 
