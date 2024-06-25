@@ -53,14 +53,14 @@
 				{packageName}
 				{#if packageVersion}{' '}v{packageVersion}{/if}
 				{#if gitCommitHash}
-					{' '}(<data value={gitCommitHash}
+					{' '}(<data lang="zxx" value={gitCommitHash}
 						>{gitCommitHash.slice(0, 7)}</data
 					>)
 				{/if}
 				{#if packageHomepage}
 					{' | '}<a
 						href={packageHomepage}
-						rel="noopener noreferrer nofollow"
+						rel="me external noopener noreferrer"
 						target="_blank"
 					>
 						Home
@@ -69,7 +69,7 @@
 				{#if repository}
 					{' | '}<a
 						href={repository}
-						rel="noopener noreferrer nofollow"
+						rel="me external noopener noreferrer"
 						target="_blank"
 					>
 						Source

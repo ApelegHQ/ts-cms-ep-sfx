@@ -15,8 +15,9 @@
 
 /// <reference types="svelte" />
 
-import App from './App.svelte';
-import isCI from './lib/isCI.js';
+import App from '~/App.svelte';
+import { ROOT_ELEMENT_ID_ } from '~/lib/elementIds.js';
+import isCI from '~/lib/isCI.js';
 
 const onLoad = (handler: { (): void }) => {
 	if (
@@ -69,7 +70,7 @@ const onLoad = (handler: { (): void }) => {
 };
 
 onLoad(() => {
-	const rootId = 'ROOT_ELEMENT__';
+	const rootId = ROOT_ELEMENT_ID_;
 	const oldRoot = document.getElementById(rootId);
 
 	if (!oldRoot) {

@@ -19,15 +19,21 @@
 	import Disclaimer from '~/components/Disclaimer.svelte';
 	import Footer from '~/components/Footer.svelte';
 	import Header from '~/components/Header.svelte';
+	import SkipToMainContent from '~/components/SkipToMainContent.svelte';
+	import {
+		CMS_DATA_ELEMENT_ID_,
+		MAIN_SCRIPT_ELEMENT_ID_,
+		MAIN_STYLESHEET_ELEMENT_ID_,
+	} from '~/lib/elementIds.js';
 	import Decrypt from './decrypt.svelte';
 	import Encrypt from './encrypt.svelte';
 
 	const [mainScript$, mainStylesheet$] = (():
 		| [HTMLScriptElement, HTMLLinkElement]
 		| [] => {
-		const _mainScript$ = document.getElementById('MAIN_SCRIPT_ELEMENT__');
+		const _mainScript$ = document.getElementById(MAIN_SCRIPT_ELEMENT_ID_);
 		const _mainStylesheet$ = document.getElementById(
-			'MAIN_STYLESHEET_ELEMENT__',
+			MAIN_STYLESHEET_ELEMENT_ID_,
 		);
 		if (
 			!_mainScript$ ||
@@ -42,7 +48,7 @@
 	})();
 
 	const hasCmsData = (() => {
-		const cmsData$ = document.getElementById('CMS_DATA_ELEMENT__');
+		const cmsData$ = document.getElementById(CMS_DATA_ELEMENT_ID_);
 		if (cmsData$ && cmsData$ instanceof HTMLScriptElement) {
 			return true;
 		} else {
@@ -52,6 +58,7 @@
 </script>
 
 <DemoBanner />
+<SkipToMainContent />
 <Header {mainScript$} {mainStylesheet$} />
 {#if hasCmsData}
 	<Decrypt />

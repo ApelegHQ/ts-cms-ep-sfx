@@ -1,4 +1,5 @@
-/* Copyright © 2024 Exact Realty Limited. All rights reserved.
+<!--
+ * Copyright © 2023 Exact Realty Limited. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License") with LLVM
  * exceptions; you may not use this file except in compliance with the
@@ -11,18 +12,13 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+-->
 
-.offline-download-button {
-	display: block;
-	padding: 0.4em;
-	margin: 0.5em;
-	float: right;
-	font-size: 0.8em;
-	text-transform: uppercase;
-	cursor: pointer;
-	border: 2px solid currentColor;
-	color: #a26135;
-	background-color: white;
-	user-select: none;
-}
+<script lang="typescript">
+	import { MAIN_CONTENT_ELEMENT_ID_ } from '~/lib/elementIds.js';
+	import './SkipToMainContent.css';
+</script>
+
+<a class="skiptomaincontent" href={'#' + MAIN_CONTENT_ELEMENT_ID_}
+	>Skip to main content</a
+>

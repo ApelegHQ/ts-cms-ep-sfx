@@ -13,12 +13,17 @@
  * limitations under the License.
  */
 
+import {
+	MAIN_SCRIPT_ELEMENT_ID_,
+	MAIN_SCRIPT_SRC_ELEMENT_ID_,
+} from '~/lib/elementIds.js';
+
 // The main purpose of this loader is to avoid loading a long `data:` URL,
 // which makes stack traces ugly.
 (() => {
 	const ns = 'http://www.w3.org/1999/xhtml';
 
-	const mainScript$ = document.getElementById('MAIN_SCRIPT_SRC_ELEMENT__');
+	const mainScript$ = document.getElementById(MAIN_SCRIPT_SRC_ELEMENT_ID_);
 	if (!mainScript$ || !(mainScript$ instanceof HTMLScriptElement)) {
 		throw new Error('Missing main script element');
 	}
@@ -31,7 +36,7 @@
 	if (integrity) {
 		script$.setAttribute('integrity', integrity);
 	}
-	script$.setAttribute('id', 'MAIN_SCRIPT_ELEMENT__');
+	script$.setAttribute('id', MAIN_SCRIPT_ELEMENT_ID_);
 	script$.setAttribute('src', URL.createObjectURL(blob));
 	document.head.appendChild(script$);
 })();

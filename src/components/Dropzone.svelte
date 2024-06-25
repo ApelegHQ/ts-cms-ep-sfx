@@ -18,7 +18,13 @@
 	import { onMount } from 'svelte';
 	import isTrustedEvent from '~/lib/isTrustedEvent.js';
 
+	let fieldset$: HTMLFieldSetElement;
+
 	onMount(() => {
+		fieldset$.addEventListener('drop', onDrop, false);
+		fieldset$.addEventListener('keydown', onKeyDown, false);
+		fieldset$.addEventListener('click', onClick, false);
+
 		if (!input$.style) return;
 
 		input$.style.setProperty('display', 'none', 'important');
@@ -85,11 +91,12 @@
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <fieldset
-	on:click={onClick}
-	on:keydown={onKeyDown}
-	on:drop|preventDefault={onDrop}
+	on:click
+	on:keydown
+	on:drop|preventDefault
 	on:blur
 	on:dragend
+	on:dragenter
 	on:dragover|preventDefault
 	on:dragleave
 	on:focus
@@ -98,6 +105,7 @@
 	on:mouseleave
 	on:mousemove
 	on:mouseover
+	bind:this={fieldset$}
 	class={className_}
 	disabled={disabled_}
 	form={form_}

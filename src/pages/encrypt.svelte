@@ -27,6 +27,10 @@
 	import Loading from '~/components/Loading.svelte';
 	import EFormFields from '~/lib/EFormFields.js';
 	import downloadArchive from '~/lib/downloadArchive.js';
+	import {
+		ENCRYPT_DROPZONE_ELEMENT_ID_,
+		MAIN_CONTENT_ELEMENT_ID_,
+	} from '~/lib/elementIds.js';
 	import isTrustedEvent from '~/lib/isTrustedEvent.js';
 	import prepareDownloadableCmsPayload from '~/lib/prepareDownloadableCmsPayload.js';
 	import setupConstructCmsSandbox from '~/lib/setupConstructCmsSandbox.js';
@@ -67,6 +71,7 @@
 	let noFilename: boolean = false;
 	let filenameOverride: string | undefined | null;
 	let encryptionError: Error | undefined;
+	let dropzoneActive: boolean = false;
 
 	const init = () => {
 		instance = {};
@@ -324,13 +329,22 @@
 			});
 	};
 
+	const handleDragEnter = () => {
+		dropzoneActive = true;
+	};
+	const handleDragOver = handleDragEnter;
+	const handleDragLeave = () => {
+		dropzoneActive = false;
+	};
+	const handleDrop = handleDragLeave;
+
 	export { mainScript$_ as mainScript$, mainStylesheet$_ as mainStylesheet$ };
 </script>
 
 <svelte:head>
 	<title>Encrypt</title>
 </svelte:head>
-<main class="main">
+<main class="main" id={MAIN_CONTENT_ELEMENT_ID_}>
 	{#if !encryptionSandbox}
 		<Loading>Getting things ready</Loading>
 	{:else if encryptionSandbox instanceof Error}
@@ -352,17 +366,25 @@
 				method="POST"
 			>
 				<Dropzone
+					on:dragenter={handleDragEnter}
+					on:dragover={handleDragOver}
+					on:dragleave={handleDragLeave}
+					on:drop={handleDrop}
 					on:change={handleFileChange}
-					class={filename === undefined
-						? 'dropzone'
-						: 'dropzone-selected'}
+					class={[
+						'dropzone',
+						dropzoneActive && 'dropzone-active',
+						filename !== undefined && 'dropzone-selected',
+					]
+						.filter(Boolean)
+						.join(' ')}
 					disabled={working || null}
-					inputId={'ENCRYPT_DROPZONE_ELEMENT__'}
+					inputId={ENCRYPT_DROPZONE_ELEMENT_ID_}
 					name={EFormFields.FILE}
 					required
 				>
 					<legend class="sr-only">File selection</legend>
-					<label for={'ENCRYPT_DROPZONE_ELEMENT__'} class="sr-only"
+					<label for={ENCRYPT_DROPZONE_ELEMENT_ID_} class="sr-only"
 						>File</label
 					>
 					<div class="dropzone-inner">

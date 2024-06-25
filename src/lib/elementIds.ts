@@ -13,16 +13,14 @@
  * limitations under the License.
  */
 
-.offline-download-button {
-	display: block;
-	padding: 0.4em;
-	margin: 0.5em;
-	float: right;
-	font-size: 0.8em;
-	text-transform: uppercase;
-	cursor: pointer;
-	border: 2px solid currentColor;
-	color: #a26135;
-	background-color: white;
-	user-select: none;
-}
+/* eslint-disable @typescript-eslint/naming-convention */
+
+export const MAIN_SCRIPT_SRC_ELEMENT_ID_ = 'MAIN_SCRIPT_SRC_ELEMENT__';
+export const MAIN_SCRIPT_ELEMENT_ID_ = 'MAIN_SCRIPT_ELEMENT__';
+export const MAIN_STYLESHEET_ELEMENT_ID_ = 'MAIN_STYLESHEET_ELEMENT__';
+export const MAIN_CONTENT_ELEMENT_ID_ = 'MAIN_CONTENT_ELEMENT__';
+export const CMS_DATA_ELEMENT_ID_ = 'CMS_DATA_ELEMENT__';
+export const CMS_FILENAME_ELEMENT_ID_ = 'CMS_FILENAME_ELEMENT__';
+export const CMS_HINT_ELEMENT_ID_ = 'CMS_HINT_ELEMENT__';
+export const ENCRYPT_DROPZONE_ELEMENT_ID_ = 'ENCRYPT_DROPZONE_ELEMENT__';
+export const ROOT_ELEMENT_ID_ = 'ROOT_ELEMENT__';

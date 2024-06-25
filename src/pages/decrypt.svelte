@@ -23,6 +23,12 @@
 	import bufferEqual from '~/lib/bufferEqual.js';
 	import cmsPemToDer from '~/lib/cmsPemToDer.js';
 	import downloadBlob from '~/lib/downloadBlob.js';
+	import {
+		CMS_DATA_ELEMENT_ID_,
+		CMS_FILENAME_ELEMENT_ID_,
+		CMS_HINT_ELEMENT_ID_,
+		MAIN_CONTENT_ELEMENT_ID_,
+	} from '~/lib/elementIds.js';
 	import isTrustedEvent from '~/lib/isTrustedEvent.js';
 	import setupDecryptionSandbox from '~/lib/setupDecryptionSandbox.js';
 	import setupParseCmsDataSandbox from '~/lib/setupParseCmsSandbox.js';
@@ -88,11 +94,11 @@
 					abortHandler,
 					false,
 				);
-				const cmsData$ = document.getElementById('CMS_DATA_ELEMENT__');
+				const cmsData$ = document.getElementById(CMS_DATA_ELEMENT_ID_);
 				const cmsFilename$ = document.getElementById(
-					'CMS_FILENAME_ELEMENT__',
+					CMS_FILENAME_ELEMENT_ID_,
 				);
-				const cmsHint$ = document.getElementById('CMS_HINT_ELEMENT__');
+				const cmsHint$ = document.getElementById(CMS_HINT_ELEMENT_ID_);
 
 				if (!cmsData$ || !(cmsData$ instanceof HTMLScriptElement)) {
 					throw new Error('Invalid or nonexistent CMS data');
@@ -336,7 +342,7 @@
 <svelte:head>
 	<title>Decrypt</title>
 </svelte:head>
-<main class="main">
+<main class="main" id={MAIN_CONTENT_ELEMENT_ID_}>
 	{#if (!sandbox || !dataAttributes) && !initError}
 		<Loading>Getting things ready</Loading>
 	{:else if initError instanceof Error}
@@ -354,8 +360,9 @@
 				on:submit|preventDefault={handleFormSubmit}
 				on:reset={handleFormReset}
 				aria-busy={working ? 'true' : 'false'}
-				action="about:blank"
+				action="#"
 				method="POST"
+				rel={blob instanceof Blob ? '' : 'next'}
 			>
 				{#if !(blob instanceof Blob)}
 					<fieldset class="fieldset" disabled={working || null}>

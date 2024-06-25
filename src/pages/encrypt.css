@@ -13,17 +13,13 @@
  * limitations under the License.
  */
 
-.dropzone,
-.dropzone-selected {
+.dropzone {
 	display: block;
 	color: black;
 	min-height: 6em;
 	text-align: center;
 	cursor: pointer;
 	transition: padding 0.2s ease-out;
-}
-
-.dropzone {
 	padding: 8em 1.5em;
 	border: 2px dashed #a26135;
 	background-color: #fff;
@@ -31,12 +27,16 @@
 
 .dropzone-selected {
 	padding: 1.5em;
-	border: 2px dashed #006400;
+	border-color: #006400;
 	background-color: #efe;
 }
 
-.dropzone:disabled,
-.dropzone-selected:disabled {
+.dropzone-active {
+	border-color: #086fff;
+	background-color: #ecf4ff;
+}
+
+.dropzone:disabled {
 	background-color: #ddd;
 	cursor: no-drop;
 }

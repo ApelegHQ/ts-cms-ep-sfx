@@ -15,12 +15,19 @@
 
 import * as fallbackMessage from 'inline:~/fallbackMessage.inline.js';
 import * as loader from 'inline:~/loader.inline.js';
+import chunkString from './chunkString.js';
 import {
+	CMS_DATA_ELEMENT_ID_,
+	CMS_FILENAME_ELEMENT_ID_,
+	CMS_HINT_ELEMENT_ID_,
+	MAIN_SCRIPT_SRC_ELEMENT_ID_,
+	MAIN_STYLESHEET_ELEMENT_ID_,
+} from './elementIds.js';
+import {
+	xmlEscape_ as xmlEscape,
 	xmlEscapeAttr_ as xmlEscapeAttr,
 	xmlEscapeJsonScriptCdata_ as xmlEscapeJsonScriptCdata,
-	xmlEscape_ as xmlEscape,
 } from './xmlEscape.js';
-import chunkString from './chunkString.js';
 
 const bbtoa = (buf: AllowSharedBufferSource) => {
 	const u8buf = ArrayBuffer.isView(buf)
@@ -76,30 +83,30 @@ const generateHtml_ = async (
 		`<script src="data:text/javascript;base64,${xmlEscapeAttr(fallbackMessage.contentBase64)}" integrity="${xmlEscapeAttr(fallbackMessage.sri)}" crossorigin="anonymous">` +
 		`</script>` +
 		'\r\n' +
-		`<script type="text/plain" data-integrity="${xmlEscapeAttr(mainScriptTextSriDigest)}" id="MAIN_SCRIPT_SRC_ELEMENT__">\r\n` +
+		`<script type="text/plain" data-integrity="${xmlEscapeAttr(mainScriptTextSriDigest)}" id="${xmlEscapeAttr(MAIN_SCRIPT_SRC_ELEMENT_ID_)}">\r\n` +
 		xmlEscape(chunkString(bbtoa(mainScriptText), 512).join('\r\n')) +
 		`</script>` +
 		'\r\n' +
-		`<link rel="stylesheet" href="data:text/css;base64,${xmlEscapeAttr(bbtoa(cssText))}" crossorigin="anonymous" integrity="${xmlEscapeAttr(cssTextSriDigest)}" id="MAIN_STYLESHEET_ELEMENT__"/>` +
+		`<link rel="stylesheet" href="data:text/css;base64,${xmlEscapeAttr(bbtoa(cssText))}" crossorigin="anonymous" integrity="${xmlEscapeAttr(cssTextSriDigest)}" id="${xmlEscapeAttr(MAIN_STYLESHEET_ELEMENT_ID_)}"/>` +
 		'\r\n' +
 		`<script src="data:text/javascript;base64,${xmlEscapeAttr(loader.contentBase64)}" integrity="${xmlEscapeAttr(loader.sri)}" crossorigin="anonymous">` +
 		'</script>' +
 		'\r\n' +
 		(Array.isArray(encryptedContent) && encryptedContent.length > 1
-			? `<script type="${xmlEscapeAttr(pkcs7MimeType)}" id="CMS_DATA_ELEMENT__">` +
+			? `<script type="${xmlEscapeAttr(pkcs7MimeType)}" id="${xmlEscapeAttr(CMS_DATA_ELEMENT_ID_)}">` +
 				startJsonEscapeSequece +
 				encryptedContent[0] +
 				endJsonEscapeSequece +
 				`</script>` +
 				(encryptedContent[1]
-					? `<script type="${xmlEscapeAttr(pkcs7MimeType)}" id="CMS_FILENAME_ELEMENT__">` +
+					? `<script type="${xmlEscapeAttr(pkcs7MimeType)}" id="${xmlEscapeAttr(CMS_FILENAME_ELEMENT_ID_)}">` +
 						startJsonEscapeSequece +
 						encryptedContent[1] +
 						endJsonEscapeSequece +
 						`</script>`
 					: '') +
 				(hint
-					? `<script type="application/json" id="CMS_HINT_ELEMENT__">` +
+					? `<script type="application/json" id="${xmlEscapeAttr(CMS_HINT_ELEMENT_ID_)}">` +
 						startJsonEscapeSequece +
 						xmlEscapeJsonScriptCdata(JSON.stringify(hint)) +
 						endJsonEscapeSequece +
