@@ -26,20 +26,23 @@ type CSSProperty = keyof Omit<
 
 onerror = function (
 	event: ErrorEvent | string,
+	_document: Document,
 	_e$: HTMLElement | null,
 	_paragraph$: HTMLParagraphElement,
 ) {
 	// These are just to avoid declaring variables and unused as arguments
+	void _document;
 	void _e$;
 	void _paragraph$;
 
-	_e$ = document.getElementById('error');
+	_document = document;
+	_e$ = _document.getElementById('error');
 	if (_e$) {
 		_e$.style['display'] = 'block';
 		if (event) {
-			_paragraph$ = document.createElement('p');
+			_paragraph$ = _document.createElement('p');
 			_paragraph$.appendChild(
-				new Text(
+				_document.createTextNode(
 					(event as unknown as ErrorEvent).message ||
 						(event as unknown as string),
 				),
@@ -101,7 +104,7 @@ if (typeof Reflect === [] + [][0])
 		_applyStyle(_div$, _divStyles);
 		_paragraph$['lang'] = 'en';
 		_paragraph$.appendChild(
-			new Text(
+			_document.createTextNode(
 				'Your browser is unsupported and some functionality might not work as intended.',
 			),
 		);

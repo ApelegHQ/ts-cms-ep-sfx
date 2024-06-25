@@ -89,7 +89,7 @@ const generateHtml_ = async (
 		'\r\n' +
 		`<link rel="stylesheet" href="data:text/css;base64,${xmlEscapeAttr(bbtoa(cssText))}" crossorigin="anonymous" integrity="${xmlEscapeAttr(cssTextSriDigest)}" id="${xmlEscapeAttr(MAIN_STYLESHEET_ELEMENT_ID_)}"/>` +
 		'\r\n' +
-		`<script src="data:text/javascript;base64,${xmlEscapeAttr(loader.contentBase64)}" integrity="${xmlEscapeAttr(loader.sri)}" crossorigin="anonymous">` +
+		`<script src="data:text/javascript;base64,${xmlEscapeAttr(loader.contentBase64)}" defer="defer" integrity="${xmlEscapeAttr(loader.sri)}" crossorigin="anonymous">` +
 		'</script>' +
 		'\r\n' +
 		(Array.isArray(encryptedContent) && encryptedContent.length > 1
