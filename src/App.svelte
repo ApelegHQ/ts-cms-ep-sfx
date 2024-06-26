@@ -29,7 +29,10 @@
 	@tailwind components;
 	@tailwind utilities;
 
-	.main_ {
-		@apply h-full min-h-screen w-full bg-slate-300 py-1 text-slate-800;
+	/* Needed to make footer stick to the bottom */
+	.app-container {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
 	}
 </style>

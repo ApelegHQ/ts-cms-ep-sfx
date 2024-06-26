@@ -27,7 +27,7 @@ import {
 	if (!mainScript$ || !(mainScript$ instanceof HTMLScriptElement)) {
 		throw new Error('Missing main script element');
 	}
-	mainScript$.remove();
+	mainScript$.parentNode?.removeChild(mainScript$);
 	const text = atob(mainScript$.text.replace(/[^a-zA-Z0-9+/=]/g, ''));
 	const blob = new Blob([text], { ['type']: 'text/javascript' });
 	const script$ = document.createElementNS(ns, 'script');

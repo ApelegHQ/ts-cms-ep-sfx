@@ -139,10 +139,3 @@
 #ERROR_ELEMENT__ {
 	display: none;
 }
-
-/* Needed to make footer stick to the bottom */
-.app-container {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
-}

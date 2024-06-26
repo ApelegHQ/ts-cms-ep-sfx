@@ -467,7 +467,7 @@
 					>
 						<legend class="sr-only">File configuration</legend>
 						<label class="label">
-							<span>File name</span>
+							<span>Override file name</span>
 							<input
 								on:input={handleFileNameInput}
 								name={EFormFields.FILENAME}
