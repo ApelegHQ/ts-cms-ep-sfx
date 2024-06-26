@@ -66,7 +66,12 @@ self.onerror = function (
 	return false;
 } as unknown as Window['onerror'];
 
-if (typeof Reflect === [] + [][0])
+if (
+	typeof Reflect === [] + [][0] ||
+	typeof Blob !== 'function' ||
+	!Blob.prototype ||
+	typeof Blob.prototype.arrayBuffer !== 'function'
+)
 	self.onload = function (
 		_document: Document,
 		_body$: HTMLElement,

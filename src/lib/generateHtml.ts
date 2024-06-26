@@ -78,7 +78,7 @@ const generateHtml_ = async (
 		' http-equiv="content-security-policy"' +
 		// Safari / WebKit seem to require frame-ancestors 'self' for starting
 		// sandboxes
-		` content="default-src 'none'; script-src 'self' 'unsafe-eval' data:; script-src-elem blob: data: '${fallbackMessage.sri}' '${loader.sri}' '${mainScriptTextSriDigest}'; script-src-attr 'none'; style-src data: '${cssTextSriDigest}'; child-src blob:; connect-src blob: data:; frame-ancestors 'self'; form-action data:"` +
+		` content="default-src 'none'; script-src 'self' 'unsafe-eval' blob: data:; script-src-elem blob: data: '${fallbackMessage.sri}' '${loader.sri}' '${mainScriptTextSriDigest}'; script-src-attr 'none'; style-src data: '${cssTextSriDigest}'; child-src blob:; connect-src blob: data:; frame-src blob:; worker-src blob:; frame-ancestors 'self'; form-action data:"` +
 		'/>' +
 		`<title>HTML CMS Tool</title>` +
 		`<script src="data:text/javascript;base64,${xmlEscapeAttr(fallbackMessage.contentBase64)}" integrity="${xmlEscapeAttr(fallbackMessage.sri)}" crossorigin="anonymous">` +

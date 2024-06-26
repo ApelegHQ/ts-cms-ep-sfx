@@ -48,6 +48,7 @@ Using this secure file sharing utility is simple:
     - Share the generated HTML file with your recipient.
 
 3. **Decrypt the File**:
+
     - Your recipient can open the HTML file in their browser.
     - They will be prompted to enter the password you provided and will need to
       click on the "Next &#x2192;" button to decrypt the file and confirm details
@@ -65,6 +66,21 @@ decrypted content.
 Want to see how it works? Check out the live demo at
 <https://cms-sfx-demo.exact.realty>.
 
+## 🌐 Browser Support
+
+The following is a non-comprehensive list of browsers that have been tested.
+Even though we have tested with older versions for compatibility support and
+reporting, we strongly recommend using up-to-date browsers that still receive
+security updates.
+
+- Chrome: ✅️ 77–
+- Edge: ✅️ 79–
+- Firefox: ✅️ 69–
+- Internet Explorer: ❌ Not supported
+- Opera: ✅️ 63–
+- Pale Moon: ❌ Not supported [yet](https://repo.palemoon.org/MoonchildProductions/UXP/issues/2534)
+- Safari: ✅️ 14–
+
 ## 🔒 Security Considerations
 
 This utility is designed with security in mind. By using the CMS standard, PWRI,
@@ -76,6 +92,9 @@ the browser, so your data never leaves your device.
 security of this tool _greatly_ depend on the strength of the password you
 choose. We recommend using a strong, unique password to protect your files.
 Weak or compromised passwords can put your data at risk.
+
+For more detailed information about the security of this tool and how it works,
+see [`AUDITING.md`](./AUDITING.md).
 
 ## ❗️ Disclaimer
 
@@ -113,7 +132,7 @@ or feature requests, please feel free to submit them.
 
 This project is licensed under the Apache 2.0 License with the LLVM exception.
 You are free to use this package in compliance with the terms of the license.
-For more information, see the `LICENSE` file.
+For more information, see the [`LICENSE`](./LICENSE) file.
 
 We hope you find this secure file sharing utility useful! If you have any
 questions or feedback, please don't hesitate to reach out.
