@@ -16,7 +16,7 @@
 /// <reference types="svelte" />
 
 import App from '~/App.svelte';
-import { ROOT_ELEMENT_ID_ } from '~/lib/elementIds.js';
+import { ERROR_ELEMENT_ID_, ROOT_ELEMENT_ID_ } from '~/lib/elementIds.js';
 import isCI from '~/lib/isCI.js';
 
 const onLoad = (handler: { (): void }) => {
@@ -97,7 +97,7 @@ onLoad(() => {
 	}
 
 	window.onerror = null;
-	const error$ = document.getElementById('error');
+	const error$ = document.getElementById(ERROR_ELEMENT_ID_);
 	if (error$?.parentElement) {
 		error$.parentElement.removeChild(error$);
 	}

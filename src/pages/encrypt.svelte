@@ -275,7 +275,16 @@
 				? parseInt(_userIterationCount[1])
 				: defaultIterationCount;
 
-			const buffer = await _file.arrayBuffer();
+			const buffer = await new Promise<ArrayBuffer>((resolve, reject) => {
+				const fileReader = new FileReader();
+				fileReader.onerror = () => {
+					reject(fileReader.error);
+				};
+				fileReader.onload = () => {
+					resolve(fileReader.result as ArrayBuffer);
+				};
+				fileReader.readAsArrayBuffer(_file);
+			});
 
 			if (
 				typeof cmsSandbox !== 'function' ||

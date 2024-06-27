@@ -43,10 +43,7 @@ const bbtoa = (buf: AllowSharedBufferSource) => {
 };
 
 const sriDigest = async (buf: AllowSharedBufferSource) => {
-	const digest = await globalThis.crypto.subtle.digest(
-		{ ['name']: 'SHA-384' },
-		buf,
-	);
+	const digest = await crypto.subtle.digest({ ['name']: 'SHA-384' }, buf);
 
 	return 'sha384-' + bbtoa(digest);
 };

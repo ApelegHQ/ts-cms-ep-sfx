@@ -15,7 +15,7 @@
 
 const newId = () => {
 	const buf = new Uint8Array(16);
-	globalThis.crypto.getRandomValues(buf);
+	crypto.getRandomValues(buf);
 	return Array.from(buf)
 		.map((c) => c.toString(16).padStart(2, '0'))
 		.join('');

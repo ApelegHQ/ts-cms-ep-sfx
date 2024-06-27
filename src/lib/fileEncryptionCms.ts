@@ -34,10 +34,10 @@ const fileEncryptionCms_ = async (
 	const noncePWRI = new Uint8Array(12);
 	const nonceECI = new Uint8Array(12);
 
-	globalThis.crypto.getRandomValues(noncePWRI);
-	globalThis.crypto.getRandomValues(nonceECI);
+	crypto.getRandomValues(noncePWRI);
+	crypto.getRandomValues(nonceECI);
 
-	const [encryptedKey, encryptedContent] = await globalThis.crypto.subtle
+	const [encryptedKey, encryptedContent] = await crypto.subtle
 		.generateKey({ ['name']: 'AES-GCM', ['length']: 256 }, true, [
 			'encrypt',
 		])
@@ -49,21 +49,20 @@ const fileEncryptionCms_ = async (
 			});
 
 			return Promise.all([
-				Promise.all([
-					KEKp,
-					globalThis.crypto.subtle.exportKey('raw', CEK),
-				]).then(([KEK, rawCEK]) => {
-					return globalThis.crypto.subtle.encrypt(
-						{
-							['name']: 'AES-GCM',
-							['iv']: noncePWRI,
-							['tagLength']: 128,
-						},
-						KEK,
-						rawCEK,
-					);
-				}),
-				globalThis.crypto.subtle.encrypt(
+				Promise.all([KEKp, crypto.subtle.exportKey('raw', CEK)]).then(
+					([KEK, rawCEK]) => {
+						return crypto.subtle.encrypt(
+							{
+								['name']: 'AES-GCM',
+								['iv']: noncePWRI,
+								['tagLength']: 128,
+							},
+							KEK,
+							rawCEK,
+						);
+					},
+				),
+				crypto.subtle.encrypt(
 					{
 						['name']: 'AES-GCM',
 						['iv']: nonceECI,

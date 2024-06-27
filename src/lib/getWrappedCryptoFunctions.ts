@@ -19,7 +19,7 @@ type TIndirectCryptoKey = string;
 
 const getWrappedCryptoFunctions_ = () => {
 	const keyCache = new Cache<CryptoKey>();
-	const subtle = globalThis.crypto.subtle;
+	const subtle = crypto.subtle;
 
 	const decrypt = async (
 		algorithm:

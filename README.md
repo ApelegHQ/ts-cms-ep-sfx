@@ -73,13 +73,13 @@ Even though we have tested with older versions for compatibility support and
 reporting, we strongly recommend using up-to-date browsers that still receive
 security updates.
 
-- Chrome: ✅️ 77–
-- Edge: ✅️ 79–
-- Firefox: ✅️ 69–
-- Internet Explorer: ❌ Not supported
-- Opera: ✅️ 63–
-- Pale Moon: ❌ Not supported [yet](https://repo.palemoon.org/MoonchildProductions/UXP/issues/2534)
-- Safari: ✅️ 14–
+-   Chrome: ✅️ 77–
+-   Edge: ✅️ 79–
+-   Firefox: ✅️ 65–
+-   Internet Explorer: ❌ Not supported
+-   Opera: ✅️ 63–
+-   Pale Moon: ❌ Not supported [yet](https://repo.palemoon.org/MoonchildProductions/UXP/issues/2534)
+-   Safari: ✅️ 14–
 
 ## 🔒 Security Considerations
 

@@ -41,16 +41,16 @@ const deriveKEK_ = async (
 
 	if (!salt) {
 		const saltBuffer = new Uint8Array(32);
-		globalThis.crypto.getRandomValues(saltBuffer);
+		crypto.getRandomValues(saltBuffer);
 		salt = saltBuffer;
 	}
 
-	const KEK = await globalThis.crypto.subtle
+	const KEK = await crypto.subtle
 		.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, [
 			'deriveKey',
 		])
 		.then((baseKey) => {
-			return globalThis.crypto.subtle.deriveKey(
+			return crypto.subtle.deriveKey(
 				{
 					['name']: 'PBKDF2',
 					['salt']: salt,

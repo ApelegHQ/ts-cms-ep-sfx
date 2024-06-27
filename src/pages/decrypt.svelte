@@ -93,7 +93,7 @@
 			.then(async () => {
 				const stage1AbortController = new AbortController();
 				const abortHandler = () => stage1AbortController.abort();
-				abortController.signal.addEventListener(
+				abortController.signal?.addEventListener(
 					'abort',
 					abortHandler,
 					false,
@@ -151,7 +151,7 @@
 					initError = new Error(message);
 					throw initError;
 				} finally {
-					abortController.signal.removeEventListener(
+					abortController.signal?.removeEventListener(
 						'abort',
 						abortHandler,
 						false,

@@ -24,7 +24,7 @@ const fileDecryptionCms_ = async (
 ): Promise<AllowSharedBufferSource> => {
 	const KEK = await deriveKEK();
 
-	const rawCEK = await globalThis.crypto.subtle.decrypt(
+	const rawCEK = await crypto.subtle.decrypt(
 		{
 			['name']: 'AES-GCM',
 			['iv']: noncePWRI,
@@ -33,14 +33,14 @@ const fileDecryptionCms_ = async (
 		KEK,
 		encryptedKey,
 	);
-	const CEK = await globalThis.crypto.subtle.importKey(
+	const CEK = await crypto.subtle.importKey(
 		'raw',
 		rawCEK,
 		{ ['name']: 'AES-GCM', ['length']: 256 },
 		false,
 		['decrypt'],
 	);
-	const data = await globalThis.crypto.subtle.decrypt(
+	const data = await crypto.subtle.decrypt(
 		{
 			['name']: 'AES-GCM',
 			['iv']: nonceECI,

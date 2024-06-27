@@ -68,9 +68,18 @@ self.onerror = function (
 
 if (
 	typeof Reflect === [] + [][0] ||
-	typeof Blob !== 'function' ||
-	!Blob.prototype ||
-	typeof Blob.prototype.arrayBuffer !== 'function'
+	typeof globalThis === [] + [][0] ||
+	typeof AbortController !== 'function' ||
+	typeof Promise !== 'function' ||
+	!Promise.prototype ||
+	typeof Promise.prototype.finally !== 'function' ||
+	typeof Blob !== 'function'
+	// There's also <https://bugzilla.mozilla.org/show_bug.cgi?id=1469045>,
+	// <https://bugzilla.mozilla.org/show_bug.cgi?id=1502801>,
+	// <https://repo.palemoon.org/MoonchildProductions/UXP/issues/2534>, but
+	// feature detecting that (message from iframe has isTrusted = false) is
+	// more involved
+	// Detecting globalThis might work in this case
 )
 	self.onload = function (
 		_document: Document,

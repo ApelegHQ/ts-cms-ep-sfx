@@ -23,7 +23,7 @@ declare const external$exportKey: SubtleCrypto['exportKey'] | undefined;
 declare const external$generateKey: SubtleCrypto['generateKey'] | undefined;
 declare const external$importKey: SubtleCrypto['importKey'] | undefined;
 
-if (!globalThis.crypto.subtle) {
+if (!crypto.subtle) {
 	console.warn(
 		'SubtleCrypto is not available. External (unsandboxed) calls will be used instead.',
 	);
@@ -62,7 +62,7 @@ if (!globalThis.crypto.subtle) {
 		assign('importKey', external$importKey);
 	}
 
-	Object.defineProperty(globalThis.crypto, 'subtle', {
+	Object.defineProperty(crypto, 'subtle', {
 		['configurable']: true,
 		['value']: Object.create(subtlePrototypePolyfill),
 	});
