@@ -43,11 +43,11 @@ additional restrictions on the flow of data.
 
 ### Cryptographic primitives
 
-This application relies on the primitives exposed by the `SubtleCypto` API, and
+This application relies on the primitives exposed by the `SubtleCrypto` API, and
 the cryptographic operations used are restricted to what is needed to construct
 and parse a Cryptographic Message Syntax (CMS) payload.
 
-The following methods of the `SubtleCypto` API are used:
+The following methods of the `SubtleCrypto` API are used:
 
 -   **`decrypt`:** When decrypting a file, this function is used to decrypt the
     Content Encryption Key (CEK) with a password-derived Key Encryption Key (KEK),

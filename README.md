@@ -73,13 +73,27 @@ Even though we have tested with older versions for compatibility support and
 reporting, we strongly recommend using up-to-date browsers that still receive
 security updates.
 
--   Chrome: ✅️ 77–
+-   Chrome: ✅️ 73–
+-   Dillo: ❌ Not supported
 -   Edge: ✅️ 79–
 -   Firefox: ✅️ 65–
 -   Internet Explorer: ❌ Not supported
--   Opera: ✅️ 63–
+-   NetSurf: ❌ Not supported
+-   Opera: ✅️ 60–
 -   Pale Moon: ❌ Not supported [yet](https://repo.palemoon.org/MoonchildProductions/UXP/issues/2534)
 -   Safari: ✅️ 14–
+
+## ⚡ Performance
+
+Note that this tool works by creating a self-contained HTML file. As a result,
+it may not be the best fit for very large files, for two main reasons:
+
+1. A large file will produce a correpondingly larger HTML document. Since this
+   is atypical, browsers may not be optimised for parsing such large files.
+2. Because of the file being embedded in the DOM tree (in encrypted form), the
+   need to encrypt / decrypt it, and some design constraints, the entire content
+   may need to fit into memory several times over. Ultimately, the amount of RAM
+   available is a hard limit to how big a file this tool can support.
 
 ## 🔒 Security Considerations
 
