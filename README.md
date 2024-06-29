@@ -81,7 +81,7 @@ security updates.
 -   NetSurf: ❌ Not supported
 -   Opera: ✅️ 60–
 -   Pale Moon: ❌ Not supported [yet](https://repo.palemoon.org/MoonchildProductions/UXP/issues/2534)
--   Safari: ✅️ 14–
+-   Safari: ✅️ 15–
 
 ## ⚡ Performance
 

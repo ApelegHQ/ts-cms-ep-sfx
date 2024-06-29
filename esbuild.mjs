@@ -19,17 +19,19 @@
 import cc from '@exact-realty/esbuild-plugin-closure-compiler';
 import inlineScripts from '@exact-realty/esbuild-plugin-inline-js';
 import autoprefixer from 'autoprefixer';
+import cssnano from 'cssnano';
 import esbuild from 'esbuild';
 import sveltePlugin from 'esbuild-svelte';
+import childProcess from 'node:child_process';
 import { randomUUID, webcrypto } from 'node:crypto';
 import fs from 'node:fs/promises';
 import { join } from 'node:path';
 import vm from 'node:vm';
+import postcssCssVariables from 'postcss-css-variables';
 import sveltePreprocess from 'svelte-preprocess';
 import tailwindcss from 'tailwindcss';
 import packageJson from './package.json' with { type: 'json' };
 import tailwindConfig from './tailwind.config.mjs';
-import childProcess from 'node:child_process';
 
 const gitCommitHash = (() => {
 	try {
@@ -224,7 +226,12 @@ const exactRealtyBuilderPlugin = (
 			preprocess: sveltePreprocess({
 				typescript: {},
 				postcss: {
-					plugins: [tailwindcss(tailwindConfig), autoprefixer()],
+					plugins: [
+						tailwindcss(tailwindConfig),
+						postcssCssVariables(),
+						autoprefixer(),
+						cssnano({ preset: 'default' }),
+					],
 				},
 			}),
 			compilerOptions: {
