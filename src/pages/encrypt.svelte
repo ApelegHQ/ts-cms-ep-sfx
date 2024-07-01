@@ -61,6 +61,7 @@
 
 	let mainScript$_: HTMLScriptElement | undefined;
 	let mainStylesheet$_: HTMLLinkElement | undefined;
+	let openPgpSignature$_: HTMLScriptElement | undefined;
 	let passwordInput$: HTMLInputElement;
 	let passwordConfirmInput$: HTMLInputElement;
 	let instance: Record<never, never>;
@@ -308,6 +309,7 @@
 				await downloadArchive(
 					mainScript$_!,
 					mainStylesheet$_!,
+					openPgpSignature$_!,
 					_archiveName,
 					cms,
 					_hint,
@@ -347,7 +349,11 @@
 	};
 	const handleDrop = handleDragLeave;
 
-	export { mainScript$_ as mainScript$, mainStylesheet$_ as mainStylesheet$ };
+	export {
+		mainScript$_ as mainScript$,
+		mainStylesheet$_ as mainStylesheet$,
+		openPgpSignature$_ as openPgpSignature$,
+	};
 </script>
 
 <svelte:head>

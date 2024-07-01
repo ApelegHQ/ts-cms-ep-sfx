@@ -50,7 +50,7 @@ const server = http.createServer((req, res) => {
 			res.write(data.subarray(0, firstScriptIndex));
 			res.write(
 				'\r\n<!-- START: Signal CI environment -->\r\n' +
-					`<script src="data:text/javascript,${encodeURIComponent('window.__CI__=!0')}"></script>` +
+					`<script src="data:text/javascript,${encodeURIComponent('Object.defineProperty(window,"__CI__",{value:!0})')}"></script>` +
 					'\r\n<!-- END: Signal CI environment -->\r\n',
 			);
 			res.write(data.subarray(firstScriptIndex));

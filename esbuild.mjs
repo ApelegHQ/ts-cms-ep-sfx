@@ -293,6 +293,7 @@ const exactRealtyBuilderPlugin = (
 		mainFields: ['module', 'main'],
 		outdir: OUTDIR_CLIENT,
 		target: 'es2018',
+		format: 'cjs',
 		plugins,
 		write: false,
 	});
@@ -318,8 +319,10 @@ const exactRealtyBuilderPlugin = (
 
 	function requireFromString(src) {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		const exports = {};
 		const ctx = vm.createContext({
-			exports: {},
+			module: { exports },
+			exports,
 			btoa,
 			atob,
 			crypto: webcrypto,
@@ -340,13 +343,101 @@ const exactRealtyBuilderPlugin = (
 	).contents;
 	const cssText = findPath(clientBuild.outputFiles, cssBundlePath).contents;
 
-	await fs
-		.access(TARGET_DIR, fs.constants.W_OK)
-		.catch(() => fs.mkdir(TARGET_DIR, { recursive: true }));
-	await fs.writeFile(
-		join(TARGET_DIR, 'index.html'),
-		await requireFromString(text).default(scriptText, cssText),
-	);
+	const m = requireFromString(text);
+
+	const prepOutDir = async () => {
+		await fs
+			.access(TARGET_DIR, fs.constants.W_OK)
+			.catch(() => fs.mkdir(TARGET_DIR, { recursive: true }));
+	};
+
+	const obtainSignatureInformation = () => {
+		const result = childProcess.spawnSync('git', [
+			'tag',
+			'-l',
+			'--format=%(contents:body)',
+			'--points-at',
+			'HEAD',
+			'v*',
+		]);
+
+		if (result.status === 0) {
+			const lines = result.stdout.toString('utf-8').split(/\r\n|\r|\n/);
+			const marker = lines.lastIndexOf('::');
+			if (marker < 0) {
+				console.warn('No signature information found in git tags');
+				return;
+			}
+			const expectedDigest = lines[marker + 1]
+				.trim()
+				.replace(/^:/, '')
+				.toLowerCase();
+			const openPgpSignature = lines
+				.slice(marker + 2)
+				.map((s) => s.trim())
+				.filter((s) => s.startsWith(':'))
+				.map((s) => s.replace(/^:/, ''))
+				.join('\r\n');
+
+			return [expectedDigest, openPgpSignature];
+		} else {
+			console.warn('Error getting git tag information');
+		}
+	};
+
+	switch ((process.env.SIGNATURE_MODE || '').toLowerCase()) {
+		case '':
+		case 'unsigned': {
+			await prepOutDir();
+
+			await fs.writeFile(
+				join(TARGET_DIR, 'index.html'),
+				await m.default(scriptText, cssText),
+			);
+			break;
+		}
+		case 'presign': {
+			await prepOutDir();
+
+			await fs.writeFile(
+				join(TARGET_DIR, 'tbs'),
+				await m.tbsPayload(scriptText, cssText),
+			);
+			break;
+		}
+		case 'opportunistic':
+		case 'mandatory': {
+			// opportunistic or mandatory
+			const [expectedDigest, openPgpSignature] =
+				obtainSignatureInformation() || [];
+
+			const tbsPayload = await m.tbsPayload(scriptText, cssText);
+			const digest = Buffer.from(
+				await crypto.subtle.digest(
+					{ name: 'SHA-256' },
+					Buffer.from(tbsPayload),
+				),
+			)
+				.toString('hex')
+				.toLowerCase();
+
+			if (digest !== expectedDigest) {
+				console.error('Digest mismatch', { digest, expectedDigest });
+				if (process.env.SIGNATURE_MODE.toLowerCase() === 'mandatory') {
+					throw new Error('Digest mismatch');
+				}
+			}
+
+			await prepOutDir();
+			await fs.writeFile(
+				join(TARGET_DIR, 'index.html'),
+				await m.default(scriptText, cssText, openPgpSignature || ''),
+			);
+			break;
+		}
+		default:
+			throw new Error('Unsupported SIGNATURE_MODE');
+	}
 })().catch((e) => {
 	console.dir(e);
 	process.exit(1);

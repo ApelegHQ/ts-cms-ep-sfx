@@ -5,6 +5,9 @@ printf 'fffa52c22d797b715a962e6c8d11ec7d79b90dd819b5bc51d62137ea4b22a340  OpenJD
 tar -xzf 'OpenJDK21U-jdk_x64_linux_hotspot_21.0.3_9.tar.gz' 
 export JAVA_HOME="$(pwd)/jdk-21.0.3+9"
 export PATH="$JAVA_HOME/bin:$PATH"
+export LC_ALL="C"
+export TZ="UTC"
 export NODE_ENV="production"
 export BUILD_TYPE="release"
+export SIGNATURE_MODE="opportunistic"
 npm run build

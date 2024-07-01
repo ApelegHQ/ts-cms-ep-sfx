@@ -23,6 +23,7 @@ import {
 	ERROR_ELEMENT_ID_,
 	MAIN_SCRIPT_SRC_ELEMENT_ID_,
 	MAIN_STYLESHEET_ELEMENT_ID_,
+	OPENPGP_SIGNATURE_ELEMENT_ID_,
 } from './elementIds.js';
 import {
 	xmlEscape_ as xmlEscape,
@@ -48,27 +49,15 @@ const sriDigest = async (buf: AllowSharedBufferSource) => {
 	return 'sha384-' + bbtoa(digest);
 };
 
-const generateHtml_ = async (
+export const tbsPayload_ = async (
 	mainScriptText: AllowSharedBufferSource,
 	cssText: AllowSharedBufferSource,
-	encryptedContent?: string[],
-	hint?: string,
 ) => {
-	const pkcs7MimeType = 'application/pkcs7-mime';
-	const startJsonEscapeSequece = '<![CDATA[><!--\r\n';
-	const endJsonEscapeSequece = '\r\n--><!]]>';
-
 	const mainScriptTextSriDigest = await sriDigest(mainScriptText);
 	const cssTextSriDigest = cssText ? await sriDigest(cssText) : '';
 
-	if (hint) {
-		hint = hint.replace(/<\//g, '<//');
-	}
-
 	return (
-		'<!DOCTYPE html>' +
-		'<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">' +
-		'<head>' +
+		'<script type="text/plain"></script>' +
 		'<meta charset="UTF-8"/>' +
 		'<meta name="viewport" content="width=device-width, initial-scale=1.0"/>' +
 		'<meta' +
@@ -89,7 +78,47 @@ const generateHtml_ = async (
 		'\r\n' +
 		`<script src="data:text/javascript;base64,${xmlEscapeAttr(loader.contentBase64)}" defer="defer" integrity="${xmlEscapeAttr(loader.sri)}" crossorigin="anonymous">` +
 		'</script>' +
-		'\r\n' +
+		`<script type="text/plain" id="${xmlEscapeAttr(OPENPGP_SIGNATURE_ELEMENT_ID_)}">\r\n`
+	);
+};
+
+const openPgpSignatureWrapper = (payload: string, signature: string) => {
+	const fiveDashes = String.prototype.repeat.call('-', 5);
+
+	return (
+		'<script type="text/plain">\r\n' +
+		`${fiveDashes}BEGIN PGP SIGNED MESSAGE${fiveDashes}\r\n` +
+		'Hash: SHA256\r\n\r\n' +
+		payload +
+		signature.split(/\r\n|\r|\n/).join('\r\n') +
+		'\r\n</script>\r\n'
+	);
+};
+
+const generateHtml_ = async (
+	mainScriptText: AllowSharedBufferSource,
+	cssText: AllowSharedBufferSource,
+	openPgpSignatureText?: string,
+	encryptedContent?: string[],
+	hint?: string,
+) => {
+	const pkcs7MimeType = 'application/pkcs7-mime';
+	const startJsonEscapeSequece = '<![CDATA[><!--\r\n';
+	const endJsonEscapeSequece = '\r\n--><!]]>';
+
+	const tbsPayload = await tbsPayload_(mainScriptText, cssText);
+
+	if (hint) {
+		hint = hint.replace(/<\//g, '<//');
+	}
+
+	return (
+		'<!DOCTYPE html>' +
+		'<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">' +
+		'<head>' +
+		(openPgpSignatureText
+			? openPgpSignatureWrapper(tbsPayload, openPgpSignatureText)
+			: tbsPayload + '</script>') +
 		(Array.isArray(encryptedContent) && encryptedContent.length > 1
 			? `<script type="${xmlEscapeAttr(pkcs7MimeType)}" id="${xmlEscapeAttr(CMS_DATA_ELEMENT_ID_)}">` +
 				startJsonEscapeSequece +

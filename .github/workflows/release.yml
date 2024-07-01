@@ -23,8 +23,11 @@ jobs:
             - run: npm ci
             - run: npm run build
               env:
+                  LC_ALL: C
+                  TZ: UTC
                   BUILD_TYPE: release
                   NODE_ENV: production
+                  SIGNATURE_MODE: mandatory
             - run: |
                   cd build
                   cp index.html encrypt.html

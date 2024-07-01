@@ -20,15 +20,25 @@
 
 	let mainScript$_: HTMLScriptElement | undefined;
 	let mainStylesheet$_: HTMLLinkElement | undefined;
+	let openPgpSignature$_: HTMLScriptElement | undefined;
 
 	const handleClick = () => {
-		downloadArchive(mainScript$_!, mainStylesheet$_!, 'encrypt.html');
+		downloadArchive(
+			mainScript$_!,
+			mainStylesheet$_!,
+			openPgpSignature$_!,
+			'encrypt.html',
+		);
 	};
 
-	export { mainScript$_ as mainScript$, mainStylesheet$_ as mainStylesheet$ };
+	export {
+		mainScript$_ as mainScript$,
+		mainStylesheet$_ as mainStylesheet$,
+		openPgpSignature$_ as openPgpSignature$,
+	};
 </script>
 
-{#if mainScript$_ && mainStylesheet$_}
+{#if mainScript$_ && mainStylesheet$_ && openPgpSignature$_}
 	<button on:click={handleClick} class="offline-download-button"
 		>&#x2b07;&#xfe0e; Download for offline use</button
 	>

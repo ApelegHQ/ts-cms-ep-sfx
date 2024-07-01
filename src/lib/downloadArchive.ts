@@ -19,6 +19,7 @@ import generateHtml from './generateHtml.js';
 const downloadArchive_ = async (
 	mainScript$: HTMLScriptElement,
 	mainStylesheet$: HTMLLinkElement,
+	openPgpSignature$: HTMLScriptElement,
 	archiveName: string,
 	encryptedContent?: string[] | undefined,
 	hint?: string | undefined,
@@ -36,6 +37,7 @@ const downloadArchive_ = async (
 	const htmlDocument = await generateHtml(
 		scriptSrc,
 		styleSrc,
+		openPgpSignature$.text.trim(),
 		encryptedContent,
 		hint,
 	);

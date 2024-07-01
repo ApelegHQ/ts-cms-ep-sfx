@@ -24,27 +24,33 @@
 		CMS_DATA_ELEMENT_ID_,
 		MAIN_SCRIPT_ELEMENT_ID_,
 		MAIN_STYLESHEET_ELEMENT_ID_,
+		OPENPGP_SIGNATURE_ELEMENT_ID_,
 	} from '~/lib/elementIds.js';
 	import Decrypt from './decrypt.svelte';
 	import Encrypt from './encrypt.svelte';
 
-	const [mainScript$, mainStylesheet$] = (():
-		| [HTMLScriptElement, HTMLLinkElement]
+	const [mainScript$, mainStylesheet$, openPgpSignature$] = (():
+		| [HTMLScriptElement, HTMLLinkElement, HTMLScriptElement]
 		| [] => {
 		const _mainScript$ = document.getElementById(MAIN_SCRIPT_ELEMENT_ID_);
 		const _mainStylesheet$ = document.getElementById(
 			MAIN_STYLESHEET_ELEMENT_ID_,
 		);
+		const _openPgpSignature$ = document.getElementById(
+			OPENPGP_SIGNATURE_ELEMENT_ID_,
+		);
 		if (
 			!_mainScript$ ||
 			!(_mainScript$ instanceof HTMLScriptElement) ||
 			!_mainStylesheet$ ||
-			!(_mainStylesheet$ instanceof HTMLLinkElement)
+			!(_mainStylesheet$ instanceof HTMLLinkElement) ||
+			!_openPgpSignature$ ||
+			!(_openPgpSignature$ instanceof HTMLScriptElement)
 		) {
 			return [];
 		}
 
-		return [_mainScript$, _mainStylesheet$];
+		return [_mainScript$, _mainStylesheet$, _openPgpSignature$];
 	})();
 
 	const hasCmsData = (() => {
@@ -59,11 +65,11 @@
 
 <DemoBanner />
 <SkipToMainContent />
-<Header {mainScript$} {mainStylesheet$} />
+<Header {mainScript$} {mainStylesheet$} {openPgpSignature$} />
 {#if hasCmsData}
 	<Decrypt />
 {:else}
-	<Encrypt {mainScript$} {mainStylesheet$} />
+	<Encrypt {mainScript$} {mainStylesheet$} {openPgpSignature$} />
 {/if}
 <Disclaimer />
 <Footer />

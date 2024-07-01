@@ -20,8 +20,13 @@
 
 	let mainScript$_: HTMLScriptElement | undefined;
 	let mainStylesheet$_: HTMLLinkElement | undefined;
+	let openPgpSignature$_: HTMLScriptElement | undefined;
 
-	export { mainScript$_ as mainScript$, mainStylesheet$_ as mainStylesheet$ };
+	export {
+		mainScript$_ as mainScript$,
+		mainStylesheet$_ as mainStylesheet$,
+		openPgpSignature$_ as openPgpSignature$,
+	};
 </script>
 
 <header class="header">
@@ -32,6 +37,7 @@
 		<OfflineDownload
 			mainScript$={mainScript$_}
 			mainStylesheet$={mainStylesheet$_}
+			openPgpSignature$={openPgpSignature$_}
 		/>
 	</div>
 </header>

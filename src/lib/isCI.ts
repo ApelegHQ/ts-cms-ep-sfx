@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
-const isCI_ = Object.prototype.hasOwnProperty.call(window, '__CI__');
+declare const __CI__: unknown;
+
+const isCI_ = typeof __CI__ !== [] + [][0] && !!__CI__;
 
 export default isCI_;

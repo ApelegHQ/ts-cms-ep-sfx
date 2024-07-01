@@ -13,7 +13,10 @@
  * limitations under the License.
  */
 
-import generateHtml from '~/lib/generateHtml.js';
+import generateHtml, { tbsPayload_ } from '~/lib/generateHtml.js';
 
-(globalThis as unknown as { ['exports']: typeof exports }).exports.default =
-	generateHtml;
+const defaultKey = 'default';
+const tbsPayloadKey = 'tbsPayload';
+
+exports[defaultKey] = generateHtml;
+exports[tbsPayloadKey] = tbsPayload_;
