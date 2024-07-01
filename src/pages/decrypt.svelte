@@ -38,6 +38,7 @@
 	import setupParseCmsDataSandbox from '~/lib/setupParseCmsSandbox.js';
 	import './common.css';
 	import './decrypt.css';
+	import commentCdataExtractor from '~/lib/commentCdataExtractor.js';
 
 	let initError: Error | undefined;
 	let dataAttributes:
@@ -160,16 +161,10 @@
 				}
 
 				if (cmsHint$ && cmsHint$ instanceof HTMLScriptElement) {
-					// Delimiters look like:
-					//   * start: `><!--` (XML) / `<![CDATA[><!--` (HTML)
-					//   * end: `--><!` (XML) / `--><!]]>` (HTML)
-					const hintText = cmsHint$.text;
-					const matches = hintText.match(
-						/^\s*(?:<!\[CDATA\[)?><!--([\S\s]*)--><!(?:]]>)?\s*$/,
-					);
-					if (matches) {
+					const hintText = commentCdataExtractor(cmsHint$.text);
+					if (hintText) {
 						try {
-							const _hint = JSON.parse(matches[1]);
+							const _hint = JSON.parse(hintText);
 							if (typeof _hint === 'string') {
 								hint = _hint;
 							} else {

@@ -17,6 +17,7 @@ import {
 	MAIN_SCRIPT_ELEMENT_ID_,
 	MAIN_SCRIPT_SRC_ELEMENT_ID_,
 } from '~/lib/elementIds.js';
+import commentCdataExtractor from './lib/commentCdataExtractor.js';
 
 // The main purpose of this loader is to avoid loading a long `data:` URL,
 // which makes stack traces ugly.
@@ -28,7 +29,12 @@ import {
 		throw new Error('Missing main script element');
 	}
 	mainScript$.parentNode?.removeChild(mainScript$);
-	const text = atob(mainScript$.text.replace(/[^a-zA-Z0-9+/=]/g, ''));
+	const text = atob(
+		(commentCdataExtractor(mainScript$.text) || '').replace(
+			/[^a-zA-Z0-9+/=]/g,
+			'',
+		),
+	);
 	const blob = new Blob([text], { ['type']: 'text/javascript' });
 	const script$ = document.createElementNS(ns, 'script');
 	script$.setAttribute('crossorigin', 'anonymous');

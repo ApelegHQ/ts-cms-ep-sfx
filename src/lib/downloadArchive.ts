@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import commentCdataExtractor from './commentCdataExtractor.js';
 import downloadBlob from './downloadBlob.js';
 import generateHtml from './generateHtml.js';
 
@@ -34,10 +35,12 @@ const downloadArchive_ = async (
 		fetch(mainStylesheet$.href).then(handleResponseText),
 	]);
 
+	const signatureData = commentCdataExtractor(openPgpSignature$.text);
+
 	const htmlDocument = await generateHtml(
 		scriptSrc,
 		styleSrc,
-		openPgpSignature$.text.trim(),
+		signatureData,
 		encryptedContent,
 		hint,
 	);

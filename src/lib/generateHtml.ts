@@ -30,6 +30,10 @@ import {
 	xmlEscapeAttr_ as xmlEscapeAttr,
 	xmlEscapeJsonScriptCdata_ as xmlEscapeJsonScriptCdata,
 } from './xmlEscape.js';
+import {
+	commentCdataEscapeSequenceEnd_ as commentCdataEscapeSequenceEnd,
+	commentCdataEscapeSequenceStart_ as commentCdataEscapeSequenceStart,
+} from './commentCdataEscapeSequence.js';
 
 const bbtoa = (buf: AllowSharedBufferSource) => {
 	const u8buf = ArrayBuffer.isView(buf)
@@ -57,28 +61,33 @@ export const tbsPayload_ = async (
 	const cssTextSriDigest = cssText ? await sriDigest(cssText) : '';
 
 	return (
-		'<script type="text/plain"></script>' +
+		commentCdataEscapeSequenceEnd +
+		'</script>' +
 		'<meta charset="UTF-8"/>' +
 		'<meta name="viewport" content="width=device-width, initial-scale=1.0"/>' +
 		'<meta' +
 		' http-equiv="content-security-policy"' +
-		// Safari / WebKit seem to require frame-ancestors 'self' for starting
-		// sandboxes
-		` content="default-src 'none'; script-src 'self' 'unsafe-eval' blob: data:; script-src-elem blob: data: '${fallbackMessage.sri}' '${loader.sri}' '${mainScriptTextSriDigest}'; script-src-attr 'none'; style-src data: '${cssTextSriDigest}'; child-src blob:; connect-src blob: data:; frame-src blob:; worker-src blob:; frame-ancestors 'self'; form-action data:"` +
+		// `frame-ancestors` isn't supported as http-equiv and it causes issues
+		// with WebKit.
+		// `form-action data:` is so that form action=modal works
+		` content="default-src 'none'; script-src 'self' 'unsafe-eval' blob: data:; script-src-elem blob: data: '${fallbackMessage.sri}' '${loader.sri}' '${mainScriptTextSriDigest}'; script-src-attr 'none'; style-src data: '${cssTextSriDigest}'; child-src blob:; connect-src blob: data:; frame-src blob:; worker-src blob:; form-action data:"` +
 		'/>' +
 		`<title>HTML CMS Tool</title>` +
 		`<script src="data:text/javascript;base64,${xmlEscapeAttr(fallbackMessage.contentBase64)}" integrity="${xmlEscapeAttr(fallbackMessage.sri)}" crossorigin="anonymous">` +
 		`</script>` +
 		'\r\n' +
-		`<script type="text/plain" data-integrity="${xmlEscapeAttr(mainScriptTextSriDigest)}" id="${xmlEscapeAttr(MAIN_SCRIPT_SRC_ELEMENT_ID_)}">\r\n` +
+		`<script type="text/plain" data-integrity="${xmlEscapeAttr(mainScriptTextSriDigest)}" id="${xmlEscapeAttr(MAIN_SCRIPT_SRC_ELEMENT_ID_)}">` +
+		commentCdataEscapeSequenceStart +
 		xmlEscape(chunkString(bbtoa(mainScriptText), 512).join('\r\n')) +
+		commentCdataEscapeSequenceEnd +
 		`</script>` +
 		'\r\n' +
 		`<link rel="stylesheet" href="data:text/css;base64,${xmlEscapeAttr(bbtoa(cssText))}" crossorigin="anonymous" integrity="${xmlEscapeAttr(cssTextSriDigest)}" id="${xmlEscapeAttr(MAIN_STYLESHEET_ELEMENT_ID_)}"/>` +
 		'\r\n' +
 		`<script src="data:text/javascript;base64,${xmlEscapeAttr(loader.contentBase64)}" defer="defer" integrity="${xmlEscapeAttr(loader.sri)}" crossorigin="anonymous">` +
 		'</script>' +
-		`<script type="text/plain" id="${xmlEscapeAttr(OPENPGP_SIGNATURE_ELEMENT_ID_)}">\r\n`
+		`<script type="text/plain" id="${xmlEscapeAttr(OPENPGP_SIGNATURE_ELEMENT_ID_)}">` +
+		commentCdataEscapeSequenceStart
 	);
 };
 
@@ -86,25 +95,25 @@ const openPgpSignatureWrapper = (payload: string, signature: string) => {
 	const fiveDashes = String.prototype.repeat.call('-', 5);
 
 	return (
-		'<script type="text/plain">\r\n' +
+		'<script type="text/plain">' +
+		commentCdataEscapeSequenceStart +
 		`${fiveDashes}BEGIN PGP SIGNED MESSAGE${fiveDashes}\r\n` +
 		'Hash: SHA256\r\n\r\n' +
 		payload +
 		signature.split(/\r\n|\r|\n/).join('\r\n') +
-		'\r\n</script>\r\n'
+		commentCdataEscapeSequenceEnd +
+		'</script>\r\n'
 	);
 };
 
 const generateHtml_ = async (
 	mainScriptText: AllowSharedBufferSource,
 	cssText: AllowSharedBufferSource,
-	openPgpSignatureText?: string,
+	openPgpSignatureText?: string | null | undefined,
 	encryptedContent?: string[],
 	hint?: string,
 ) => {
 	const pkcs7MimeType = 'application/pkcs7-mime';
-	const startJsonEscapeSequece = '<![CDATA[><!--\r\n';
-	const endJsonEscapeSequece = '\r\n--><!]]>';
 
 	const tbsPayload = await tbsPayload_(mainScriptText, cssText);
 
@@ -118,25 +127,29 @@ const generateHtml_ = async (
 		'<head>' +
 		(openPgpSignatureText
 			? openPgpSignatureWrapper(tbsPayload, openPgpSignatureText)
-			: tbsPayload + '</script>') +
+			: '<script type="text/plain">' +
+				commentCdataEscapeSequenceStart +
+				tbsPayload +
+				commentCdataEscapeSequenceEnd +
+				'</script>') +
 		(Array.isArray(encryptedContent) && encryptedContent.length > 1
 			? `<script type="${xmlEscapeAttr(pkcs7MimeType)}" id="${xmlEscapeAttr(CMS_DATA_ELEMENT_ID_)}">` +
-				startJsonEscapeSequece +
+				commentCdataEscapeSequenceStart +
 				encryptedContent[0] +
-				endJsonEscapeSequece +
+				commentCdataEscapeSequenceEnd +
 				`</script>` +
 				(encryptedContent[1]
 					? `<script type="${xmlEscapeAttr(pkcs7MimeType)}" id="${xmlEscapeAttr(CMS_FILENAME_ELEMENT_ID_)}">` +
-						startJsonEscapeSequece +
+						commentCdataEscapeSequenceStart +
 						encryptedContent[1] +
-						endJsonEscapeSequece +
+						commentCdataEscapeSequenceEnd +
 						`</script>`
 					: '') +
 				(hint
 					? `<script type="application/json" id="${xmlEscapeAttr(CMS_HINT_ELEMENT_ID_)}">` +
-						startJsonEscapeSequece +
+						commentCdataEscapeSequenceStart +
 						xmlEscapeJsonScriptCdata(JSON.stringify(hint)) +
-						endJsonEscapeSequece +
+						commentCdataEscapeSequenceEnd +
 						`</script>`
 					: '')
 			: '') +
