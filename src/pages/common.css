@@ -75,6 +75,7 @@
 	font-size: 0.875em;
 	text-transform: uppercase;
 	color: #a26135;
+	cursor: pointer;
 }
 
 .checkbox input {
@@ -99,6 +100,10 @@
 
 .checkbox input:active + span {
 	color: #333;
+}
+
+.checkbox input:disabled + span {
+	cursor: not-allowed;
 }
 
 .label input,

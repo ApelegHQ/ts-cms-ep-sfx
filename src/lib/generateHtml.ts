@@ -73,7 +73,7 @@ export const tbsPayload_ = async (
 		` content="default-src 'none'; script-src 'self' 'unsafe-eval' blob: data:; script-src-elem blob: data: '${fallbackMessage.sri}' '${loader.sri}' '${mainScriptTextSriDigest}'; script-src-attr 'none'; style-src data: '${cssTextSriDigest}'; child-src blob:; connect-src blob: data:; frame-src blob:; worker-src blob:; form-action data:"` +
 		'/>' +
 		`<title>HTML CMS Tool</title>` +
-		`<script src="data:text/javascript;base64,${xmlEscapeAttr(fallbackMessage.contentBase64)}" integrity="${xmlEscapeAttr(fallbackMessage.sri)}" crossorigin="anonymous">` +
+		`<script src="data:text/javascript;base64,${encodeURIComponent(fallbackMessage.contentBase64)}" integrity="${xmlEscapeAttr(fallbackMessage.sri)}" crossorigin="anonymous">` +
 		`</script>` +
 		'\r\n' +
 		`<script type="text/plain" data-integrity="${xmlEscapeAttr(mainScriptTextSriDigest)}" id="${xmlEscapeAttr(MAIN_SCRIPT_SRC_ELEMENT_ID_)}">` +
@@ -82,9 +82,9 @@ export const tbsPayload_ = async (
 		commentCdataEscapeSequenceEnd +
 		`</script>` +
 		'\r\n' +
-		`<link rel="stylesheet" href="data:text/css;base64,${xmlEscapeAttr(bbtoa(cssText))}" crossorigin="anonymous" integrity="${xmlEscapeAttr(cssTextSriDigest)}" id="${xmlEscapeAttr(MAIN_STYLESHEET_ELEMENT_ID_)}"/>` +
+		`<link rel="stylesheet" href="data:text/css;base64,${encodeURIComponent(bbtoa(cssText))}" crossorigin="anonymous" integrity="${xmlEscapeAttr(cssTextSriDigest)}" id="${xmlEscapeAttr(MAIN_STYLESHEET_ELEMENT_ID_)}"/>` +
 		'\r\n' +
-		`<script src="data:text/javascript;base64,${xmlEscapeAttr(loader.contentBase64)}" defer="defer" integrity="${xmlEscapeAttr(loader.sri)}" crossorigin="anonymous">` +
+		`<script src="data:text/javascript;base64,${encodeURIComponent(loader.contentBase64)}" defer="defer" integrity="${xmlEscapeAttr(loader.sri)}" crossorigin="anonymous">` +
 		'</script>' +
 		`<script type="text/plain" id="${xmlEscapeAttr(OPENPGP_SIGNATURE_ELEMENT_ID_)}">` +
 		commentCdataEscapeSequenceStart

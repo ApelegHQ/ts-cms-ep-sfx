@@ -18,6 +18,7 @@
 	font-size: 1.2em;
 	background-color: #f00;
 	color: #fff;
+	border: 1px solid #600;
 	font-weight: bold;
 	user-select: none;
 	pointer-events: none;

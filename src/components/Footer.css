@@ -46,9 +46,22 @@
 	text-align: center;
 }
 
-.footer-package-name {
+.footer-package-info {
 	display: block;
 	text-align: center;
 	font-size: 0.85em;
 	font-style: italic;
+}
+
+.footer-package-info li {
+	display: inline;
+}
+
+.footer-package-info li + li::before {
+	content: ' | ';
+	font-style: normal;
+}
+
+.footer-package-info a {
+	text-decoration: underline;
 }

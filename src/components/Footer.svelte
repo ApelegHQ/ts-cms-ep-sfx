@@ -48,34 +48,41 @@
 			reserved.
 		</p>
 		{#if packageName}
-			<p class="footer-package-name" lang="en">
-				Build information:{' '}
-				{packageName}
-				{#if packageVersion}{' '}v{packageVersion}{/if}
-				{#if gitCommitHash}
-					{' '}(<data lang="zxx" value={gitCommitHash}
-						>{gitCommitHash.slice(0, 7)}</data
-					>)
-				{/if}
+			<ul class="footer-package-info" lang="en">
+				<li>
+					Build information:{' '}
+					{packageName}
+					{#if packageVersion}{' '}v{packageVersion}{/if}
+					{#if gitCommitHash}
+						{' '}(<data lang="zxx" value={gitCommitHash}
+							>{gitCommitHash.slice(0, 7)}</data
+						>)
+					{/if}
+				</li>
+
 				{#if packageHomepage}
-					{' | '}<a
-						href={packageHomepage}
-						rel="me external noopener noreferrer"
-						target="_blank"
-					>
-						Home
-					</a>
+					<li>
+						<a
+							href={packageHomepage}
+							rel="me external noopener noreferrer"
+							target="_blank"
+						>
+							Home
+						</a>
+					</li>
 				{/if}
 				{#if repository}
-					{' | '}<a
-						href={repository}
-						rel="me external noopener noreferrer"
-						target="_blank"
-					>
-						Source
-					</a>
+					<li>
+						<a
+							href={repository}
+							rel="me external noopener noreferrer"
+							target="_blank"
+						>
+							Source
+						</a>
+					</li>
 				{/if}
-			</p>
+			</ul>
 		{/if}
 	</div>
 </footer>

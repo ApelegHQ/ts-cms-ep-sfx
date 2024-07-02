@@ -15,7 +15,7 @@
 
 .dropzone {
 	display: block;
-	color: black;
+	color: #333;
 	min-height: 6em;
 	text-align: center;
 	cursor: pointer;
