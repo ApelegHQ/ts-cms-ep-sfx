@@ -1,6 +1,6 @@
 {
 	"name": "@exact-realty/cms-ep-sfx",
-	"version": "1.0.12",
+	"version": "1.0.13",
 	"description": "Secure File Sharing Utility",
 	"type": "module",
 	"main": "-",

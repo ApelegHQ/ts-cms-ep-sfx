@@ -1,0 +1,19 @@
+name: Upload build assets to VirusTotal
+
+on:
+    release:
+        types:
+            - published
+
+jobs:
+    virustotal:
+        runs-on: ubuntu-latest
+        steps:
+            -
+                name: VirusTotal Scan
+                uses: crazy-max/ghaction-virustotal@92a6081d9aab8f8ef3d9081e8bb264aaccc9e74d
+                with:
+                    vt_api_key: ${{ secrets.VIRUSTOTAL_API_KEY }}
+                    files: |
+                        *
+                    update_release_body: true

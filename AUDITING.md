@@ -3,7 +3,7 @@
 ## Purpose of this document
 
 This document is meant to highlight security-relevant aspects of this tool that
-might be relevant to facilitate a rigorous audit process.
+might facilitate a rigorous audit process.
 
 ## Data exfiltration
 
@@ -11,28 +11,28 @@ These are some of the built-in protections to prevent data exfiltration.
 
 ### Content Security Policy (CSP)
 
-Content Security Policy (CSP) is used to limit communication with the outside
-world. In particular, no external resources are allowed to be loaded. You can
-verify this by assessing the contents of the corresponding `<meta>` tag and note
-that no external content is allowed.
+Content Security Policy (CSP) is used to restrict communication with the outside
+world. In particular, no external resources are allowed to be loaded. This may
+be verified by assessing the contents of the corresponding `<meta>` tag and
+confirming that no external content is allowed.
 
 ### Navigation
 
 -   **`window.open`:** `window.open`, or similar functions that can be used to
     make requests to external resources, is not used.
--   **Form submissions:** No forms with an external `action` are used. This is
-    further enforced with CSP.
--   Links: Links to external resources use statically-defined URLs that do not
-    depend on user input. No links to external resources are opened without user
-    interaction.
+-   **Form submissions:** No forms with an external `action` attribute that
+    could lead to data exfiltration are used. This is further enforced with CSP.
+-   **Links:** Links to external resources use statically-defined URLs that do
+    not depend on user input. No links to external resources are
+    automatically opened without user interaction.
 
 ### Dynamic resource loading
 
--   **`fetch()` / `XMLHttpRequest`:** Only used on local resources. Also
+-   **`fetch()` / `XMLHttpRequest`:** Only used for local resources. Also
     restricted by CSP.
 -   **`import()`:** Not used. Also restricted by CSP.
--   **`ping` attribute**: Not used. Also restricted by CSP.
--   **Other dynamic resources**: Not used. Also restricted by CSP.
+-   **`ping` attribute:** Not used. Also restricted by CSP.
+-   **Other dynamic resources:** Not used. Also restricted by CSP.
 
 ### Additional measures
 
@@ -43,9 +43,8 @@ additional restrictions on the flow of data.
 
 ### Cryptographic primitives
 
-This application relies on the primitives exposed by the `SubtleCrypto` API, and
-the cryptographic operations used are restricted to what is needed to construct
-and parse a Cryptographic Message Syntax (CMS) payload.
+This application relies on the primitives exposed by the `SubtleCrypto` API for
+constructing and parsing a Cryptographic Message Syntax (CMS) payload.
 
 The following methods of the `SubtleCrypto` API are used:
 
@@ -69,7 +68,7 @@ The following methods of the `SubtleCrypto` API are used:
     Additionally, when decrypting a file, this function is used to import the
     Content Encryption Key (CEK) after it has been decrypted.
 
-In addition, the `getRandomValues` method of the `Crypto` API is used as an
+Additionally, the `getRandomValues` method of the `Crypto` API is used as an
 entropy source when encrypting a file. This is used to derive a salt, used in
 the KEK derivation process, as well as to generate initialisation vectors (IVs)
 for encrypted payloads.
@@ -85,7 +84,7 @@ the PBKDF2 algorithm. This is implemented in the file `src/lib/deriveKEK.ts`.
 
 User-supplied data (file and file name) are encrypted in two separate steps, one
 for file contents and another for a file name. The base implementation for
-encryption can be found in the file `src/lib/fileEncryptionCms.ts`. In addition,
+encryption can be found in the file `src/lib/fileEncryptionCms.ts`. Additionally,
 the file `src/sandbox/fileEncryptionCms.ts` implements the two distinct steps
 used for contents and name.
 
@@ -93,7 +92,7 @@ used for contents and name.
 
 User-supplied data (file and file name) are decrypted in two separate steps, one
 for file contents and another for a file name. The base implementation for
-decryption can be found in the file `src/lib/fileDecryptionCms.ts`. In addition,
+decryption can be found in the file `src/lib/fileDecryptionCms.ts`. Additionally,
 the file `src/sandbox/fileDecryptionCms.ts` implements the two distinct steps
 used for contents and name.
 
@@ -122,11 +121,11 @@ initialisation vectors each time one is needed.
 -   **`src/lib/setupConstructCmsSandbox.ts`:** This file implements the creation
     of a sandbox for constructing a CMS payload. The sandbox entrypoint is that
     from `src/sandbox/constructCmsData.ts`.
--   **`src/lib/setupDecryptionSandbox.ts`:** This file implments the creation of
+-   **`src/lib/setupDecryptionSandbox.ts`:** This file implements the creation of
     two sandboxes used during decryption, one to derive the KEK and another one to
     decrypt data. The sandbox entrypoints are those from
     `src/sandbox/deriveKEK.ts` and `src/lib/fileDecryptionCms.ts`.
--   **`src/lib/setupEncryptionSandbox.ts`:** This file implments the creation of
+-   **`src/lib/setupEncryptionSandbox.ts`:** This file implements the creation of
     two sandboxes used during encryption, one to derive the KEK and another one to
     encrypt data. The sandbox entrypoints are those from
     `src/sandbox/deriveKEK.ts` and `src/lib/fileEncryptionCms.ts`.

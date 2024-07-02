@@ -86,7 +86,7 @@ export const tbsPayload_ = async (
 		'\r\n' +
 		`<script src="data:text/javascript;base64,${encodeURIComponent(loader.contentBase64)}" defer="defer" integrity="${xmlEscapeAttr(loader.sri)}" crossorigin="anonymous">` +
 		'</script>' +
-		`<script type="text/plain" id="${xmlEscapeAttr(OPENPGP_SIGNATURE_ELEMENT_ID_)}">` +
+		`<script type="application/pgp-signature" id="${xmlEscapeAttr(OPENPGP_SIGNATURE_ELEMENT_ID_)}">` +
 		commentCdataEscapeSequenceStart
 	);
 };
