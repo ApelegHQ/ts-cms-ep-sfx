@@ -34,7 +34,7 @@ const server = http.createServer((req, res) => {
 			['content-type', 'text/html; charset=UTF-8'],
 			[
 				'content-security-policy',
-				"default-src 'none'; script-src 'self' 'unsafe-eval' blob: data:; script-src-elem blob: data:; script-src-attr 'none'; style-src data:; child-src blob:; connect-src blob: data:; frame-src blob:; worker-src blob:; frame-ancestors 'self'; form-action 'self' data:",
+				"default-src 'none'; script-src 'self' 'unsafe-eval' blob: data:; script-src-elem blob: data:; script-src-attr 'none'; style-src data:; child-src blob:; connect-src blob: data:; frame-src blob:; worker-src blob:; frame-ancestors 'self'; form-action 'self' about:",
 			],
 			[
 				'permissions-policy',

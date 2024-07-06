@@ -30,7 +30,7 @@
 				<form
 					class="fullscreenmodal-form"
 					method="dialog"
-					action="data:,"
+					action="about:blank"
 				>
 					<button class="fullscreenmodal-dismiss" type="submit">
 						<span class="sr-only">Close</span>

@@ -359,7 +359,7 @@
 				on:submit|preventDefault={handleFormSubmit}
 				on:reset={handleFormReset}
 				aria-busy={working ? 'true' : 'false'}
-				action="#"
+				action="about:blank"
 				method="POST"
 				rel={blob instanceof Blob ? '' : 'next'}
 			>

@@ -113,7 +113,7 @@ initialisation vectors each time one is needed.
     which means that the `SubtleCrypto` API is not available. In those cases, this
     file is used to define those methods with an external implementation, provided
     by the top document. While this is necessary in these situations, it negates
-    some of isolation that a fully sandboxed environment would provide.
+    some of the isolation that a fully sandboxed environment would provide.
 -   **`src/lib/parseCmsData.ts`:** This file implements partial parsing of a CMS
     payload (used before decryption). It does not handle unprotected user data,
     but it receives user-supplied input that will ultimately be used to recover

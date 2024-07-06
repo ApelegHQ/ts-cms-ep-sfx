@@ -26,6 +26,7 @@
 	import ErrorModal from '~/components/ErrorModal.svelte';
 	import Loading from '~/components/Loading.svelte';
 	import EFormFields from '~/lib/EFormFields.js';
+	import blobToBuffer from '~/lib/blobToBuffer.js';
 	import downloadArchive from '~/lib/downloadArchive.js';
 	import {
 		ENCRYPT_DROPZONE_ELEMENT_ID_,
@@ -276,16 +277,7 @@
 				? parseInt(_userIterationCount[1])
 				: defaultIterationCount;
 
-			const buffer = await new Promise<ArrayBuffer>((resolve, reject) => {
-				const fileReader = new FileReader();
-				fileReader.onerror = () => {
-					reject(fileReader.error);
-				};
-				fileReader.onload = () => {
-					resolve(fileReader.result as ArrayBuffer);
-				};
-				fileReader.readAsArrayBuffer(_file);
-			});
+			const buffer = await blobToBuffer(_file);
 
 			if (
 				typeof cmsSandbox !== 'function' ||
