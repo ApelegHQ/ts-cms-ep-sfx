@@ -64,7 +64,7 @@ decrypted content.
 ![Screencast showing file encryption and decryption in action](assets/demo.gif)
 
 Want to see how it works? Check out the live demo at
-<https://cms-sfx-demo.exact.realty>.
+<https://cms-sfx-demo.apeleg.com>.
 
 ## 🌐 Browser Support
 
