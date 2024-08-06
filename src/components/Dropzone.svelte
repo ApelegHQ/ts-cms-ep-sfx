@@ -1,5 +1,5 @@
 <!--
- * Copyright © 2023 Exact Realty Limited. All rights reserved.
+ * Copyright © 2023 Apeleg Limited. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License") with LLVM
  * exceptions; you may not use this file except in compliance with the
@@ -68,7 +68,7 @@
 	let multiple_: boolean | null | undefined = undefined;
 	let name_: string | null | undefined = undefined;
 	let required_: boolean | null | undefined = undefined;
-	let role_: string | null | undefined = 'textbox';
+	let role_: string | null | undefined = undefined;
 	let style_: string | null | undefined = undefined;
 	let tabindex_: number | null | undefined = 0;
 

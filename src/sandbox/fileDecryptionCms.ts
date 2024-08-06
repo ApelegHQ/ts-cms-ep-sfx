@@ -1,4 +1,4 @@
-/* Copyright © 2024 Exact Realty Limited. All rights reserved.
+/* Copyright © 2024 Apeleg Limited. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License") with LLVM
  * exceptions; you may not use this file except in compliance with the
@@ -100,7 +100,7 @@ const entrypoint_ = async (
 		);
 
 		return [data, filename];
-	} catch (e) {
+	} catch {
 		return [data];
 	}
 };

@@ -1,5 +1,5 @@
 <!--
- * Copyright © 2023 Exact Realty Limited. All rights reserved.
+ * Copyright © 2023 Apeleg Limited. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License") with LLVM
  * exceptions; you may not use this file except in compliance with the
@@ -44,8 +44,7 @@
 			Made with &#x2764;&#xfe0f; by <Logo />
 		</aside>
 		<p class="footer-copyright" lang="en">
-			© <data value="2024">ⅯⅯⅩⅩⅠⅤ</data> Exact Realty Limited. All rights
-			reserved.
+			© <data value="2024">ⅯⅯⅩⅩⅠⅤ</data> Apeleg Limited. All rights reserved.
 		</p>
 		{#if packageName}
 			<ul class="footer-package-info" lang="en">

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/* Copyright © 2024 Exact Realty Limited. All rights reserved.
+/* Copyright © 2024 Apeleg Limited. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License") with LLVM
  * exceptions; you may not use this file except in compliance with the
@@ -28,7 +28,7 @@ import fs from 'node:fs/promises';
 import { join } from 'node:path';
 import vm from 'node:vm';
 import postcssCssVariables from 'postcss-css-variables';
-import sveltePreprocess from 'svelte-preprocess';
+import { sveltePreprocess } from 'svelte-preprocess';
 import tailwindcss from 'tailwindcss';
 import packageJson from './package.json' with { type: 'json' };
 import tailwindConfig from './tailwind.config.mjs';

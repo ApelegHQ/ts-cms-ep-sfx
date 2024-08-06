@@ -82,6 +82,7 @@ security updates.
 -   Opera: ✅️ 60–
 -   Pale Moon: ❌ Not supported [yet](https://repo.palemoon.org/MoonchildProductions/UXP/issues/2534)
 -   Safari: ✅️ 15–
+-   SeaMonkey: ✅️ 2.53.18–
 
 ## ⚡ Performance
 
