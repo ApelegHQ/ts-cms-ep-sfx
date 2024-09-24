@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import browserSandbox from '@exact-realty/lot/browser';
+import browserSandbox from '@apeleghq/lot/browser';
 import * as parseCmsData from 'inline:~/sandbox/parseCmsData.js';
 import type { parseCmsData$SEP_ } from './sandboxEntrypoints.js';
 

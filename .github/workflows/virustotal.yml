@@ -8,6 +8,7 @@ on:
 jobs:
     virustotal:
         runs-on: ubuntu-latest
+        timeout-minutes: 5
         steps:
             - name: VirusTotal Scan
               uses: crazy-max/ghaction-virustotal@92a6081d9aab8f8ef3d9081e8bb264aaccc9e74d

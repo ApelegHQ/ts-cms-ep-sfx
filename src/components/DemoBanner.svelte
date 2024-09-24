@@ -20,7 +20,7 @@
 </script>
 
 {#if isCI}
-	<aside class="demo-banner" lang="en">
+	<aside aria-label="Testing mode banner" class="demo-banner" lang="en">
 		<div class="demo-banner-inner">
 			<p>&#x26a0;&#xfe0f; Testing mode &#x26a0;&#xfe0f;</p>
 		</div>

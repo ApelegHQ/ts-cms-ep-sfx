@@ -16,11 +16,14 @@
 
 <script lang="typescript">
 	import './Disclaimer.css';
+
+	const labelId =
+		'disclaimer-title-' + (0, Math.random)().toFixed(6).slice(2);
 </script>
 
-<aside class="disclaimer" lang="en">
+<aside aria-labelledby={labelId} class="disclaimer" lang="en">
 	<div class="disclaimer-inner">
-		<h2 class="disclaimer-title">Warranty disclaimer</h2>
+		<h2 class="disclaimer-title" id={labelId}>Warranty disclaimer</h2>
 		<p class="disclaimer-text">
 			To the extent permissible by applicable law, the Software is
 			provided &#x201c;as is&#x201d;, without warranty of any kind,

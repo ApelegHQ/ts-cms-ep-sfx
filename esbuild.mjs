@@ -16,8 +16,8 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import cc from '@exact-realty/esbuild-plugin-closure-compiler';
-import inlineScripts from '@exact-realty/esbuild-plugin-inline-js';
+import cc from '@apeleghq/esbuild-plugin-closure-compiler';
+import inlineScripts from '@apeleghq/esbuild-plugin-inline-js';
 import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
 import esbuild from 'esbuild';
@@ -68,7 +68,7 @@ const dev = ['dev', 'development'].includes(MODE);
 const exactRealtyBuilderPlugin = (
 	options = { buildTarget: 'iso', jsOnly: false },
 ) => ({
-	name: '@exact-realty/builder',
+	name: '@apeleghq/builder',
 
 	setup(build) {
 		const buildID = randomUUID();

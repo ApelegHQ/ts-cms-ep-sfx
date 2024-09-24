@@ -19,7 +19,6 @@
 	import Disclaimer from '~/components/Disclaimer.svelte';
 	import Footer from '~/components/Footer.svelte';
 	import Header from '~/components/Header.svelte';
-	import SkipToMainContent from '~/components/SkipToMainContent.svelte';
 	import {
 		CMS_DATA_ELEMENT_ID_,
 		MAIN_SCRIPT_ELEMENT_ID_,
@@ -64,7 +63,6 @@
 </script>
 
 <DemoBanner />
-<SkipToMainContent />
 <Header {mainScript$} {mainStylesheet$} {openPgpSignature$} />
 {#if hasCmsData}
 	<Decrypt />

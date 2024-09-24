@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import browserSandbox from '@exact-realty/lot/browser';
+import browserSandbox from '@apeleghq/lot/browser';
 import * as deriveKEK from 'inline:~/sandbox/deriveKEK.js';
 import * as fileEncryptionCms from 'inline:~/sandbox/fileEncryptionCms.js';
 import getWrappedCryptoFunctions from './getWrappedCryptoFunctions.js';

@@ -40,11 +40,11 @@
 
 <footer class="footer">
 	<div class="footer-inner">
-		<aside class="footer-attribution" lang="en">
+		<aside aria-label="attribution" class="footer-attribution" lang="en">
 			Made with &#x2764;&#xfe0f; by <Logo />
 		</aside>
 		<p class="footer-copyright" lang="en">
-			© <data value="2024">ⅯⅯⅩⅩⅠⅤ</data> Apeleg Limited. All rights reserved.
+			© <time datetime="2024">ⅯⅯⅩⅩⅠⅤ</time> Apeleg Limited. All rights reserved.
 		</p>
 		{#if packageName}
 			<ul class="footer-package-info" lang="en">

@@ -17,6 +17,7 @@ jobs:
         if: ${{ false }}
         name: 'BrowserStack Test on Ubuntu'
         runs-on: ubuntu-latest
+        timeout-minutes: 5
         steps:
             - name: 'BrowserStack Env Setup'
               uses: browserstack/github-actions/setup-env@master

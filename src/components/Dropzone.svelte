@@ -25,11 +25,28 @@
 		fieldset$.addEventListener('keydown', onKeyDown, false);
 		fieldset$.addEventListener('click', onClick, false);
 
-		if (!input$.style) return;
+		if (fieldset$.style) {
+			fieldset$.style.setProperty('position', 'relative', 'important');
+		}
 
-		input$.style.setProperty('display', 'none', 'important');
-		input$.style.setProperty('position', 'absolute', 'important');
-		input$.style.setProperty('transform', 'scale(0)', 'important');
+		if (input$.style) {
+			[
+				['position', 'absolute'],
+				['padding', '0'],
+				['margin', '0'],
+				['top', '0'],
+				['right', '0'],
+				['bottom', '0'],
+				['left', '0'],
+				['width', '100%'],
+				['overflow', 'hidden'],
+				['clip', 'rect(0,0,0,0)'],
+				['white-space', 'nowrap'],
+				['border-width', '0'],
+			].forEach((p) => {
+				input$.style.setProperty(p[0], p[1], 'important');
+			});
+		}
 	});
 
 	const onClick = (e: MouseEvent) => {
@@ -89,7 +106,6 @@
 	};
 </script>
 
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <fieldset
 	on:click
 	on:keydown
@@ -112,7 +128,6 @@
 	id={id_}
 	role={role_}
 	style={style_}
-	tabindex={tabindex_}
 >
 	<slot>
 		<p>Drop your files here</p>
@@ -121,7 +136,6 @@
 		bind:this={input$}
 		on:change
 		type="file"
-		tabindex="-1"
 		accept={accept_}
 		capture={capture_}
 		disabled={disabled_}
@@ -130,5 +144,6 @@
 		multiple={multiple_}
 		name={name_}
 		required={required_}
+		tabindex={tabindex_}
 	/>
 </fieldset>

@@ -28,6 +28,7 @@ jobs:
                     - os: macos-latest
                       browser: safari
         runs-on: ${{ matrix.os }}
+        timeout-minutes: 5
         steps:
             - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
             - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8

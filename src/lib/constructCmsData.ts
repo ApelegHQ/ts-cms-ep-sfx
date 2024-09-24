@@ -17,7 +17,7 @@ import {
 	Asn1ContextSpecific,
 	Asn1Object,
 	Asn1Sequence,
-} from '@exact-realty/asn1-der';
+} from '@apeleghq/asn1-der';
 import {
 	ContentEncryptionAlgorithmIdentifier,
 	ContentType,
@@ -30,11 +30,8 @@ import {
 	PasswordRecipientInfo,
 	RecipientInfo,
 	RecipientInfos,
-} from '@exact-realty/cms-classes/cms';
-import {
-	OID_PKCS7_DATA,
-	OID_PKCS7_ENVELOPEDDATA,
-} from '@exact-realty/crypto-oids';
+} from '@apeleghq/cms-classes/cms';
+import { OID_PKCS7_DATA, OID_PKCS7_ENVELOPEDDATA } from '@apeleghq/crypto-oids';
 
 const constructCmsData_ = (
 	salt: AllowSharedBufferSource,

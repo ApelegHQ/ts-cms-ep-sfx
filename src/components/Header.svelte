@@ -15,6 +15,7 @@
 -->
 
 <script lang="typescript">
+	import SkipToMainContent from '~/components/SkipToMainContent.svelte';
 	import './Header.css';
 	import OfflineDownload from './OfflineDownload.svelte';
 
@@ -30,6 +31,7 @@
 </script>
 
 <header class="header">
+	<SkipToMainContent />
 	<div class="header-inner">
 		<h1 class="header-title">
 			HTML&#x2010;based file encryption and decryption utility

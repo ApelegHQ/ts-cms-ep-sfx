@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import browserSandbox from '@exact-realty/lot/browser';
+import browserSandbox from '@apeleghq/lot/browser';
 import * as constructCmsData from 'inline:~/sandbox/constructCmsData.js';
 import type { constructCmsData$SEP_ } from './sandboxEntrypoints.js';
 
