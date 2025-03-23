@@ -251,22 +251,28 @@ const exactRealtyBuilderPlugin = (
 				// in init_hydrate
 				namespace: 'http://www.w3.org/1999/xhtml',
 				hydratable: true,
+				// NOTE: Since files are processed out of order, this can affect
+				// reproducibility.
 				cssHash: (() => {
 					const dict = Object.create(null);
-					let count = 0;
 
 					return ({ css, hash }) => {
 						const hashValue = hash(css);
 						if (hashValue in dict) {
 							return dict[hashValue];
 						}
-						const name = (count++)
-							.toString(36)
-							.replace(/^[0-9]/g, (v) =>
-								String.fromCharCode('A'.charCodeAt(0) + +v),
-							);
-						dict[hashValue] = name;
-						return name;
+						const values = new Set(Object.values(dict));
+						for (let i = 2; i < hashValue.length; i++) {
+							const truncatedHash = hashValue
+								.slice(2)
+								.replace(/^[0-9]/g, (v) =>
+									String.fromCharCode('A'.charCodeAt(0) + +v),
+								);
+							if (!values.has(truncatedHash)) {
+								dict[hashValue] = truncatedHash;
+								return truncatedHash;
+							}
+						}
 					};
 				})(),
 				discloseVersion: false,
