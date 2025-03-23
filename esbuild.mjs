@@ -18,9 +18,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import cc from '@apeleghq/esbuild-plugin-closure-compiler';
 import inlineScripts from '@apeleghq/esbuild-plugin-inline-js';
-import autoprefixer from 'autoprefixer';
+import tailwindcss from '@tailwindcss/postcss';
 import cssnano from 'cssnano';
 import esbuild from 'esbuild';
+import stylePlugin from 'esbuild-style-plugin';
 import sveltePlugin from 'esbuild-svelte';
 import childProcess from 'node:child_process';
 import { randomUUID, webcrypto } from 'node:crypto';
@@ -29,9 +30,7 @@ import { join } from 'node:path';
 import vm from 'node:vm';
 import postcssCssVariables from 'postcss-css-variables';
 import { sveltePreprocess } from 'svelte-preprocess';
-import tailwindcss from 'tailwindcss';
 import packageJson from './package.json' with { type: 'json' };
-import tailwindConfig from './tailwind.config.mjs';
 
 const gitCommitHash = (() => {
 	try {
@@ -222,14 +221,22 @@ const exactRealtyBuilderPlugin = (
 				}),
 			],
 		}),
+		stylePlugin({
+			postcss: {
+				plugins: [
+					tailwindcss(),
+					postcssCssVariables(),
+					cssnano({ preset: 'default' }),
+				],
+			},
+		}),
 		sveltePlugin({
 			preprocess: sveltePreprocess({
 				typescript: {},
 				postcss: {
 					plugins: [
-						tailwindcss(tailwindConfig),
+						// tailwindcss(tailwindConfig),
 						postcssCssVariables(),
-						autoprefixer(),
 						cssnano({ preset: 'default' }),
 					],
 				},
@@ -318,7 +325,6 @@ const exactRealtyBuilderPlugin = (
 	const text = findPath(generateHtmlBuild.outputFiles, outputPath).text;
 
 	function requireFromString(src) {
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const exports = {};
 		const ctx = vm.createContext({
 			module: { exports },

@@ -14,22 +14,22 @@ Syntax) standard, PWRI (password recipient info) and AES-256-GCM encryption.
 
 ## 🔐 Features
 
--   **Encrypt Files**: Select a file, enter a password, and the tool will generate
-    a standalone HTML file that contains the encrypted data.
--   **Share Securely**: Share the generated HTML file with your recipient, who can
-    then decrypt the file using the same password.
--   **Decrypt Files**: The recipient can use the standalone HTML file to decrypt
-    the CMS payload and access the original file.
--   **Local Processing**: All encryption and decryption operations are performed
-    locally in the browser, ensuring your data never leaves your device.
--   **Standalone HTML**: The encrypted and decrypted files are self-contained HTML
-    files, making them easy to share and use.
--   **AES-256-GCM**: The utility uses the secure AES-256-GCM cipher to encrypt
-    your files, providing strong protection for your data.
--   **Standards-based**: By using the CMS standard, this tool avoids "reinventing
-    the wheel" and allows interoperability with other file encryption tools.
--   **No Installation Required**: This utility can be used directly in your web
-    browser, without the need for any additional software installation.
+- **Encrypt Files**: Select a file, enter a password, and the tool will generate
+  a standalone HTML file that contains the encrypted data.
+- **Share Securely**: Share the generated HTML file with your recipient, who can
+  then decrypt the file using the same password.
+- **Decrypt Files**: The recipient can use the standalone HTML file to decrypt
+  the CMS payload and access the original file.
+- **Local Processing**: All encryption and decryption operations are performed
+  locally in the browser, ensuring your data never leaves your device.
+- **Standalone HTML**: The encrypted and decrypted files are self-contained HTML
+  files, making them easy to share and use.
+- **AES-256-GCM**: The utility uses the secure AES-256-GCM cipher to encrypt
+  your files, providing strong protection for your data.
+- **Standards-based**: By using the CMS standard, this tool avoids "reinventing
+  the wheel" and allows interoperability with other file encryption tools.
+- **No Installation Required**: This utility can be used directly in your web
+  browser, without the need for any additional software installation.
 
 ## 🚀 Getting Started
 
@@ -73,16 +73,16 @@ Even though we have tested with older versions for compatibility support and
 reporting, we strongly recommend using up-to-date browsers that still receive
 security updates.
 
--   Chrome: ✅️ 73–
--   Dillo: ❌ Not supported
--   Edge: ✅️ 79–
--   Firefox: ✅️ 65–
--   Internet Explorer: ❌ Not supported
--   NetSurf: ❌ Not supported
--   Opera: ✅️ 60–
--   Pale Moon: ✅️ 33.3.0–
--   Safari: ✅️ 15–
--   SeaMonkey: ✅️ 2.53.18–
+- Chrome: ✅️ 73–
+- Dillo: ❌ Not supported
+- Edge: ✅️ 79–
+- Firefox: ✅️ 65–
+- Internet Explorer: ❌ Not supported
+- NetSurf: ❌ Not supported
+- Opera: ✅️ 60–
+- Pale Moon: ✅️ 33.3.0–
+- Safari: ✅️ 15–
+- SeaMonkey: ✅️ 2.53.18–
 
 ## ⚡ Performance
 

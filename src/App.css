@@ -13,6 +13,19 @@
  * limitations under the License.
  */
 
+@import 'tailwindcss/preflight.css';
+@import 'tailwindcss/theme.css';
+
+@theme {
+	--font-sans: 'Poppins', 'DejaVu Sans', 'Verdana', 'Noto Sans', 'sans';
+	--font-serif:
+		'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif';
+	--font-mono:
+		'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas',
+		'Liberation Mono', 'Courier New', 'monospace';
+	--default-font-family: --theme(--font-sans, initial);
+}
+
 #FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ {
 	display: flex;
 	flex-direction: column;
@@ -39,7 +52,8 @@
 	border: 0 solid transparent;
 	padding: 0.75rem;
 	margin: 0 auto;
-	background-image: linear-gradient(white, white),
+	background-image:
+		linear-gradient(white, white),
 		linear-gradient(to left, #743ad5, #d53a9d);
 	background-origin: border-box;
 	background-clip: content-box, border-box;

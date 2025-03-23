@@ -11,6 +11,4 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
-/* eslint-disable @typescript-eslint/naming-convention */
-
 import 'svelte';

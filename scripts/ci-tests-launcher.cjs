@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable @typescript-eslint/no-var-requires */
 const { register } = require('node:module');
 const { pathToFileURL } = require('node:url');
 register('ts-node/esm', pathToFileURL('./'));

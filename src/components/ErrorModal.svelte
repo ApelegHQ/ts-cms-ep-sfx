@@ -16,7 +16,6 @@
 
 <script lang="typescript">
 	import FullScreenModal from './FullScreenModal.svelte';
-	import './ErrorModal.css';
 
 	let error_: unknown;
 	let dismissable_: boolean | null | undefined = false;
@@ -27,7 +26,7 @@
 <FullScreenModal dismissable={dismissable_}>
 	<div class="errormodal-icon">&#x1f645;&#xfe0e;</div>
 	<details>
-		<summary class="errormodal-text">An error occurred</summary>
+		<summary>An error occurred</summary>
 		<div>
 			{#if error_ instanceof Error}
 				<dl>
@@ -52,3 +51,35 @@
 		</div>
 	</details>
 </FullScreenModal>
+
+<style lang="postcss">
+	.errormodal-icon {
+		font-size: 6em;
+		color: #333;
+		text-align: center;
+	}
+
+	summary {
+		font-size: 1.5rem;
+	}
+
+	.errormodal-errorname {
+		text-decoration: underline;
+		font-weight: bold;
+		display: inline;
+	}
+
+	.errormodal-message::before {
+		content: ': ';
+	}
+
+	.errormodal-message {
+		display: inline;
+	}
+
+	.errormodal-stack {
+		margin: 0.5em auto;
+		overflow: auto;
+		max-width: 75vw;
+	}
+</style>

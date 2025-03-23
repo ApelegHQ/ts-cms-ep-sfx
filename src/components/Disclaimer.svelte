@@ -15,16 +15,14 @@
 -->
 
 <script lang="typescript">
-	import './Disclaimer.css';
-
 	const labelId =
 		'disclaimer-title-' + (0, Math.random)().toFixed(6).slice(2);
 </script>
 
-<aside aria-labelledby={labelId} class="disclaimer" lang="en">
-	<div class="disclaimer-inner">
-		<h2 class="disclaimer-title" id={labelId}>Warranty disclaimer</h2>
-		<p class="disclaimer-text">
+<aside aria-labelledby={labelId} lang="en">
+	<div>
+		<h2 id={labelId}>Warranty disclaimer</h2>
+		<p>
 			To the extent permissible by applicable law, the Software is
 			provided &#x201c;as is&#x201d;, without warranty of any kind,
 			express or implied, including but not limited to the warranties of
@@ -37,3 +35,33 @@
 		</p>
 	</div>
 </aside>
+
+<style lang="postcss">
+	aside {
+		width: 100%;
+		font-size: 0.8em;
+		padding: 1em;
+		background-color: #fff;
+		color: #333;
+	}
+
+	div {
+		display: block;
+		width: 100%;
+		max-width: 800px;
+		margin: 1em auto;
+		border: 0.5em solid currentColor;
+		padding: 1em;
+	}
+
+	h2 {
+		font-size: 1.5em;
+		font-weight: bold;
+		text-transform: uppercase;
+		margin-bottom: 0.5em;
+	}
+
+	p {
+		font-style: italic;
+	}
+</style>

@@ -16,7 +16,6 @@
 
 <script lang="typescript">
 	import SkipToMainContent from '~/components/SkipToMainContent.svelte';
-	import './Header.css';
 	import OfflineDownload from './OfflineDownload.svelte';
 
 	let mainScript$_: HTMLScriptElement | undefined;
@@ -32,10 +31,8 @@
 
 <header class="header">
 	<SkipToMainContent />
-	<div class="header-inner">
-		<h1 class="header-title">
-			HTML&#x2010;based file encryption and decryption utility
-		</h1>
+	<div>
+		<h1>HTML&#x2010;based file encryption and decryption utility</h1>
 		<OfflineDownload
 			mainScript$={mainScript$_}
 			mainStylesheet$={mainStylesheet$_}
@@ -43,3 +40,27 @@
 		/>
 	</div>
 </header>
+
+<style lang="postcss">
+	header {
+		width: 100%;
+		padding: 1em;
+		background-color: #fff;
+		color: #333;
+	}
+
+	div {
+		display: block;
+		width: 100%;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	h1 {
+		font-size: 1.8em;
+		font-weight: bold;
+		text-transform: uppercase;
+		margin-bottom: 0.5em;
+		display: inline;
+	}
+</style>

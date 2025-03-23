@@ -16,7 +16,6 @@
 
 <script lang="typescript">
 	import downloadArchive from '~/lib/downloadArchive.js';
-	import './OfflineDownload.css';
 
 	let mainScript$_: HTMLScriptElement | undefined;
 	let mainStylesheet$_: HTMLLinkElement | undefined;
@@ -39,7 +38,23 @@
 </script>
 
 {#if mainScript$_ && mainStylesheet$_ && openPgpSignature$_}
-	<button on:click={handleClick} class="offline-download-button"
+	<button on:click={handleClick}
 		>&#x2b07;&#xfe0e; Download for offline use</button
 	>
 {/if}
+
+<style lang="postcss">
+	* {
+		display: block;
+		padding: 0.4em;
+		margin: 0.5em;
+		float: right;
+		font-size: 0.8em;
+		text-transform: uppercase;
+		cursor: pointer;
+		border: 2px solid currentColor;
+		color: #a26135;
+		background-color: white;
+		user-select: none;
+	}
+</style>

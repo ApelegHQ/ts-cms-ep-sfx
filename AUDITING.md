@@ -18,21 +18,21 @@ confirming that no external content is allowed.
 
 ### Navigation
 
--   **`window.open`:** `window.open`, or similar functions that can be used to
-    make requests to external resources, is not used.
--   **Form submissions:** No forms with an external `action` attribute that
-    could lead to data exfiltration are used. This is further enforced with CSP.
--   **Links:** Links to external resources use statically-defined URLs that do
-    not depend on user input. No links to external resources are
-    automatically opened without user interaction.
+- **`window.open`:** `window.open`, or similar functions that can be used to
+  make requests to external resources, is not used.
+- **Form submissions:** No forms with an external `action` attribute that
+  could lead to data exfiltration are used. This is further enforced with CSP.
+- **Links:** Links to external resources use statically-defined URLs that do
+  not depend on user input. No links to external resources are
+  automatically opened without user interaction.
 
 ### Dynamic resource loading
 
--   **`fetch()` / `XMLHttpRequest`:** Only used for local resources. Also
-    restricted by CSP.
--   **`import()`:** Not used. Also restricted by CSP.
--   **`ping` attribute:** Not used. Also restricted by CSP.
--   **Other dynamic resources:** Not used. Also restricted by CSP.
+- **`fetch()` / `XMLHttpRequest`:** Only used for local resources. Also
+  restricted by CSP.
+- **`import()`:** Not used. Also restricted by CSP.
+- **`ping` attribute:** Not used. Also restricted by CSP.
+- **Other dynamic resources:** Not used. Also restricted by CSP.
 
 ### Additional measures
 
@@ -48,25 +48,25 @@ constructing and parsing a Cryptographic Message Syntax (CMS) payload.
 
 The following methods of the `SubtleCrypto` API are used:
 
--   **`decrypt`:** When decrypting a file, this function is used to decrypt the
-    Content Encryption Key (CEK) with a password-derived Key Encryption Key (KEK),
-    and to use that CEK to decrypt the file and file name.
--   **`deriveKey`:** When encrypting or decrypting a file, this function is used
-    to derive the Key Encryption Key (KEK) from a user-supplied password.
--   **`encrypt`:** When encrypting a file, this function is used to encrypt the
-    Content Encryption Key (CEK) with a password-derived Key Encryption Key (KEK),
-    and to use that CEK to encrypt the file and file name.
--   **`exportKey`:** When encrypting a file, this function is used to export the
-    randomly-generated Content Encryption Key (CEK). This is needed so that it can
-    then be encrypted using the Key Encryption Key (KEK) and included, in
-    encrypted form, in the CMS payload.
--   **`generateKey`:** When encrypting a file, this function is used to generate
-    a random AES-256-GCM Content Encryption Key (CEK), which is subsequently used
-    to encrypt user-supplied data.
--   **`importKey`:** When encrypting or decrypting a file, this function is used
-    on the user-supplied password in order to derive the Key Encryption Key (KEK).
-    Additionally, when decrypting a file, this function is used to import the
-    Content Encryption Key (CEK) after it has been decrypted.
+- **`decrypt`:** When decrypting a file, this function is used to decrypt the
+  Content Encryption Key (CEK) with a password-derived Key Encryption Key (KEK),
+  and to use that CEK to decrypt the file and file name.
+- **`deriveKey`:** When encrypting or decrypting a file, this function is used
+  to derive the Key Encryption Key (KEK) from a user-supplied password.
+- **`encrypt`:** When encrypting a file, this function is used to encrypt the
+  Content Encryption Key (CEK) with a password-derived Key Encryption Key (KEK),
+  and to use that CEK to encrypt the file and file name.
+- **`exportKey`:** When encrypting a file, this function is used to export the
+  randomly-generated Content Encryption Key (CEK). This is needed so that it can
+  then be encrypted using the Key Encryption Key (KEK) and included, in
+  encrypted form, in the CMS payload.
+- **`generateKey`:** When encrypting a file, this function is used to generate
+  a random AES-256-GCM Content Encryption Key (CEK), which is subsequently used
+  to encrypt user-supplied data.
+- **`importKey`:** When encrypting or decrypting a file, this function is used
+  on the user-supplied password in order to derive the Key Encryption Key (KEK).
+  Additionally, when decrypting a file, this function is used to import the
+  Content Encryption Key (CEK) after it has been decrypted.
 
 Additionally, the `getRandomValues` method of the `Crypto` API is used as an
 entropy source when encrypting a file. This is used to derive a salt, used in
@@ -104,35 +104,35 @@ initialisation vectors each time one is needed.
 
 #### Other relevant files
 
--   **`src/lib/constructCmsData.ts`:** This file implements construction of a
-    CMS payload (used after encryption). It does not handle unprotected user data,
-    but is used to produce a payload that is derived from user input.
--   **`src/lib/fixBrokenSandboxSecureContext.ts`:** This file is used to define
-    various methods provided by the `SubtleCrypto` API if they are not available.
-    Certain browsers do not consider the sandboxed environment a _secure context_,
-    which means that the `SubtleCrypto` API is not available. In those cases, this
-    file is used to define those methods with an external implementation, provided
-    by the top document. While this is necessary in these situations, it negates
-    some of the isolation that a fully sandboxed environment would provide.
--   **`src/lib/parseCmsData.ts`:** This file implements partial parsing of a CMS
-    payload (used before decryption). It does not handle unprotected user data,
-    but it receives user-supplied input that will ultimately be used to recover
-    encrypted user data.
--   **`src/lib/setupConstructCmsSandbox.ts`:** This file implements the creation
-    of a sandbox for constructing a CMS payload. The sandbox entrypoint is that
-    from `src/sandbox/constructCmsData.ts`.
--   **`src/lib/setupDecryptionSandbox.ts`:** This file implements the creation of
-    two sandboxes used during decryption, one to derive the KEK and another one to
-    decrypt data. The sandbox entrypoints are those from
-    `src/sandbox/deriveKEK.ts` and `src/lib/fileDecryptionCms.ts`.
--   **`src/lib/setupEncryptionSandbox.ts`:** This file implements the creation of
-    two sandboxes used during encryption, one to derive the KEK and another one to
-    encrypt data. The sandbox entrypoints are those from
-    `src/sandbox/deriveKEK.ts` and `src/lib/fileEncryptionCms.ts`.
--   **`src/lib/setupParseCmsSandbox.ts`:** This file implements the creation
-    of a sandbox for parsing a CMS payload. The sandbox entrypoint is that
-    from `src/sandbox/parseCmsData.ts`.
--   **`src/sandbox/constructCmsData.ts`:** Wrapper around
-    `src/lib/constructCmsData.ts`.
--   **`src/sandbox/deriveKEK.ts`:** Wrapper around `src/sandbox/deriveKEK.ts`.
--   **`src/sandbox/parseCmsData.ts`:** Wrapper around `src/lib/parseCmsData.ts`.
+- **`src/lib/constructCmsData.ts`:** This file implements construction of a
+  CMS payload (used after encryption). It does not handle unprotected user data,
+  but is used to produce a payload that is derived from user input.
+- **`src/lib/fixBrokenSandboxSecureContext.ts`:** This file is used to define
+  various methods provided by the `SubtleCrypto` API if they are not available.
+  Certain browsers do not consider the sandboxed environment a _secure context_,
+  which means that the `SubtleCrypto` API is not available. In those cases, this
+  file is used to define those methods with an external implementation, provided
+  by the top document. While this is necessary in these situations, it negates
+  some of the isolation that a fully sandboxed environment would provide.
+- **`src/lib/parseCmsData.ts`:** This file implements partial parsing of a CMS
+  payload (used before decryption). It does not handle unprotected user data,
+  but it receives user-supplied input that will ultimately be used to recover
+  encrypted user data.
+- **`src/lib/setupConstructCmsSandbox.ts`:** This file implements the creation
+  of a sandbox for constructing a CMS payload. The sandbox entrypoint is that
+  from `src/sandbox/constructCmsData.ts`.
+- **`src/lib/setupDecryptionSandbox.ts`:** This file implements the creation of
+  two sandboxes used during decryption, one to derive the KEK and another one to
+  decrypt data. The sandbox entrypoints are those from
+  `src/sandbox/deriveKEK.ts` and `src/lib/fileDecryptionCms.ts`.
+- **`src/lib/setupEncryptionSandbox.ts`:** This file implements the creation of
+  two sandboxes used during encryption, one to derive the KEK and another one to
+  encrypt data. The sandbox entrypoints are those from
+  `src/sandbox/deriveKEK.ts` and `src/lib/fileEncryptionCms.ts`.
+- **`src/lib/setupParseCmsSandbox.ts`:** This file implements the creation
+  of a sandbox for parsing a CMS payload. The sandbox entrypoint is that
+  from `src/sandbox/parseCmsData.ts`.
+- **`src/sandbox/constructCmsData.ts`:** Wrapper around
+  `src/lib/constructCmsData.ts`.
+- **`src/sandbox/deriveKEK.ts`:** Wrapper around `src/sandbox/deriveKEK.ts`.
+- **`src/sandbox/parseCmsData.ts`:** Wrapper around `src/lib/parseCmsData.ts`.

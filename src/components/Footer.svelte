@@ -22,7 +22,6 @@
 		packageName_ as packageName,
 		packageVersion_ as packageVersion,
 	} from '~/lib/packageInfo.js';
-	import './Footer.css';
 	import Logo from './Logo.svelte';
 
 	const repository = (() => {
@@ -38,16 +37,16 @@
 	})();
 </script>
 
-<footer class="footer">
-	<div class="footer-inner">
-		<aside aria-label="attribution" class="footer-attribution" lang="en">
+<footer>
+	<div>
+		<aside aria-label="attribution" lang="en">
 			Made with &#x2764;&#xfe0f; by <Logo />
 		</aside>
-		<p class="footer-copyright" lang="en">
-			© <time datetime="2024">ⅯⅯⅩⅩⅠⅤ</time> Apeleg Limited. All rights reserved.
+		<p lang="en">
+			© <time datetime="2025">ⅯⅯⅩⅩⅤ</time> Apeleg Limited. All rights reserved.
 		</p>
 		{#if packageName}
-			<ul class="footer-package-info" lang="en">
+			<ul lang="en">
 				<li>
 					Build information:{' '}
 					{packageName}
@@ -85,3 +84,58 @@
 		{/if}
 	</div>
 </footer>
+
+<style lang="postcss">
+	footer {
+		width: 100%;
+		font-size: 0.7em;
+		padding: 1em;
+		background-color: rgb(67, 28, 1);
+		color: white;
+	}
+
+	div {
+		display: block;
+		width: 100%;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	aside {
+		display: block;
+		text-align: right;
+	}
+
+	aside :global(svg) {
+		display: inline;
+		height: 4em;
+		width: auto;
+		user-select: none;
+		transform: translateY(-0.25em);
+	}
+
+	p {
+		display: block;
+		text-align: center;
+	}
+
+	ul {
+		display: block;
+		text-align: center;
+		font-size: 0.85em;
+		font-style: italic;
+	}
+
+	ul li {
+		display: inline;
+	}
+
+	ul li + li::before {
+		content: ' | ';
+		font-style: normal;
+	}
+
+	ul a {
+		text-decoration: underline;
+	}
+</style>

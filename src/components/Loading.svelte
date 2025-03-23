@@ -16,11 +16,25 @@
 
 <script lang="typescript">
 	import FullScreenModal from './FullScreenModal.svelte';
-	import './Loading.css';
 	import Spinner from './Spinner.svelte';
 </script>
 
 <FullScreenModal>
-	<div class="loading-icon"><Spinner /></div>
-	<p class="loading-text"><slot></slot></p>
+	<div><Spinner /></div>
+	<p><slot></slot></p>
 </FullScreenModal>
+
+<style lang="postcss">
+	div {
+		font-size: 6em;
+		color: #333;
+	}
+
+	p {
+		font-size: 2.5rem;
+		display: block;
+		margin: 0.5em auto;
+		text-align: center;
+		text-transform: uppercase;
+	}
+</style>

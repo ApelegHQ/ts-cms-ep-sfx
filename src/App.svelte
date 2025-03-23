@@ -15,22 +15,17 @@
 -->
 
 <script lang="typescript">
+	import './App.css';
 	import Index from './pages/index.svelte';
 </script>
 
-<div class="app-container">
+<div>
 	<Index />
 </div>
 
-<style lang="postcss" global>
-	@import url(./App.css);
-
-	@tailwind base;
-	@tailwind components;
-	@tailwind utilities;
-
+<style lang="postcss">
 	/* Needed to make footer stick to the bottom */
-	.app-container {
+	* {
 		display: flex;
 		flex-direction: column;
 		min-height: 100vh;

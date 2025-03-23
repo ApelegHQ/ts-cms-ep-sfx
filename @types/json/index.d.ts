@@ -11,8 +11,6 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
-/* eslint-disable @typescript-eslint/naming-convention */
-
 declare module '*.json' {
 	const default_: unknown;
 	export default default_;

@@ -11,8 +11,6 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
-/* eslint-disable @typescript-eslint/naming-convention */
-
 declare namespace __buildtimeSettings__ {
 	const assetManifest: {
 		client?: {

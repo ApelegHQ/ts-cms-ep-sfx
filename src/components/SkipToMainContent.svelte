@@ -16,9 +16,28 @@
 
 <script lang="typescript">
 	import { MAIN_CONTENT_ELEMENT_ID_ } from '~/lib/elementIds.js';
-	import './SkipToMainContent.css';
 </script>
 
-<a class="skiptomaincontent" href={'#' + MAIN_CONTENT_ELEMENT_ID_}
-	>Skip to main content</a
->
+<a href={'#' + MAIN_CONTENT_ELEMENT_ID_}>Skip to main content</a>
+
+<style lang="postcss">
+	* {
+		background-color: #f2f0f0;
+		color: #333;
+		border: 2px solid #a26135;
+		display: block;
+		font-size: 1em;
+		line-height: 1.5em;
+		margin: -5em 0.75em 0.75em;
+		padding: 0.75em;
+		position: absolute;
+		transition-duration: 0.15s;
+		transition-property: all;
+		transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+		z-index: 10;
+	}
+
+	:focus {
+		margin-top: 0.75rem;
+	}
+</style>

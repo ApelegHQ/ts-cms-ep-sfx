@@ -15,24 +15,18 @@
 -->
 
 <script lang="typescript">
-	import './FullScreenModal.css';
-
 	let dismissable_: boolean | null | undefined = false;
 	let open_: boolean | null | undefined = true;
 
 	export { dismissable_ as dismissable, open_ as open };
 </script>
 
-<dialog on:close class="fullscreenmodal" open={open_ || null}>
-	<div class="fullscreenmodal-inner">
-		<div class="fullscreenmodal-inner-inner">
+<dialog on:close open={open_ || null}>
+	<div>
+		<div>
 			{#if dismissable_}
-				<form
-					class="fullscreenmodal-form"
-					method="dialog"
-					action="about:blank"
-				>
-					<button class="fullscreenmodal-dismiss" type="submit">
+				<form method="dialog" action="about:blank">
+					<button type="submit">
 						<span class="sr-only">Close</span>
 					</button>
 				</form>
@@ -41,3 +35,56 @@
 		</div>
 	</div>
 </dialog>
+
+<style lang="postcss">
+	dialog[open] {
+		display: block;
+		position: absolute;
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 9999;
+		background-color: rgba(0, 0, 0, 40%);
+	}
+
+	dialog > div {
+		display: flex;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background-color: #f2f0f0;
+		color: #333;
+		border-radius: 1em;
+		max-height: 80%;
+		max-width: 80%;
+		overflow: hidden;
+	}
+
+	dialog > div > div {
+		display: block;
+		margin: 2em 1em 1em;
+		padding: 0 1em;
+		overflow: auto;
+	}
+
+	form {
+		display: block;
+		height: 0;
+	}
+
+	button::before {
+		content: '\2715';
+		display: block;
+		position: absolute;
+		transform: translate(-50%, 50%);
+		top: 0;
+		right: 0;
+		line-height: 1;
+		cursor: pointer;
+	}
+</style>

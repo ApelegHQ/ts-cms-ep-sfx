@@ -16,13 +16,33 @@
 
 <script lang="typescript">
 	import isCI from '~/lib/isCI.js';
-	import './DemoBanner.css';
 </script>
 
 {#if isCI}
-	<aside aria-label="Testing mode banner" class="demo-banner" lang="en">
-		<div class="demo-banner-inner">
+	<aside aria-label="Testing mode banner" lang="en">
+		<div>
 			<p>&#x26a0;&#xfe0f; Testing mode &#x26a0;&#xfe0f;</p>
 		</div>
 	</aside>
 {/if}
+
+<style lang="postcss">
+	aside {
+		width: 100%;
+		font-size: 1.2em;
+		background-color: #f00;
+		color: #fff;
+		border: 1px solid #600;
+		font-weight: bold;
+		user-select: none;
+		pointer-events: none;
+	}
+
+	div {
+		display: block;
+		width: 100%;
+		max-width: 800px;
+		margin: 0.5em auto;
+		text-align: center;
+	}
+</style>

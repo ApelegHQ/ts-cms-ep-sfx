@@ -14,8 +14,34 @@
  * limitations under the License.
 -->
 
-<script lang="typescript">
-	import './Spinner.css';
-</script>
-
 <span class="spinner" role="progressbar"></span>
+
+<style lang="postcss">
+	* {
+		display: block;
+		position: relative;
+		height: 1.2em;
+	}
+
+	::after {
+		content: '\2699\fe0e';
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		transform-origin: center;
+		animation: 5s ease-out 0s infinite spinner-animation-KF_;
+	}
+
+	@keyframes spinner-animation-KF_ {
+		0% {
+			transform: translate(-50%, -50%) rotate(0deg);
+		}
+		50% {
+			transform: translate(-50%, -50%) rotate(270deg);
+		}
+		100% {
+			transform: translate(-50%, -50%) rotate(360deg);
+		}
+	}
+</style>
