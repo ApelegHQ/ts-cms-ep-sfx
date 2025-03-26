@@ -220,7 +220,7 @@ const parseCmsData_ = (
 							u8Buf[pos + 4]
 						: offset === 6
 							? dataView.getUint32(pos + 2, false)
-							: -1;
+							: NaN;
 	pos += offset;
 	const encryptedData = u8Buf.subarray(pos, pos + len);
 	pos += len;

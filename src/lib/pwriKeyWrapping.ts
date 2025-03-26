@@ -134,6 +134,13 @@ const pwriKeyUnwrap_ = async (
 		throw new Error('Invalid check bytes');
 	}
 
+	if (
+		formattedKeyU8[0] < 3 ||
+		formattedKeyU8[0] > formattedKeyU8.byteLength - 4
+	) {
+		throw new Error('Invalid key length');
+	}
+
 	return formattedKeyU8.subarray(4, 4 + formattedKeyU8[0]);
 };
 

@@ -19,49 +19,49 @@ const interceptDownload_ = async (driver: WebDriver) => {
 	const downloadKey = crypto.randomUUID();
 	await driver.executeScript(
 		`
-        const key = arguments[0];
-        const callback = arguments[arguments.length - 1];
-        const observer = new MutationObserver((mutationList) => {
-            for (const mutation of mutationList) {
-                if (mutation.type !== 'childList') continue;
-                for (const child of mutation.addedNodes) {
-                    if (
-                        child instanceof HTMLAnchorElement &&
-                        child.hasAttribute('download') &&
-                        child.hasAttribute('href')
-                    ) {
-                        observer.disconnect();
+        Object.defineProperty(window, arguments[0], {
+            configurable: true,
+            value: new Promise((resolve) => {
+                const observer = new MutationObserver((mutationList) => {
+                    for (const mutation of mutationList) {
+                        if (mutation.type !== 'childList') continue;
+                        for (const child of mutation.addedNodes) {
+                            if (
+                                child instanceof HTMLAnchorElement &&
+                                child.hasAttribute('download') &&
+                                child.hasAttribute('href')
+                            ) {
+                                observer.disconnect();
 
-                        const download = child.getAttribute('download');
-                        const href = child.getAttribute('href');
-                        child.removeAttribute('download');
-                        child.removeAttribute('href');
-                        child.onclick = (e) => {
-                            e.preventDefault();
+                                const download = child.getAttribute('download');
+                                const href = child.getAttribute('href');
+                                child.removeAttribute('download');
+                                child.removeAttribute('href');
+                                child.onclick = (e) => {
+                                    e.preventDefault();
 
-                            Object.defineProperty(window, key, {
-                                configurable: true,
-                                value: fetch(href).then(async (res) => {
-                                    if (!res.ok) {
-                                        throw new Error('Unsuccessful response');
-                                    }
-                                    const type = res.headers.get('content-type');
-                                    const contents = await res.arrayBuffer();
-                                    return [
-                                        type,
-                                        download,
-                                        Array.from(new Uint8Array(contents)),
-                                    ];
-                                }),
-                            });
-                        };
+                                    resolve(fetch(href).then(async (res) => {
+                                        if (!res.ok) {
+                                            throw new Error('Unsuccessful response');
+                                        }
+                                        const type = res.headers.get('content-type');
+                                        const contents = await res.arrayBuffer();
+                                        return [
+                                            type,
+                                            download,
+                                            Array.from(new Uint8Array(contents)),
+                                        ];
+                                    }));
+                                };
+                            }
+                        }
                     }
-                }
-            }
+                });
+
+                observer.observe(document, { childList: true, subtree: true });
+            })
         });
-        
-        observer.observe(document, { childList: true, subtree: true });
-        `,
+`,
 		downloadKey,
 	);
 

@@ -390,8 +390,7 @@
 								</dt>
 								<dd class="decrypt-detail-value">
 									<HumanFileSize
-										value={dataAttributes[5].byteLength -
-											16}
+										value={dataAttributes[5].byteLength}
 									/>
 								</dd>
 							{/if}
