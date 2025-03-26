@@ -20,6 +20,7 @@ import {
 } from './sandboxEntrypoints.js';
 import type setupConstructCmsSandbox from './setupConstructCmsSandbox.js';
 import type setupEncryptionSandbox from './setupEncryptionSandbox.js';
+import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
 import uint8ArrayToBase64 from './uint8ArrayToBase64.js';
 
 const derToPem = (derEncoded: AllowSharedBufferSource) => {
@@ -27,13 +28,7 @@ const derToPem = (derEncoded: AllowSharedBufferSource) => {
 	const cmsBeginMarker = fiveDashes + 'BEGIN CMS' + fiveDashes + '\r\n';
 	const cmsEndMarker = fiveDashes + 'END CMS' + fiveDashes + '\r\n';
 
-	const buf = ArrayBuffer.isView(derEncoded)
-		? new Uint8Array(
-				derEncoded.buffer,
-				derEncoded.byteOffset,
-				derEncoded.byteLength,
-			)
-		: new Uint8Array(derEncoded);
+	const buf = sharedBufferToUint8Array(derEncoded);
 	const base64EncodedBuf = uint8ArrayToBase64(buf);
 
 	const cmsPemData =
@@ -75,15 +70,17 @@ const prepareDownloadableCmsPayload_ = async (
 				data[3],
 				data[4],
 				data[5],
+				data[6],
 			),
 			cmsSandbox(
 				constructCmsData$SEP_,
 				data[0],
 				data[1],
-				data[6],
 				data[7],
 				data[8],
 				data[9],
+				data[10],
+				data[11],
 			),
 		])
 	).map((x) => derToPem(x)) as [string, string];

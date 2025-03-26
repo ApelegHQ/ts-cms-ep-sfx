@@ -13,27 +13,16 @@
  * limitations under the License.
  */
 
-import constructCmsData from '~/lib/constructCmsData.js';
-import { constructCmsData$SEP_ } from '~/lib/sandboxEntrypoints.js';
-
-const entrypoint_ = (
-	salt: AllowSharedBufferSource,
-	iterationCount: number,
-	ivPWRI: AllowSharedBufferSource,
-	encryptedKey: AllowSharedBufferSource,
-	nonceECI: AllowSharedBufferSource,
-	encryptedContent: AllowSharedBufferSource,
-	tag: AllowSharedBufferSource,
-): AllowSharedBufferSource => {
-	return constructCmsData(
-		salt,
-		iterationCount,
-		ivPWRI,
-		encryptedKey,
-		nonceECI,
-		encryptedContent,
-		tag,
-	).derEncode();
+const sharedBufferToUint8Array_ = (
+	buf: AllowSharedBufferSource,
+): Uint8Array => {
+	if (ArrayBuffer.isView(buf)) {
+		return new Uint8Array(buf.buffer).subarray(
+			buf.byteOffset,
+			buf.byteOffset + buf.byteLength,
+		);
+	}
+	return new Uint8Array(buf);
 };
 
-exports[constructCmsData$SEP_] = entrypoint_;
+export default sharedBufferToUint8Array_;

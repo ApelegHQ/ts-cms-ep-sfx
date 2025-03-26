@@ -13,6 +13,29 @@
  * limitations under the License.
  */
 
+import { pwriKeyWrap_ as pwriKeyWrap } from './pwriKeyWrapping.js';
+
+const gcmEncrypt = async (
+	key: CryptoKey,
+	nonce: AllowSharedBufferSource,
+	data: AllowSharedBufferSource,
+): Promise<
+	[encryptedData: AllowSharedBufferSource, tag: AllowSharedBufferSource]
+> => {
+	const tagLength = 16;
+	const result = await crypto.subtle.encrypt(
+		{
+			['name']: 'AES-GCM',
+			['iv']: nonce,
+			['tagLength']: tagLength * 8,
+		},
+		key,
+		data,
+	);
+
+	return [result.slice(0, data.byteLength), result.slice(data.byteLength)];
+};
+
 const fileEncryptionCms_ = async (
 	deriveKEK: {
 		(): Promise<[KEK: CryptoKey, salt: Uint8Array, iterationCount: number]>;
@@ -22,22 +45,23 @@ const fileEncryptionCms_ = async (
 	[
 		salt: AllowSharedBufferSource,
 		iterationCount: number,
-		noncePWRI: AllowSharedBufferSource,
+		ivPWRI: AllowSharedBufferSource,
 		encryptedKey: AllowSharedBufferSource,
 		nonceECI: AllowSharedBufferSource,
 		encryptedContent: AllowSharedBufferSource,
+		tag: AllowSharedBufferSource,
 	]
 > => {
 	let iterationCount: number = NaN;
 	let salt: Uint8Array = new Uint8Array(0);
 
-	const noncePWRI = new Uint8Array(12);
+	const ivPWRI = new Uint8Array(16);
 	const nonceECI = new Uint8Array(12);
 
-	crypto.getRandomValues(noncePWRI);
+	crypto.getRandomValues(ivPWRI);
 	crypto.getRandomValues(nonceECI);
 
-	const [encryptedKey, encryptedContent] = await crypto.subtle
+	const [encryptedKey, [encryptedContent, tag]] = await crypto.subtle
 		.generateKey({ ['name']: 'AES-GCM', ['length']: 256 }, true, [
 			'encrypt',
 		])
@@ -51,36 +75,21 @@ const fileEncryptionCms_ = async (
 			return Promise.all([
 				Promise.all([KEKp, crypto.subtle.exportKey('raw', CEK)]).then(
 					([KEK, rawCEK]) => {
-						return crypto.subtle.encrypt(
-							{
-								['name']: 'AES-GCM',
-								['iv']: noncePWRI,
-								['tagLength']: 128,
-							},
-							KEK,
-							rawCEK,
-						);
+						return pwriKeyWrap(KEK, ivPWRI, rawCEK);
 					},
 				),
-				crypto.subtle.encrypt(
-					{
-						['name']: 'AES-GCM',
-						['iv']: nonceECI,
-						['tagLength']: 128,
-					},
-					CEK,
-					data,
-				),
+				gcmEncrypt(CEK, nonceECI, data),
 			]);
 		});
 
 	return [
 		salt,
 		iterationCount,
-		noncePWRI,
+		ivPWRI,
 		encryptedKey,
 		nonceECI,
 		encryptedContent,
+		tag,
 	];
 };
 

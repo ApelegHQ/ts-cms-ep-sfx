@@ -16,7 +16,7 @@
 const deriveKEK_ = async (
 	password: string,
 	iterationCount: number,
-	keyUsage: KeyUsage,
+	keyUsages: KeyUsage[],
 	salt?: AllowSharedBufferSource | undefined,
 ): Promise<
 	[KEK: CryptoKey, salt: AllowSharedBufferSource, iterationCount: number]
@@ -33,8 +33,8 @@ const deriveKEK_ = async (
 		throw new TypeError('Invalid iteration count');
 	}
 	if (
-		typeof keyUsage !== 'string' ||
-		(keyUsage !== 'encrypt' && keyUsage !== 'decrypt')
+		!Array.isArray(keyUsages) ||
+		keyUsages.some((usage) => usage !== 'encrypt' && usage !== 'decrypt')
 	) {
 		throw new TypeError('Invalid key usage');
 	}
@@ -58,9 +58,9 @@ const deriveKEK_ = async (
 					['hash']: 'SHA-256',
 				},
 				baseKey,
-				{ ['name']: 'AES-GCM', ['length']: 256 },
+				{ ['name']: 'AES-CBC', ['length']: 256 },
 				false,
-				[keyUsage],
+				keyUsages,
 			);
 		});
 

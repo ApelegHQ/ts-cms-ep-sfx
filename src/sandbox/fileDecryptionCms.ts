@@ -17,20 +17,23 @@ import '~/lib/fixBrokenSandboxSecureContext.js';
 
 import fileDecryptionCms from '~/lib/fileDecryptionCms.js';
 import { fileDecryptionCms$SEP_ } from '~/lib/sandboxEntrypoints.js';
+import sharedBufferToUint8Array from '~/lib/sharedBufferToUint8Array';
 
 declare function deriveKEK(): Promise<CryptoKey>;
 
 if (typeof deriveKEK !== 'function') throw new Error('Missing deriveKEK');
 
 const entrypoint_ = async (
-	noncePWRI: AllowSharedBufferSource,
+	ivPWRI: AllowSharedBufferSource,
 	encryptedKey: AllowSharedBufferSource,
 	nonceECI: AllowSharedBufferSource,
 	encryptedContent: AllowSharedBufferSource,
-	filenameNoncePWRI?: AllowSharedBufferSource,
+	tag: AllowSharedBufferSource,
+	filenameIvPWRI?: AllowSharedBufferSource,
 	filenameEncryptedKey?: AllowSharedBufferSource,
 	filenameNonceECI?: AllowSharedBufferSource,
 	filenameEncryptedContent?: AllowSharedBufferSource,
+	filenameTag?: AllowSharedBufferSource,
 ): Promise<[AllowSharedBufferSource] | [AllowSharedBufferSource, string]> => {
 	const cachedDeriveKEK = (() => {
 		const unset: Record<never, never> = {};
@@ -46,17 +49,19 @@ const entrypoint_ = async (
 
 	const data = await fileDecryptionCms(
 		cachedDeriveKEK,
-		noncePWRI,
+		ivPWRI,
 		encryptedKey,
 		nonceECI,
 		encryptedContent,
+		tag,
 	);
 
 	if (
-		!filenameNoncePWRI ||
+		!filenameIvPWRI ||
 		!filenameEncryptedKey ||
 		!filenameNonceECI ||
-		!filenameEncryptedContent
+		!filenameEncryptedContent ||
+		!filenameTag
 	) {
 		return [data];
 	}
@@ -64,27 +69,19 @@ const entrypoint_ = async (
 	try {
 		const filenameData = await fileDecryptionCms(
 			cachedDeriveKEK,
-			filenameNoncePWRI,
+			filenameIvPWRI,
 			filenameEncryptedKey,
 			filenameNonceECI,
 			filenameEncryptedContent,
+			filenameTag,
 		);
 
-		const filenameBufferU8 = ArrayBuffer.isView(filenameData)
-			? new Uint8Array(
-					filenameData.buffer,
-					filenameData.byteOffset,
-					filenameData.byteLength,
-				)
-			: new Uint8Array(filenameData);
-
-		const filenameBufferU16 = ArrayBuffer.isView(filenameData)
-			? new Uint16Array(
-					filenameData.buffer,
-					filenameData.byteOffset,
-					filenameData.byteLength,
-				)
-			: new Uint16Array(filenameData);
+		const filenameBufferU8 = sharedBufferToUint8Array(filenameData);
+		const filenameBufferU16 = new Uint16Array(
+			filenameBufferU8.buffer,
+			filenameBufferU8.byteOffset,
+			filenameBufferU8.byteLength / 2,
+		);
 
 		if (filenameBufferU8[0] !== 0) {
 			throw new Error('Unsupported format');

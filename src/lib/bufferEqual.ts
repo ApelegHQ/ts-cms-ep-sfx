@@ -13,19 +13,16 @@
  * limitations under the License.
  */
 
+import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
+
 const bufferEqual_ = (
 	a: AllowSharedBufferSource,
 	b: AllowSharedBufferSource,
 ) => {
 	let r = a.byteLength ^ b.byteLength;
 
-	const u8a = ArrayBuffer.isView(a)
-		? new Uint8Array(a.buffer, a.byteOffset, a.byteLength)
-		: new Uint8Array(a);
-
-	const u8b = ArrayBuffer.isView(b)
-		? new Uint8Array(b.buffer, b.byteOffset, b.byteLength)
-		: new Uint8Array(b);
+	const u8a = sharedBufferToUint8Array(a);
+	const u8b = sharedBufferToUint8Array(b);
 
 	const minLength = Math.min(a.byteLength, b.byteLength);
 	for (let i = 0; i < minLength; i++) {

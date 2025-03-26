@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+import sharedBufferToUint8Array from './sharedBufferToUint8Array';
+
 const derIntegerToUint = (buffer: Uint8Array): number => {
 	if (buffer[0] & 0x80) {
 		throw new RangeError('Value out of range');
@@ -54,7 +56,13 @@ const assertDeepEq = <T>(
 		r |= actual[i] === expected[i] ? 0 : 1;
 	}
 	if (r !== 0) {
-		throw new Error('assertDeepEq failed');
+		throw new Error(
+			'assertDeepEq failed' +
+				';act' +
+				new Array(actual).join() +
+				';exp' +
+				new Array(expected).join(),
+		);
 	}
 };
 
@@ -63,34 +71,41 @@ const parseCmsData_ = (
 ): [
 	salt: AllowSharedBufferSource,
 	iterationCount: number,
-	noncePWRI: AllowSharedBufferSource,
+	ivPWRI: AllowSharedBufferSource,
 	encryptedKey: AllowSharedBufferSource,
 	nonceECI: AllowSharedBufferSource,
 	encryptedContent: AllowSharedBufferSource,
+	tag: AllowSharedBufferSource,
 ] => {
-	const u8Buf = ArrayBuffer.isView(buf)
-		? new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength)
-		: new Uint8Array(buf);
+	const u8Buf = sharedBufferToUint8Array(buf);
+	const dataView = new DataView(
+		u8Buf.buffer,
+		u8Buf.byteOffset,
+		u8Buf.byteLength,
+	);
 
 	let pos = 0;
 	// First byte must be a sequence
 	// SEQUENCE
 	assertEq(u8Buf[pos], 0x30);
 	pos += lenOffset(u8Buf, pos);
-	// OBJECT            :pkcs7-envelopedData
+	// OBJECT            :id-smime-ct-authEnvelopedData
 	assertDeepEq(
-		u8Buf.subarray(pos, pos + 2 + 9),
-		[0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x07, 0x03],
+		u8Buf.subarray(pos, pos + 2 + 11),
+		[
+			0x06, 0x0b, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x09, 0x10,
+			0x01, 0x17,
+		],
 	);
-	pos += 2 + 9;
+	pos += 2 + 11;
 	// cont [ 0 ]
 	assertEq(u8Buf[pos], 0xa0);
 	pos += lenOffset(u8Buf, pos);
 	// SEQUENCE
 	assertEq(u8Buf[pos], 0x30);
 	pos += lenOffset(u8Buf, pos);
-	// INTEGER           :03
-	assertDeepEq(u8Buf.subarray(pos, pos + 3), [0x02, 0x01, 0x03]);
+	// INTEGER           :00
+	assertDeepEq(u8Buf.subarray(pos, pos + 3), [0x02, 0x01, 0x00]);
 	pos += 3;
 	// SET
 	assertEq(u8Buf[pos], 0x31);
@@ -147,22 +162,20 @@ const parseCmsData_ = (
 	// SEQUENCE
 	//   OBJECT            :id-alg-PWRI-KEK
 	//   SEQUENCE
+	//     OBJECT            :aes-256-cbc
 	//     OCTET STRING
 	assertDeepEq(
-		u8Buf.subarray(pos, pos + 32),
+		u8Buf.subarray(pos, pos + 30),
 		[
-			0x30, 0x2d, 0x06, 0x0b, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01,
-			0x09, 0x10, 0x03, 0x09, 0x30, 0x1e, 0x06, 0x09, 0x60, 0x86, 0x48,
-			0x01, 0x65, 0x03, 0x04, 0x01, 0x2e, 0x30, 0x11, 0x04, 0x0c,
+			0x30, 0x2c, 0x06, 0x0b, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01,
+			0x09, 0x10, 0x03, 0x09, 0x30, 0x1d, 0x06, 0x09, 0x60, 0x86, 0x48,
+			0x01, 0x65, 0x03, 0x04, 0x01, 0x2a, 0x04, 0x10,
 		],
 	);
-	pos += 32;
-	const noncePWRI = u8Buf.subarray(pos, pos + 12);
-	pos += 12;
-	//   INTEGER           :10
-	// OCTET STRING
-	assertDeepEq(u8Buf.subarray(pos, pos + 4), [0x02, 0x01, 0x10, 0x04]);
-	pos += 3;
+	pos += 30;
+	const ivPWRI = u8Buf.subarray(pos, pos + 16);
+	pos += 16;
+	assertEq(u8Buf[pos], 0x04);
 	pos += lenOffset(u8Buf, pos);
 	const encryptedPasswordLen = u8Buf[pos - 1];
 	if (encryptedPasswordLen >= 0x80) {
@@ -194,16 +207,38 @@ const parseCmsData_ = (
 	pos += 3;
 	// cont [ 0 ]
 	assertEq(u8Buf[pos], 0x80);
-	pos += lenOffset(u8Buf, pos);
-	const encryptedData = u8Buf.subarray(pos);
+	const offset = lenOffset(u8Buf, pos);
+	const len =
+		offset === 2
+			? u8Buf[pos + 1]
+			: offset === 3
+				? u8Buf[pos + 2]
+				: offset === 4
+					? dataView.getUint16(pos + 2, false)
+					: offset === 5
+						? dataView.getUint16(pos + 2, false) * 256 +
+							u8Buf[pos + 4]
+						: offset === 6
+							? dataView.getUint32(pos + 2, false)
+							: -1;
+	pos += offset;
+	const encryptedData = u8Buf.subarray(pos, pos + len);
+	pos += len;
+	// OCTET STRING
+	assertDeepEq(u8Buf.subarray(pos, pos + 2), [0x04, 0x10]);
+	pos += 2;
+	const tag = u8Buf.subarray(pos, pos + 16);
+	pos += 16;
+	assertEq(pos, u8Buf.byteLength);
 
 	return [
 		salt,
 		iterationCount,
-		noncePWRI,
+		ivPWRI,
 		encryptedPassword,
 		nonceECI,
 		encryptedData,
+		tag,
 	];
 };
 

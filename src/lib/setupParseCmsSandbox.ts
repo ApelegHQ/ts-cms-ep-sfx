@@ -25,10 +25,11 @@ const setupParseCmsDataSandbox_ = (signal?: AbortSignal) =>
 			): [
 				salt: AllowSharedBufferSource,
 				iterationCount: number,
-				noncePWRI: AllowSharedBufferSource,
+				ivPWRI: AllowSharedBufferSource,
 				encryptedKey: AllowSharedBufferSource,
 				nonceECI: AllowSharedBufferSource,
 				encryptedContent: AllowSharedBufferSource,
+				tag: AllowSharedBufferSource,
 			];
 		};
 	}>(parseCmsData.default, null, null, signal);

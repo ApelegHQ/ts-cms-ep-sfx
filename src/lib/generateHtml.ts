@@ -17,6 +17,10 @@ import * as fallbackMessage from 'legacy:~/fallbackMessage.inline.js';
 import * as loader from 'legacy:~/loader.inline.js';
 import chunkString from './chunkString.js';
 import {
+	commentCdataEscapeSequenceEnd_ as commentCdataEscapeSequenceEnd,
+	commentCdataEscapeSequenceStart_ as commentCdataEscapeSequenceStart,
+} from './commentCdataEscapeSequence.js';
+import {
 	CMS_DATA_ELEMENT_ID_,
 	CMS_FILENAME_ELEMENT_ID_,
 	CMS_HINT_ELEMENT_ID_,
@@ -25,20 +29,15 @@ import {
 	MAIN_STYLESHEET_ELEMENT_ID_,
 	OPENPGP_SIGNATURE_ELEMENT_ID_,
 } from './elementIds.js';
+import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
 import {
 	xmlEscape_ as xmlEscape,
 	xmlEscapeAttr_ as xmlEscapeAttr,
 	xmlEscapeJsonScriptCdata_ as xmlEscapeJsonScriptCdata,
 } from './xmlEscape.js';
-import {
-	commentCdataEscapeSequenceEnd_ as commentCdataEscapeSequenceEnd,
-	commentCdataEscapeSequenceStart_ as commentCdataEscapeSequenceStart,
-} from './commentCdataEscapeSequence.js';
 
 const bbtoa = (buf: AllowSharedBufferSource) => {
-	const u8buf = ArrayBuffer.isView(buf)
-		? new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength)
-		: new Uint8Array(buf);
+	const u8buf = sharedBufferToUint8Array(buf);
 
 	return btoa(
 		Array.from(u8buf)

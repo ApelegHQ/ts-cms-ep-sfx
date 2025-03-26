@@ -31,14 +31,16 @@ const entrypoint_ = async (
 	[
 		salt: AllowSharedBufferSource,
 		iterationCount: number,
-		noncePWRI: AllowSharedBufferSource,
+		ivPWRI: AllowSharedBufferSource,
 		encryptedKey: AllowSharedBufferSource,
 		nonceECI: AllowSharedBufferSource,
 		encryptedContent: AllowSharedBufferSource,
-		filenameNoncePWRI: AllowSharedBufferSource,
+		tag: AllowSharedBufferSource,
+		filenameIvPWRI: AllowSharedBufferSource,
 		filenameEncryptedKey: AllowSharedBufferSource,
 		filenameNonceECI: AllowSharedBufferSource,
 		filenameEncryptedContent: AllowSharedBufferSource,
+		filenameTag: AllowSharedBufferSource,
 	]
 > => {
 	const cachedDeriveKEK = (() => {
@@ -79,10 +81,12 @@ const entrypoint_ = async (
 		dataResult[3],
 		dataResult[4],
 		dataResult[5],
+		dataResult[6],
 		filenameResult[2],
 		filenameResult[3],
 		filenameResult[4],
 		filenameResult[5],
+		filenameResult[6],
 	];
 };
 

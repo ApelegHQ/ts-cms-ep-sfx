@@ -45,20 +45,22 @@
 		| [
 				salt: AllowSharedBufferSource,
 				iterationCount: number,
-				noncePWRI: AllowSharedBufferSource,
+				ivPWRI: AllowSharedBufferSource,
 				encryptedKey: AllowSharedBufferSource,
 				nonceECI: AllowSharedBufferSource,
 				encryptedContent: AllowSharedBufferSource,
+				tag: AllowSharedBufferSource,
 		  ]
 		| undefined;
 	let filenameAttributes:
 		| [
 				salt: AllowSharedBufferSource,
 				iterationCount: number,
-				noncePWRI: AllowSharedBufferSource,
+				ivPWRI: AllowSharedBufferSource,
 				encryptedKey: AllowSharedBufferSource,
 				nonceECI: AllowSharedBufferSource,
 				encryptedContent: AllowSharedBufferSource,
+				tag: AllowSharedBufferSource,
 		  ]
 		| undefined;
 	let hint: string | undefined;
@@ -286,10 +288,12 @@
 								dataAttributes[3],
 								dataAttributes[4],
 								dataAttributes[5],
+								dataAttributes[6],
 								filenameAttributes[2],
 								filenameAttributes[3],
 								filenameAttributes[4],
 								filenameAttributes[5],
+								filenameAttributes[6],
 							)
 						: sandbox(
 								fileDecryptionCms$SEP_,
@@ -297,6 +301,7 @@
 								dataAttributes[3],
 								dataAttributes[4],
 								dataAttributes[5],
+								dataAttributes[6],
 							));
 
 					blob = new Blob([data], {

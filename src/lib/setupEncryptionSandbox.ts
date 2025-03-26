@@ -39,7 +39,7 @@ const setupEncryptionSandbox_ = (
 			(
 				password: string,
 				iterationCount: number,
-				keyUsage: KeyUsage,
+				keyUsages: KeyUsage[],
 				salt?: Uint8Array | undefined,
 			): [KEK: CryptoKey, salt: Uint8Array, iterationCount: number];
 		};
@@ -60,14 +60,16 @@ const setupEncryptionSandbox_ = (
 				): [
 					salt: AllowSharedBufferSource,
 					iterationCount: number,
-					noncePWRI: AllowSharedBufferSource,
+					ivPWRI: AllowSharedBufferSource,
 					encryptedKey: AllowSharedBufferSource,
 					nonceECI: AllowSharedBufferSource,
 					encryptedContent: AllowSharedBufferSource,
-					filenameNoncePWRI: AllowSharedBufferSource,
+					tag: AllowSharedBufferSource,
+					filenameIvPWRI: AllowSharedBufferSource,
 					filenameEncryptedKey: AllowSharedBufferSource,
 					filenameNonceECI: AllowSharedBufferSource,
 					filenameEncryptedContent: AllowSharedBufferSource,
+					filenameTag: AllowSharedBufferSource,
 				];
 			};
 		}>(
@@ -79,7 +81,7 @@ const setupEncryptionSandbox_ = (
 						deriveKEK$SEP_,
 						passwordGetter(),
 						iterationCountGetter(),
-						'encrypt',
+						['encrypt'],
 					);
 				},
 				[external$encrypt$SEP_]: wrappedCryptoFunctions.encrypt_,

@@ -22,6 +22,7 @@ import {
 	deriveKEK$SEP_,
 	external$decrypt$SEP_,
 	external$deriveKey$SEP_,
+	external$encrypt$SEP_,
 	external$importKey$SEP_,
 } from './sandboxEntrypoints.js';
 
@@ -38,7 +39,7 @@ const setupDecryptionSandbox_ = (
 			(
 				password: string,
 				iterationCount: number,
-				keyUsage: KeyUsage,
+				keyUsages: KeyUsage[],
 				salt?: AllowSharedBufferSource | undefined,
 			): [
 				KEK: CryptoKey,
@@ -58,14 +59,16 @@ const setupDecryptionSandbox_ = (
 		browserSandbox<{
 			[fileDecryptionCms$SEP_]: {
 				(
-					noncePWRI: AllowSharedBufferSource,
+					ivPWRI: AllowSharedBufferSource,
 					encryptedKey: AllowSharedBufferSource,
 					nonceECI: AllowSharedBufferSource,
 					encryptedContent: AllowSharedBufferSource,
-					filenameNoncePWRI?: AllowSharedBufferSource,
+					tag: AllowSharedBufferSource,
+					filenameIvPWRI?: AllowSharedBufferSource,
 					filenameEncryptedKey?: AllowSharedBufferSource,
 					filenameNonceECI?: AllowSharedBufferSource,
 					filenameEncryptedContent?: AllowSharedBufferSource,
+					filenameTag?: AllowSharedBufferSource,
 				):
 					| [AllowSharedBufferSource]
 					| [AllowSharedBufferSource, string];
@@ -79,12 +82,13 @@ const setupDecryptionSandbox_ = (
 						deriveKEK$SEP_,
 						passwordGetter(),
 						iterationCountGetter(),
-						'decrypt',
+						['encrypt', 'decrypt'],
 						saltGetter(),
 					);
 
 					return KEK;
 				},
+				[external$encrypt$SEP_]: wrappedCryptoFunctions.encrypt_,
 				[external$decrypt$SEP_]: wrappedCryptoFunctions.decrypt_,
 				[external$importKey$SEP_]: wrappedCryptoFunctions.importKey_,
 			},

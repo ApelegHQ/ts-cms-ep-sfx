@@ -13,26 +13,22 @@
  * limitations under the License.
  */
 
+import { pwriKeyUnwrap_ as pwriKeyUnwrap } from './pwriKeyWrapping.js';
+import sharedBufferConcat from './sharedBufferConcat.js';
+
 const fileDecryptionCms_ = async (
 	deriveKEK: {
 		(): Promise<CryptoKey>;
 	},
-	noncePWRI: AllowSharedBufferSource,
+	ivPWRI: AllowSharedBufferSource,
 	encryptedKey: AllowSharedBufferSource,
 	nonceECI: AllowSharedBufferSource,
 	encryptedContent: AllowSharedBufferSource,
+	tag: AllowSharedBufferSource,
 ): Promise<AllowSharedBufferSource> => {
 	const KEK = await deriveKEK();
 
-	const rawCEK = await crypto.subtle.decrypt(
-		{
-			['name']: 'AES-GCM',
-			['iv']: noncePWRI,
-			['tagLength']: 128,
-		},
-		KEK,
-		encryptedKey,
-	);
+	const rawCEK = await pwriKeyUnwrap(KEK, ivPWRI, encryptedKey);
 	const CEK = await crypto.subtle.importKey(
 		'raw',
 		rawCEK,
@@ -40,14 +36,17 @@ const fileDecryptionCms_ = async (
 		false,
 		['decrypt'],
 	);
+
+	const tagLength = 16;
+	const buffer = sharedBufferConcat(encryptedContent, tag);
 	const data = await crypto.subtle.decrypt(
 		{
 			['name']: 'AES-GCM',
 			['iv']: nonceECI,
-			['tagLength']: 128,
+			['tagLength']: tagLength * 8,
 		},
 		CEK,
-		encryptedContent,
+		buffer,
 	);
 	return data;
 };

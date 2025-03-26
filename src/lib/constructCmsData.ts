@@ -19,38 +19,43 @@ import {
 	Asn1Sequence,
 } from '@apeleghq/asn1-der';
 import {
+	AuthEnvelopedData,
 	ContentEncryptionAlgorithmIdentifier,
 	ContentType,
 	EncryptedContent,
 	EncryptedContentInfo,
 	EncryptedKey,
-	EnvelopedData,
 	KeyDerivationAlgorithmIdentifier,
 	KeyEncryptionAlgorithmIdentifier,
+	MessageAuthenticationCode,
 	PasswordRecipientInfo,
 	RecipientInfo,
 	RecipientInfos,
 } from '@apeleghq/cms-classes/cms';
-import { OID_PKCS7_DATA, OID_PKCS7_ENVELOPEDDATA } from '@apeleghq/crypto-oids';
+import {
+	OID_PKCS7_DATA,
+	OID_PKCS9_SMIME_CT_AUTH_ENVELOPED_DATA,
+} from '@apeleghq/crypto-oids';
 
 const constructCmsData_ = (
 	salt: AllowSharedBufferSource,
 	iterationCount: number,
-	noncePWRI: AllowSharedBufferSource,
+	ivPWRI: AllowSharedBufferSource,
 	encryptedKey: AllowSharedBufferSource,
 	nonceECI: AllowSharedBufferSource,
 	encryptedContent: AllowSharedBufferSource,
+	tag: AllowSharedBufferSource,
 ): Asn1Sequence => {
 	return new Asn1Sequence([
-		new Asn1Object(OID_PKCS7_ENVELOPEDDATA),
+		new Asn1Object(OID_PKCS9_SMIME_CT_AUTH_ENVELOPED_DATA),
 		new Asn1ContextSpecific(
 			0,
-			new EnvelopedData(
+			new AuthEnvelopedData(
 				new RecipientInfos([
 					new RecipientInfo(
 						new PasswordRecipientInfo(
-							KeyEncryptionAlgorithmIdentifier.pwriAes256gcm(
-								noncePWRI,
+							KeyEncryptionAlgorithmIdentifier.pwriAes256cbc(
+								ivPWRI,
 							),
 							new EncryptedKey(encryptedKey),
 							KeyDerivationAlgorithmIdentifier.pbkdf2sha256(
@@ -65,6 +70,7 @@ const constructCmsData_ = (
 					ContentEncryptionAlgorithmIdentifier.aes256gcm16(nonceECI),
 					new EncryptedContent(encryptedContent),
 				),
+				new MessageAuthenticationCode(tag),
 			),
 			true,
 		),

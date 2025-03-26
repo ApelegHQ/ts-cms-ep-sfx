@@ -23,10 +23,11 @@ const setupConstructCmsDataSandbox_ = (signal?: AbortSignal) =>
 			(
 				salt: AllowSharedBufferSource,
 				iterationCount: number,
-				noncePWRI: AllowSharedBufferSource,
+				ivPWRI: AllowSharedBufferSource,
 				encryptedKey: AllowSharedBufferSource,
 				nonceECI: AllowSharedBufferSource,
 				encryptedContent: AllowSharedBufferSource,
+				tag: AllowSharedBufferSource,
 			): AllowSharedBufferSource;
 		};
 	}>(constructCmsData.default, null, null, signal);

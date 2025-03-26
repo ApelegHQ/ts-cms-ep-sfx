@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S node --import ./loader.mjs
 
 /* Copyright © 2024 Apeleg Limited. All rights reserved.
  *
@@ -53,20 +53,14 @@ const PUBLIC_PATH = process.env['PUBLIC_PATH'] ?? `about:blank`;
 
 const dev = ['dev', 'development'].includes(MODE);
 
-/**
- * @typedef {Object} ExactRealtyBuilderPluginOptions
- * @property {'client' | 'server' | 'worker' | 'iso'} buildTarget
- * @property {boolean} jsOnly
- */
+type ApelegBuilderPluginOptions = {
+	buildTarget: 'client' | 'server' | 'worker' | 'iso';
+	jsOnly: boolean;
+};
 
-/**
- *
- * @param {ExactRealtyBuilderPluginOptions} options
- * @returns {esbuild.Plugin}
- **/
 const exactRealtyBuilderPlugin = (
-	options = { buildTarget: 'iso', jsOnly: false },
-) => ({
+	options: ApelegBuilderPluginOptions = { buildTarget: 'iso', jsOnly: false },
+): esbuild.Plugin => ({
 	name: '@apeleghq/builder',
 
 	setup(build) {
@@ -81,6 +75,8 @@ const exactRealtyBuilderPlugin = (
 
 		const entryNames = {
 			['client']: 'static/[ext]/[hash]',
+			['server']: undefined,
+			['worker']: undefined,
 			['iso']: 'static/[ext]/[hash]',
 		}[options.buildTarget];
 
@@ -177,11 +173,13 @@ const exactRealtyBuilderPlugin = (
 		});
 
 		build.onStart(() => {
-			console.log(
-				`[${buildID}] build started for ${build.initialOptions.entryPoints?.join(
-					', ',
-				)}`,
-			);
+			const entryPoints = Array.isArray(build.initialOptions.entryPoints)
+				? build.initialOptions.entryPoints?.join(', ')
+				: typeof build.initialOptions.entryPoints === 'object'
+					? Object.values(build.initialOptions.entryPoints).join(', ')
+					: '(unknown)';
+
+			console.log(`[${buildID}] build started for ${entryPoints}`);
 		});
 
 		build.onEnd(async (result) => {
@@ -256,7 +254,13 @@ const exactRealtyBuilderPlugin = (
 				cssHash: (() => {
 					const dict = Object.create(null);
 
-					return ({ css, hash }) => {
+					return ({
+						css,
+						hash,
+					}: {
+						css: string;
+						hash: (input: string) => string;
+					}) => {
 						const hashValue = hash(css);
 						if (hashValue in dict) {
 							return dict[hashValue];
@@ -264,7 +268,7 @@ const exactRealtyBuilderPlugin = (
 						const values = new Set(Object.values(dict));
 						for (let i = 2; i < hashValue.length; i++) {
 							const truncatedHash = hashValue
-								.slice(2)
+								.slice(0, i)
 								.replace(/^[0-9]/g, (v) =>
 									String.fromCharCode('A'.charCodeAt(0) + +v),
 								);
@@ -311,11 +315,7 @@ const exactRealtyBuilderPlugin = (
 		write: false,
 	});
 
-	/**
-	 * @param {esbuild.OutputFile[]} files
-	 * @param {string} path
-	 */
-	const findPath = (files, path) => {
+	const findPath = (files: esbuild.OutputFile[], path: string) => {
 		return files.find(
 			(x) =>
 				x.path.endsWith(path) ||
@@ -323,14 +323,14 @@ const exactRealtyBuilderPlugin = (
 		);
 	};
 
-	const outputPath = Object.entries(generateHtmlBuild.metafile.outputs).find(
+	const outputPath = Object.entries(generateHtmlBuild.metafile!.outputs).find(
 		([, v]) => {
 			return v.entryPoint === 'src/utils/generateHtml.ts';
 		},
-	)[0];
-	const text = findPath(generateHtmlBuild.outputFiles, outputPath).text;
+	)![0];
+	const text = findPath(generateHtmlBuild.outputFiles, outputPath)!.text;
 
-	function requireFromString(src) {
+	function requireFromString(src: string) {
 		const exports = {};
 		const ctx = vm.createContext({
 			module: { exports },
@@ -344,16 +344,16 @@ const exactRealtyBuilderPlugin = (
 	}
 
 	const [scriptOutputPath, { cssBundle: cssBundlePath }] = Object.entries(
-		clientBuild.metafile.outputs,
+		clientBuild.metafile!.outputs,
 	).find(([, v]) => {
 		return v.entryPoint?.endsWith(ENTRY_FILE_CLIENT);
-	});
+	})!;
 
 	const scriptText = findPath(
 		clientBuild.outputFiles,
 		scriptOutputPath,
-	).contents;
-	const cssText = findPath(clientBuild.outputFiles, cssBundlePath).contents;
+	)!.contents;
+	const cssText = findPath(clientBuild.outputFiles, cssBundlePath!)!.contents;
 
 	const m = requireFromString(text);
 
@@ -435,7 +435,7 @@ const exactRealtyBuilderPlugin = (
 
 			if (digest !== expectedDigest) {
 				console.error('Digest mismatch', { digest, expectedDigest });
-				if (process.env.SIGNATURE_MODE.toLowerCase() === 'mandatory') {
+				if (process.env.SIGNATURE_MODE!.toLowerCase() === 'mandatory') {
 					throw new Error('Digest mismatch');
 				}
 			}
