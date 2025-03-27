@@ -18,6 +18,7 @@
 import App from '~/App.svelte';
 import { ERROR_ELEMENT_ID_, ROOT_ELEMENT_ID_ } from '~/lib/elementIds.js';
 import isCI from '~/lib/isCI.js';
+import { generateBody_ } from './lib/generateHtml';
 
 const onLoad = (handler: { (): void }) => {
 	if (
@@ -70,35 +71,39 @@ const onLoad = (handler: { (): void }) => {
 };
 
 onLoad(() => {
+	const ns = 'http://www.w3.org/1999/xhtml';
 	const rootId = ROOT_ELEMENT_ID_;
-	const oldRoot = document.getElementById(rootId);
+	const parser = new DOMParser();
 
-	if (!oldRoot) {
-		throw new Error('No element to attach to');
-	}
+	const newRoot$ = document.createElementNS(ns, 'div');
+	newRoot$.setAttribute('id', rootId);
 
-	if (__buildtimeSettings__.ssr) {
-		void new App({
-			['target']: oldRoot,
-			['hydrate']: true,
-		});
+	// Replace body to reduce the opportunities for tampering with the
+	// presentational aspects by modifying unsigned parts of the HTML file.
+	const newBodyDocument = parser.parseFromString(
+		// Generate no `noscript` tag
+		'<html xmlns="' + ns + '">' + generateBody_() + '</html>',
+		document.contentType as unknown as DOMParserSupportedType,
+	);
+	const root$ = newBodyDocument.getElementById(rootId);
+	const error$ = newBodyDocument.getElementById(ERROR_ELEMENT_ID_);
+	const body$ = document.adoptNode(newBodyDocument.body);
+	document.documentElement.replaceChild(body$, document.body);
+
+	// Now, create the App. This needs to be done after replacing body because
+	// the sandbox attaches elements to the body that shouldn't be removed.
+	// Otherwise, this would come before replacing body.
+	void new App({
+		['target']: newRoot$,
+	});
+
+	if (root$) {
+		body$.replaceChild(newRoot$, root$);
 	} else {
-		const target = document.createElementNS(
-			'http://www.w3.org/1999/xhtml',
-			'div',
-		);
-		target.setAttribute('id', rootId);
-
-		void new App({
-			['target']: target,
-		});
-
-		oldRoot.parentElement!.replaceChild(target, oldRoot);
+		body$.appendChild(newRoot$);
 	}
-
+	if (error$) {
+		body$.removeChild(error$);
+	}
 	window.onerror = null;
-	const error$ = document.getElementById(ERROR_ELEMENT_ID_);
-	if (error$?.parentElement) {
-		error$.parentElement.removeChild(error$);
-	}
 });

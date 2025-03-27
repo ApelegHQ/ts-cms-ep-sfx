@@ -96,7 +96,7 @@ Example:
 openssl cms \
   -decrypt \
   -pwri_password MyPassword \
-  -inform DER \
+  -inform PEM \
   -in encrypted.html \
   -out decrypted.example
 ```

@@ -105,6 +105,49 @@ const openPgpSignatureWrapper = (payload: string, signature: string) => {
 	);
 };
 
+const generateBody_ = (fallback?: number) => {
+	return (
+		'<body>' +
+		'<div id="ROOT_ELEMENT__">' +
+		'<div id="FALLBACK_CONTENT_ELEMENT__">' +
+		(fallback
+			? '<noscript>' +
+				'<div id="NOSCRIPT_WARNING_CONTAINER_ELEMENT__">' +
+				'<div id="NOSCRIPT_WARNING_TEXT_CONTAINER_ELEMENT__">' +
+				'<p id="NOSCRIPT_WARNING_TEXT_ELEMENT__" lang="en" xml:lang="en">' +
+				'Scripting must be enabled to use this application.' +
+				'</p>' +
+				(fallback > 1
+					? '<p lang="en" xml:lang="en">' +
+						'You could try decryping this file by running the following command:' +
+						'</p>' +
+						'<code>' +
+						'openssl cms -decrypt -pwri_password <var>SomePassword</var> -inform PEM -in <var>this-file-name.html</var> -out <var>desired-output-file-name.example</var>' +
+						'</code>'
+					: '') +
+				'</div>' +
+				'</div>' +
+				'</noscript>'
+			: '') +
+		'<div id="LOADING_ELEMENT__">' +
+		'<div id="LOADING_ANIMATION_ELEMENT__"></div>' +
+		'<p id="LOADING_TEXT_ELEMENT__" lang="en" xml:lang="en">Loading</p>' +
+		'</div>' +
+		'</div>' +
+		'</div>' +
+		`<div id="${xmlEscapeAttr(ERROR_ELEMENT_ID_)}">` +
+		'<div id="ERROR_WARNING_CONTAINER_ELEMENT__">' +
+		'<div id="ERROR_WARNING_TEXT_CONTAINER_ELEMENT__">' +
+		'<p id="ERROR_WARNING_TEXT_ELEMENT__" lang="en" xml:lang="en">' +
+		'An error occurred' +
+		'</p>' +
+		'</div>' +
+		'</div>' +
+		'</div>' +
+		'</body>'
+	);
+};
+
 const generateHtml_ = async (
 	mainScriptText: AllowSharedBufferSource,
 	cssText: AllowSharedBufferSource,
@@ -153,37 +196,11 @@ const generateHtml_ = async (
 					: '')
 			: '') +
 		'</head>' +
-		'<body>' +
-		'<div id="ROOT_ELEMENT__">' +
-		'<div id="FALLBACK_CONTENT_ELEMENT__">' +
-		'<noscript>' +
-		'<div id="NOSCRIPT_WARNING_CONTAINER_ELEMENT__">' +
-		'<div id="NOSCRIPT_WARNING_TEXT_CONTAINER_ELEMENT__">' +
-		'<p id="NOSCRIPT_WARNING_TEXT_ELEMENT__" lang="en" xml:lang="en">' +
-		'Scripting must be enabled to use this application.' +
-		'</p>' +
-		'</div>' +
-		'</div>' +
-		'</noscript>' +
-		'<div id="LOADING_ELEMENT__">' +
-		'<div id="LOADING_ANIMATION_ELEMENT__"></div>' +
-		'<p id="LOADING_TEXT_ELEMENT__" lang="en" xml:lang="en">Loading</p>' +
-		'</div>' +
-		'</div>' +
-		'</div>' +
-		`<div id="${xmlEscapeAttr(ERROR_ELEMENT_ID_)}">` +
-		'<div id="ERROR_WARNING_CONTAINER_ELEMENT__">' +
-		'<div id="ERROR_WARNING_TEXT_CONTAINER_ELEMENT__">' +
-		'<p id="ERROR_WARNING_TEXT_ELEMENT__" lang="en" xml:lang="en">' +
-		'An error occurred' +
-		'</p>' +
-		'</div>' +
-		'</div>' +
-		'</div>' +
-		'</body>' +
+		generateBody_(encryptedContent ? 2 : 1) +
 		'</html>' +
 		'\r\n'
 	);
 };
 
 export default generateHtml_;
+export { generateBody_ };

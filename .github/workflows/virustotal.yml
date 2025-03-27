@@ -1,5 +1,8 @@
 name: Upload build assets to VirusTotal
 
+permissions:
+  contents: read
+
 on:
     release:
         types:
@@ -8,6 +11,8 @@ on:
 jobs:
     virustotal:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         timeout-minutes: 5
         steps:
             - name: VirusTotal Scan
