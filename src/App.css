@@ -160,3 +160,10 @@
 		filter: invert(1) hue-rotate(180deg);
 	}
 }
+
+@media (prefers-color-scheme: dark) and (forced-colors: active) {
+	html,
+	:host {
+		filter: initial;
+	}
+}
