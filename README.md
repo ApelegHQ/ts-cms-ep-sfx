@@ -84,6 +84,23 @@ security updates.
 - Safari: ✅️ 15–
 - SeaMonkey: ✅️ 2.53.18–
 
+### Other platforms
+
+In addition to working on a web browser as a self-extracting file, the resulting
+encrypted file can also be decrypted by tools that support PEM-encoded CMS, such
+as OpenSSL.
+
+Example:
+
+```sh
+openssl cms \
+  -decrypt \
+  -pwri_password MyPassword \
+  -inform DER \
+  -in encrypted.html \
+  -out decrypted.example
+```
+
 ## ⚡ Performance
 
 Note that this tool works by creating a self-contained HTML file. As a result,

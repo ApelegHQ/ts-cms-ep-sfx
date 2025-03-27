@@ -29,7 +29,7 @@
 	};
 </script>
 
-<header class="header">
+<header>
 	<SkipToMainContent />
 	<div>
 		<h1>HTML&#x2010;based file encryption and decryption utility</h1>

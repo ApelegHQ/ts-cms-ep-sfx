@@ -153,3 +153,10 @@
 #ERROR_ELEMENT__ {
 	display: none;
 }
+
+@media (prefers-color-scheme: dark) {
+	html,
+	:host {
+		filter: invert(1) hue-rotate(180deg);
+	}
+}

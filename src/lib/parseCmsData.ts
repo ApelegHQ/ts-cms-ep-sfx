@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import sharedBufferToUint8Array from './sharedBufferToUint8Array';
+import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
 
 const derIntegerToUint = (buffer: Uint8Array): number => {
 	if (buffer[0] & 0x80) {

@@ -38,7 +38,13 @@ const gcmEncrypt = async (
 
 const fileEncryptionCms_ = async (
 	deriveKEK: {
-		(): Promise<[KEK: CryptoKey, salt: Uint8Array, iterationCount: number]>;
+		(): Promise<
+			[
+				KEK: CryptoKey,
+				salt: AllowSharedBufferSource,
+				iterationCount: number,
+			]
+		>;
 	},
 	data: AllowSharedBufferSource,
 ): Promise<
@@ -53,7 +59,7 @@ const fileEncryptionCms_ = async (
 	]
 > => {
 	let iterationCount: number = NaN;
-	let salt: Uint8Array = new Uint8Array(0);
+	let salt: AllowSharedBufferSource = new Uint8Array(0);
 
 	const ivPWRI = new Uint8Array(16);
 	const nonceECI = new Uint8Array(12);

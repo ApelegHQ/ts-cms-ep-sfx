@@ -1,6 +1,4 @@
-#!/usr/bin/env node
-
-/* Copyright © 2024 Apeleg Limited. All rights reserved.
+/* Copyright © 2025 Apeleg Limited. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License") with LLVM
  * exceptions; you may not use this file except in compliance with the
@@ -15,8 +13,5 @@
  * limitations under the License.
  */
 
-const { register } = require('node:module');
-const { pathToFileURL } = require('node:url');
-register('ts-node/esm', pathToFileURL('./'));
-
-import('../test/e2e/basicFunctionality.test.js');
+import './basicFunctionality.test.js';
+import './cmsPrimitives.test.js';

@@ -19,7 +19,7 @@ import fileEncryptionCms from '~/lib/fileEncryptionCms.js';
 import { fileEncryptionCms$SEP_ } from '~/lib/sandboxEntrypoints.js';
 
 declare function deriveKEK(): Promise<
-	[KEK: CryptoKey, salt: Uint8Array, iterationCount: number]
+	[KEK: CryptoKey, salt: AllowSharedBufferSource, iterationCount: number]
 >;
 
 if (typeof deriveKEK !== 'function') throw new Error('Missing deriveKEK');
