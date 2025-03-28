@@ -108,6 +108,15 @@ const openPgpSignatureWrapper = (payload: string, signature: string) => {
 const generateBody_ = (fallback?: number) => {
 	return (
 		'<body>' +
+		`<div id="${xmlEscapeAttr(ERROR_ELEMENT_ID_)}">` +
+		'<div id="ERROR_WARNING_CONTAINER_ELEMENT__">' +
+		'<div id="ERROR_WARNING_TEXT_CONTAINER_ELEMENT__">' +
+		'<p id="ERROR_WARNING_TEXT_ELEMENT__" lang="en" xml:lang="en">' +
+		'An error occurred' +
+		'</p>' +
+		'</div>' +
+		'</div>' +
+		'</div>' +
 		'<div id="ROOT_ELEMENT__">' +
 		'<div id="FALLBACK_CONTENT_ELEMENT__">' +
 		(fallback
@@ -119,11 +128,11 @@ const generateBody_ = (fallback?: number) => {
 				'</p>' +
 				(fallback > 1
 					? '<p lang="en" xml:lang="en">' +
-						'You could try decryping this file by running the following command:' +
+						'Alternatively, you can try decrypting this file using the following command:' +
 						'</p>' +
-						'<code>' +
-						'openssl cms -decrypt -pwri_password <var>SomePassword</var> -inform PEM -in <var>this-file-name.html</var> -out <var>desired-output-file-name.example</var>' +
-						'</code>'
+						'<pre><code>' +
+						'<b>openssl</b> cms -decrypt -pwri_password <var>SomePassword</var> -inform PEM -in <var>this-file-name.html</var> -out <var>desired-output-file-name.example</var>' +
+						'</code></pre>'
 					: '') +
 				'</div>' +
 				'</div>' +
@@ -132,15 +141,6 @@ const generateBody_ = (fallback?: number) => {
 		'<div id="LOADING_ELEMENT__">' +
 		'<div id="LOADING_ANIMATION_ELEMENT__"></div>' +
 		'<p id="LOADING_TEXT_ELEMENT__" lang="en" xml:lang="en">Loading</p>' +
-		'</div>' +
-		'</div>' +
-		'</div>' +
-		`<div id="${xmlEscapeAttr(ERROR_ELEMENT_ID_)}">` +
-		'<div id="ERROR_WARNING_CONTAINER_ELEMENT__">' +
-		'<div id="ERROR_WARNING_TEXT_CONTAINER_ELEMENT__">' +
-		'<p id="ERROR_WARNING_TEXT_ELEMENT__" lang="en" xml:lang="en">' +
-		'An error occurred' +
-		'</p>' +
 		'</div>' +
 		'</div>' +
 		'</div>' +

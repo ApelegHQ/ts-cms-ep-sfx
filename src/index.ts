@@ -18,7 +18,8 @@
 import App from '~/App.svelte';
 import { ERROR_ELEMENT_ID_, ROOT_ELEMENT_ID_ } from '~/lib/elementIds.js';
 import isCI from '~/lib/isCI.js';
-import { generateBody_ } from './lib/generateHtml';
+import { generateBody_ } from './lib/generateHtml.js';
+import tightenCsp_ from './lib/tightenCsp.js';
 
 const onLoad = (handler: { (): void }) => {
 	if (
@@ -88,6 +89,8 @@ onLoad(() => {
 	const root$ = newBodyDocument.getElementById(rootId);
 	const error$ = newBodyDocument.getElementById(ERROR_ELEMENT_ID_);
 	const body$ = document.adoptNode(newBodyDocument.body);
+
+	tightenCsp_();
 	document.documentElement.replaceChild(body$, document.body);
 
 	// Now, create the App. This needs to be done after replacing body because

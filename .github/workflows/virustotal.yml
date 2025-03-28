@@ -1,7 +1,7 @@
 name: Upload build assets to VirusTotal
 
 permissions:
-  contents: read
+    contents: read
 
 on:
     release:

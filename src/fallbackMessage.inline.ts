@@ -31,11 +31,13 @@ self.onerror = function (
 	_document: Document,
 	_e$: HTMLElement | null,
 	_paragraph$: HTMLParagraphElement,
+	_code$: HTMLElement,
 ) {
 	// These are just to avoid declaring variables and unused as arguments
 	void _document;
 	void _e$;
 	void _paragraph$;
+	void _code$;
 
 	_document = document;
 	_e$ = _document.getElementById(ERROR_ELEMENT_ID_);
@@ -43,12 +45,14 @@ self.onerror = function (
 		_e$.style['display'] = 'block';
 		if (event) {
 			_paragraph$ = _document.createElement('p');
-			_paragraph$.appendChild(
+			_code$ = _document.createElement('code');
+			_code$.appendChild(
 				_document.createTextNode(
 					(event as unknown as ErrorEvent).message ||
 						(event as unknown as string),
 				),
 			);
+			_paragraph$.appendChild(_code$);
 			for (;;) {
 				if (
 					(_e$ as HTMLElement).firstChild &&
