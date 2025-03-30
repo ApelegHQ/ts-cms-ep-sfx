@@ -58,7 +58,7 @@ const constructCmsData_ = (
 								ivPWRI,
 							),
 							new EncryptedKey(encryptedKey),
-							KeyDerivationAlgorithmIdentifier.pbkdf2sha256(
+							KeyDerivationAlgorithmIdentifier.pbkdf2sha512(
 								salt,
 								iterationCount,
 							),

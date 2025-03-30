@@ -56,13 +56,7 @@ const assertDeepEq = <T>(
 		r |= actual[i] === expected[i] ? 0 : 1;
 	}
 	if (r !== 0) {
-		throw new Error(
-			'assertDeepEq failed' +
-				';act' +
-				new Array(actual).join() +
-				';exp' +
-				new Array(expected).join(),
-		);
+		throw new Error('assertDeepEq failed');
 	}
 };
 
@@ -155,7 +149,7 @@ const parseCmsData_ = (
 		u8Buf.subarray(pos, pos + 14),
 		[
 			0x30, 0x0c, 0x06, 0x08, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x02,
-			0x09, 0x05, 0x00,
+			0x0b, 0x05, 0x00,
 		],
 	);
 	pos += 14;

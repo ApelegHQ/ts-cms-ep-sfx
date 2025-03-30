@@ -118,6 +118,8 @@ initialisation vectors each time one is needed.
   payload (used before decryption). It does not handle unprotected user data,
   but it receives user-supplied input that will ultimately be used to recover
   encrypted user data.
+- **`src/lib/pwriKeyWrapping.ts`:** This file implements PWRI key wrapping and
+  unwrapping as described in RFC 3211, section 2.3.
 - **`src/lib/setupConstructCmsSandbox.ts`:** This file implements the creation
   of a sandbox for constructing a CMS payload. The sandbox entrypoint is that
   from `src/sandbox/constructCmsData.ts`.

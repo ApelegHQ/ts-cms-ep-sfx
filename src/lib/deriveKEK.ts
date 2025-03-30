@@ -55,7 +55,7 @@ const deriveKEK_ = async (
 					['name']: 'PBKDF2',
 					['salt']: salt,
 					['iterations']: iterationCount,
-					['hash']: 'SHA-256',
+					['hash']: 'SHA-512',
 				},
 				baseKey,
 				{ ['name']: 'AES-CBC', ['length']: 256 },

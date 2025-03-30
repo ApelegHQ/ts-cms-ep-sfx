@@ -1,6 +1,6 @@
 {
 	"name": "@apeleghq/cms-ep-sfx",
-	"version": "1.1.5",
+	"version": "1.1.6",
 	"description": "Secure File Sharing Utility",
 	"type": "module",
 	"main": "-",
@@ -11,7 +11,7 @@
 	},
 	"devDependencies": {
 		"@apeleghq/asn1-der": "^1.0.3",
-		"@apeleghq/cms-classes": "^1.0.5",
+		"@apeleghq/cms-classes": "^1.0.6",
 		"@apeleghq/crypto-oids": "^20250325.0.0",
 		"@apeleghq/esbuild-plugin-closure-compiler": "^1.0.8",
 		"@apeleghq/esbuild-plugin-inline-js": "^1.1.11",
