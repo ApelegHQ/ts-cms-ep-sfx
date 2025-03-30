@@ -7,8 +7,8 @@ platforms:
       osVersion: 10
       browserName: Chrome
       browserVersion: latest
-    - os: Windows
-      osVersion: 7
+    - os: OS X
+      osVersion: Monterey
       browserName: Firefox
       browserVersion: 115.0
     - deviceName: iPhone 14

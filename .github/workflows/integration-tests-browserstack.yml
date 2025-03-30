@@ -14,10 +14,9 @@ on:
 
 jobs:
     test:
-        if: ${{ false }}
         name: 'BrowserStack Test on Ubuntu'
         runs-on: ubuntu-latest
-        timeout-minutes: 5
+        timeout-minutes: 10
         steps:
             - name: 'BrowserStack Env Setup'
               uses: browserstack/github-actions/setup-env@master
@@ -30,7 +29,7 @@ jobs:
                   node-version: '22'
             - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
               with:
-                  distribution: 'dragonwell'
+                  distribution: 'microsoft'
                   java-version: '21'
             - name: Setup cloudflared
               uses: AnimMouse/setup-cloudflared@625fcfcf71f57a4f00b9656a3b94ee0bbdbd593f
