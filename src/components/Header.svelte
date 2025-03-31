@@ -16,6 +16,7 @@
 
 <script lang="typescript">
 	import SkipToMainContent from '~/components/SkipToMainContent.svelte';
+	import { STRING__TITLE_HTML_BASED_FILE_UTILITY_ } from '~/i18n/strings.js';
 	import OfflineDownload from './OfflineDownload.svelte';
 
 	let mainScript$_: HTMLScriptElement | undefined;
@@ -32,7 +33,7 @@
 <header>
 	<SkipToMainContent />
 	<div>
-		<h1>HTML&#x2010;based file encryption and decryption utility</h1>
+		<h1>{STRING__TITLE_HTML_BASED_FILE_UTILITY_}</h1>
 		<OfflineDownload
 			mainScript$={mainScript$_}
 			mainStylesheet$={mainStylesheet$_}
@@ -60,7 +61,9 @@
 		font-size: 1.8em;
 		font-weight: bold;
 		text-transform: uppercase;
-		margin-bottom: 0.5em;
+		margin: 0 0 0.5em 0;
+		margin-inline: 0;
+		margin-block: 0 0.5em;
 		display: inline;
 	}
 </style>

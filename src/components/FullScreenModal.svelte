@@ -15,6 +15,8 @@
 -->
 
 <script lang="typescript">
+	import { STRING__MODAL_CLOSE_ } from '~/i18n/strings.js';
+
 	let dismissable_: boolean | null | undefined = false;
 	let open_: boolean | null | undefined = true;
 
@@ -27,7 +29,7 @@
 			{#if dismissable_}
 				<form method="dialog" action="about:blank">
 					<button type="submit">
-						<span class="sr-only">Close</span>
+						<span class="sr-only">{STRING__MODAL_CLOSE_}</span>
 					</button>
 				</form>
 			{/if}
@@ -72,9 +74,22 @@
 		overflow: auto;
 	}
 
+	dialog > div > div {
+		margin-inline: 1em;
+		margin-block: 2em 1em;
+		padding-inline: 1em;
+		padding-block: 0;
+	}
+
 	form {
 		display: block;
+		width: auto;
 		height: 0;
+	}
+
+	form {
+		inline-size: auto;
+		block-size: 0;
 	}
 
 	button::before {
@@ -82,9 +97,21 @@
 		display: block;
 		position: absolute;
 		transform: translate(-50%, 50%);
+		/* These don't depend on the writing mode */
 		top: 0;
 		right: 0;
+		bottom: auto;
+		left: auto;
 		line-height: 1;
 		cursor: pointer;
+	}
+
+	/* macOS: place close button to the left */
+	@supports (-webkit-font-smoothing: auto) or (-moz-osx-font-smoothing: auto) {
+		button::before {
+			/* These don't depend on the writing mode */
+			right: auto;
+			left: 1em;
+		}
 	}
 </style>

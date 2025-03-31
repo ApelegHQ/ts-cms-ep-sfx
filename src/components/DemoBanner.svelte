@@ -15,13 +15,17 @@
 -->
 
 <script lang="typescript">
+	import {
+		STRING__ARIA_LABEL_TESTING_MODE_BANNER_,
+		STRING__TESTING_MODE_,
+	} from '~/i18n/strings.js';
 	import isCI from '~/lib/isCI.js';
 </script>
 
 {#if isCI}
-	<aside aria-label="Testing mode banner" lang="en">
+	<aside aria-label={STRING__ARIA_LABEL_TESTING_MODE_BANNER_}>
 		<div>
-			<p>&#x26a0;&#xfe0f; Testing mode &#x26a0;&#xfe0f;</p>
+			<p>{STRING__TESTING_MODE_}</p>
 		</div>
 	</aside>
 {/if}
@@ -29,6 +33,7 @@
 <style lang="postcss">
 	aside {
 		width: 100%;
+		height: auto;
 		font-size: 1.2em;
 		background-color: #f00;
 		color: #fff;
@@ -38,11 +43,27 @@
 		pointer-events: none;
 	}
 
+	aside {
+		inline-size: 100%;
+		block-size: auto;
+	}
+
 	div {
 		display: block;
 		width: 100%;
+		height: auto;
 		max-width: 800px;
+		max-height: none;
 		margin: 0.5em auto;
 		text-align: center;
+	}
+
+	div {
+		inline-size: 100%;
+		inline-block: auto;
+		max-inline-size: 800px;
+		max-block-size: none;
+		margin-inline: auto;
+		margin-block: 0.5em;
 	}
 </style>

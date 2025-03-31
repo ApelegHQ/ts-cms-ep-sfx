@@ -16,10 +16,18 @@
 
 <script lang="typescript">
 	import {
+		STRING__ARIA_LABEL_ATTRIBUTION_,
+		STRING__BUILD_INFORMATION_VERSION_,
+		STRING__COPYRIGHT_YEAR_ALL_RIGHTS_RESERVED_,
+		STRING__FOOTER_HOME_LINK_,
+		STRING__FOOTER_SOURCE_CODE_LINK_,
+		STRING__MADE_WITH_LOVE_BY_,
+	} from '~/i18n/strings.js';
+	import {
 		gitCommitHash_ as gitCommitHash,
 		packageHomepage_ as packageHomepage,
-		packageRepository_ as packageRepository,
 		packageName_ as packageName,
+		packageRepository_ as packageRepository,
 		packageVersion_ as packageVersion,
 	} from '~/lib/packageInfo.js';
 	import Logo from './Logo.svelte';
@@ -39,23 +47,29 @@
 
 <footer>
 	<div>
-		<aside aria-label="attribution" lang="en">
-			Made with &#x2764;&#xfe0f; by <Logo />
+		<aside aria-label={STRING__ARIA_LABEL_ATTRIBUTION_}>
+			{STRING__MADE_WITH_LOVE_BY_[0]}<Logo
+			/>{STRING__MADE_WITH_LOVE_BY_[1]}
 		</aside>
-		<p lang="en">
-			© <time datetime="2025">ⅯⅯⅩⅩⅤ</time> Apeleg Limited. All rights reserved.
+		<p>
+			{STRING__COPYRIGHT_YEAR_ALL_RIGHTS_RESERVED_[0]}<time
+				datetime="2025">ⅯⅯⅩⅩⅤ</time
+			>{STRING__COPYRIGHT_YEAR_ALL_RIGHTS_RESERVED_[1]}
 		</p>
 		{#if packageName}
-			<ul lang="en">
+			<ul>
 				<li>
-					Build information:{' '}
+					{STRING__BUILD_INFORMATION_VERSION_[0]}
 					{packageName}
-					{#if packageVersion}{' '}v{packageVersion}{/if}
+					{#if packageVersion}{STRING__BUILD_INFORMATION_VERSION_[1]}v{packageVersion}{/if}
 					{#if gitCommitHash}
-						{' '}(<data lang="zxx" value={gitCommitHash}
+						{STRING__BUILD_INFORMATION_VERSION_[2]}(<data
+							lang="zxx"
+							value={gitCommitHash}
 							>{gitCommitHash.slice(0, 7)}</data
 						>)
 					{/if}
+					{STRING__BUILD_INFORMATION_VERSION_[3]}
 				</li>
 
 				{#if packageHomepage}
@@ -63,10 +77,8 @@
 						<a
 							href={packageHomepage}
 							rel="me external noopener noreferrer"
-							target="_blank"
+							target="_blank">{STRING__FOOTER_HOME_LINK_}</a
 						>
-							Home
-						</a>
 					</li>
 				{/if}
 				{#if repository}
@@ -75,9 +87,8 @@
 							href={repository}
 							rel="me external noopener noreferrer"
 							target="_blank"
+							>{STRING__FOOTER_SOURCE_CODE_LINK_}</a
 						>
-							Source
-						</a>
 					</li>
 				{/if}
 			</ul>
@@ -88,17 +99,34 @@
 <style lang="postcss">
 	footer {
 		width: 100%;
+		height: auto;
 		font-size: 0.7em;
 		padding: 1em;
 		background-color: rgb(67, 28, 1);
 		color: white;
 	}
 
+	footer {
+		inline-size: 100%;
+		block-size: auto;
+	}
+
 	div {
 		display: block;
 		width: 100%;
+		height: auto;
 		max-width: 800px;
+		max-height: none;
 		margin: 0 auto;
+	}
+
+	div {
+		inline-size: 100%;
+		block-size: auto;
+		max-inline-size: 800px;
+		max-block-size: none;
+		margin-inline: auto;
+		margin-block: 0;
 	}
 
 	aside {
@@ -111,6 +139,7 @@
 		height: 4em;
 		width: auto;
 		user-select: none;
+		/* Writing mode independent for this element */
 		transform: translateY(-0.25em);
 	}
 

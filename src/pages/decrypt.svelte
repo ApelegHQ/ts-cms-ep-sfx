@@ -19,9 +19,35 @@
 	import ErrorModal from '~/components/ErrorModal.svelte';
 	import HumanFileSize from '~/components/HumanFileSize.svelte';
 	import Loading from '~/components/Loading.svelte';
+	import {
+		STRING__ADVANCED_OPTIONS_,
+		STRING__APPROXIMATE_FILE_SIZE_,
+		STRING__BUTTON_CANCEL_,
+		STRING__BUTTON_DOWNLOAD_,
+		STRING__BUTTON_NEXT_,
+		STRING__BUTTON_RESET_,
+		STRING__FILE_NAME_,
+		STRING__FILE_SIZE_,
+		STRING__FILE_SUCCESSFULLY_DECRYPTED_,
+		STRING__GETTING_THINGS_READY_,
+		STRING__HINT_,
+		STRING__LEGEND_FILE_CONFIGURATION_,
+		STRING__LEGEND_FORM_ACTIONS_,
+		STRING__LEGEND_PASSWORD_CONFIGURATION_,
+		STRING__NO_FILE_NAME_,
+		STRING__NO_FILE_NAME_PROVIDED_,
+		STRING__OVERRIDE_FILE_NAME_,
+		STRING__PASSWORD_,
+		STRING__PROCESSING_DATA_,
+		STRING__PROVIDED_INFORMATION_,
+		STRING__REVIEW_FILE_INFORMATION_,
+		STRING__TITLE_DECRPYT_,
+		STRING__TITLE_DECRPYT_A_FILE_,
+	} from '~/i18n/strings.js';
 	import EFormFields from '~/lib/EFormFields.js';
 	import bufferEqual from '~/lib/bufferEqual.js';
 	import cmsPemToDer from '~/lib/cmsPemToDer.js';
+	import commentCdataExtractor from '~/lib/commentCdataExtractor.js';
 	import downloadBlob from '~/lib/downloadBlob.js';
 	import {
 		CMS_DATA_ELEMENT_ID_,
@@ -38,7 +64,6 @@
 	import setupParseCmsDataSandbox from '~/lib/setupParseCmsSandbox.js';
 	import './common.css';
 	import './decrypt.css';
-	import commentCdataExtractor from '~/lib/commentCdataExtractor.js';
 
 	let initError: Error | undefined;
 	let dataAttributes:
@@ -344,11 +369,11 @@
 </script>
 
 <svelte:head>
-	<title>Decrypt</title>
+	<title>{STRING__TITLE_DECRPYT_}</title>
 </svelte:head>
 <main class="main" id={MAIN_CONTENT_ELEMENT_ID_}>
 	{#if (!sandbox || !dataAttributes) && !initError}
-		<Loading>Getting things ready</Loading>
+		<Loading>{STRING__GETTING_THINGS_READY_}</Loading>
 	{:else if initError instanceof Error}
 		<ErrorModal error={initError}></ErrorModal>
 	{:else}
@@ -356,10 +381,10 @@
 			<ErrorModal dismissable error={blob}></ErrorModal>
 		{/if}
 		{#if working}
-			<Loading>Processing data&#x2026;</Loading>
+			<Loading>{STRING__PROCESSING_DATA_}</Loading>
 		{/if}
 		<div class="inner">
-			<h2 class="page-title">Decrypt a file</h2>
+			<h2 class="page-title">{STRING__TITLE_DECRPYT_A_FILE_}</h2>
 			<form
 				on:submit|preventDefault={handleFormSubmit}
 				on:reset={handleFormReset}
@@ -370,9 +395,11 @@
 			>
 				{#if !(blob instanceof Blob)}
 					<fieldset class="fieldset" disabled={working || null}>
-						<legend class="sr-only">Password configuration</legend>
+						<legend class="sr-only"
+							>{STRING__LEGEND_PASSWORD_CONFIGURATION_}</legend
+						>
 						<label class="label">
-							<span>Password</span>
+							<span>{STRING__PASSWORD_}</span>
 							<input
 								name={EFormFields.PASSWORD}
 								type="password"
@@ -382,11 +409,11 @@
 					</fieldset>
 
 					<details class="fieldset" open>
-						<summary>Provided information</summary>
+						<summary>{STRING__PROVIDED_INFORMATION_}</summary>
 						<dl>
 							{#if dataAttributes}
 								<dt class="decrypt-detail-name">
-									Approximate file size
+									{STRING__APPROXIMATE_FILE_SIZE_}
 								</dt>
 								<dd class="decrypt-detail-value">
 									<HumanFileSize
@@ -395,7 +422,9 @@
 								</dd>
 							{/if}
 							{#if hint}
-								<dt class="decrypt-detail-name">Hint</dt>
+								<dt class="decrypt-detail-name">
+									{STRING__HINT_}
+								</dt>
 								<dd class="decrypt-detail-value">
 									<pre>{hint}</pre>
 								</dd>
@@ -404,25 +433,31 @@
 					</details>
 				{:else}
 					<div class="decrypt-success">
-						&#x2705;&#xfe0f; File successfully decrypted!
+						{STRING__FILE_SUCCESSFULLY_DECRYPTED_}
 					</div>
 					<details class="fieldset" open>
-						<summary>Review file information</summary>
+						<summary>{STRING__REVIEW_FILE_INFORMATION_}</summary>
 						<dl>
-							<dt class="decrypt-detail-name">File name</dt>
+							<dt class="decrypt-detail-name">
+								{STRING__FILE_NAME_}
+							</dt>
 							<dd class="decrypt-detail-value">
 								{#if filename}
 									{filename}
 								{:else}
-									<em>No file name provided</em>
+									<em>{STRING__NO_FILE_NAME_PROVIDED_}</em>
 								{/if}
 							</dd>
-							<dt class="decrypt-detail-name">File size</dt>
+							<dt class="decrypt-detail-name">
+								{STRING__FILE_SIZE_}
+							</dt>
 							<dd class="decrypt-detail-value">
 								<HumanFileSize value={blob.size} />
 							</dd>
 							{#if hint}
-								<dt class="decrypt-detail-name">Hint</dt>
+								<dt class="decrypt-detail-name">
+									{STRING__HINT_}
+								</dt>
 								<dd class="decrypt-detail-value">
 									<pre>{hint}</pre>
 								</dd>
@@ -431,11 +466,13 @@
 					</details>
 
 					<details class="fieldset">
-						<summary>Advanced options</summary>
+						<summary>{STRING__ADVANCED_OPTIONS_}</summary>
 						<fieldset disabled={working || null}>
-							<legend class="sr-only">File configuration</legend>
+							<legend class="sr-only"
+								>{STRING__LEGEND_FILE_CONFIGURATION_}</legend
+							>
 							<label class="label">
-								<span>Override file name</span>
+								<span>{STRING__OVERRIDE_FILE_NAME_}</span>
 								<input
 									name={EFormFields.FILENAME}
 									type="text"
@@ -450,27 +487,29 @@
 									name={EFormFields.NO_FILENAME}
 									type="checkbox"
 								/>
-								<span>No file name</span>
+								<span>{STRING__NO_FILE_NAME_}</span>
 							</label>
 						</fieldset>
 					</details>
 				{/if}
 
 				<fieldset class="fieldset" disabled={working || null}>
-					<legend class="sr-only">Form actions</legend>
+					<legend class="sr-only"
+						>{STRING__LEGEND_FORM_ACTIONS_}</legend
+					>
 					{#if !(blob instanceof Blob)}
 						<button class="secondary-button" type="reset"
-							>Reset</button
+							>{STRING__BUTTON_RESET_}</button
 						>
 						<button class="primary-button" type="submit"
-							>Next &#x2192;</button
+							>{STRING__BUTTON_NEXT_}</button
 						>
 					{:else}
 						<button class="secondary-button" type="reset"
-							>Cancel</button
+							>{STRING__BUTTON_CANCEL_}</button
 						>
 						<button class="primary-button" type="submit"
-							>&#x1f4be;&#xfe0e; Download</button
+							>{STRING__BUTTON_DOWNLOAD_}</button
 						>
 					{/if}
 				</fieldset>

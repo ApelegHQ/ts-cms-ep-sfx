@@ -16,6 +16,7 @@
 
 <script lang="typescript">
 	import { onMount } from 'svelte';
+	import { STRING__DROP_YOUR_FILES_HERE_ } from '~/i18n/strings.js';
 	import isTrustedEvent from '~/lib/isTrustedEvent.js';
 
 	let fieldset$: HTMLFieldSetElement;
@@ -130,7 +131,7 @@
 	style={style_}
 >
 	<slot>
-		<p>Drop your files here</p>
+		<p>{STRING__DROP_YOUR_FILES_HERE_}</p>
 	</slot>
 	<input
 		bind:this={input$}

@@ -5,6 +5,7 @@ export LC_ALL="C"
 export TZ="UTC"
 export BUILD_TYPE="release"
 export NODE_ENV="production"
+export LOCALES="en es"
 
 dir=$(dirname "${0}")
 

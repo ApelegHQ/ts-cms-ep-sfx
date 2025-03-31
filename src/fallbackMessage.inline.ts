@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import { STRING__ERROR_MESSAGE_UNSUPPORTED_BROWSER_ } from '~/i18n/strings.js';
 import { ERROR_ELEMENT_ID_ } from '~/lib/elementIds.js';
 
 type CSSProperty = keyof Omit<
@@ -107,27 +108,31 @@ if (
 		void _applyStyle;
 
 		_document = document;
-		_body$ = _document.body;
 		_createElement = _document.createElement.bind(_document);
 		_div$ = _createElement('div');
 		_divStyles =
-			'position|relative|zIndex|999|width|100%|margin|0|padding|4px|backgroundColor|#ffffde|color|#333|borderBottom|2px solid #8c8475|fontSize|12px|fontFamily|Verdana'.split(
+			'position|relative|zIndex|999|width|100%|height|auto|inlineSize|100%|blockSize|auto|margin|0|padding|4px|backgroundColor|#ffffde|color|#333|border|2px none #8c8475|borderBottomStyle|solid|borderInlineStyle|none|borderBlockStyle|none|borderBlockEndStyle|solid|fontSize|12px|fontFamily|Verdana'.split(
 				'|',
 			);
 		_paragraph$ = _createElement('p');
-		_paragraphStyles = ['maxWidth', '1024px', 'margin', '0 auto'];
+		_paragraphStyles =
+			'maxWidth|1024px|maxHeight|none|maxInlineSize|1024px|maxBlockSize|none|margin|0 auto|marginBlock|0|marginInline|auto'.split(
+				'|',
+			);
 		_applyStyle = function ($: HTMLElement, y: string[], i?: number) {
 			for (i = 0; i < y.length; i += 2)
 				$.style[y[i] as CSSProperty] = y[i + 1];
 		};
 		_applyStyle(_paragraph$, _paragraphStyles);
 		_applyStyle(_div$, _divStyles);
-		_paragraph$['lang'] = 'en';
 		_paragraph$.appendChild(
 			_document.createTextNode(
-				'Your browser is unsupported and some functionality might not work as intended.',
+				STRING__ERROR_MESSAGE_UNSUPPORTED_BROWSER_,
 			),
 		);
 		_div$.appendChild(_paragraph$);
-		_body$.insertBefore(_div$, _body$.firstChild);
+		setTimeout(function () {
+			_body$ = _document.body;
+			_body$.insertBefore(_div$, _body$.firstChild);
+		}, 1500);
 	} as unknown as Window['onload'];

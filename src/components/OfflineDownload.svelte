@@ -15,6 +15,7 @@
 -->
 
 <script lang="typescript">
+	import { STRING__BUTTON_DOWNLOAD_OFFLINE_USE_ } from '~/i18n/strings.js';
 	import downloadArchive from '~/lib/downloadArchive.js';
 
 	let mainScript$_: HTMLScriptElement | undefined;
@@ -39,7 +40,7 @@
 
 {#if mainScript$_ && mainStylesheet$_ && openPgpSignature$_}
 	<button on:click={handleClick}
-		>&#x2b07;&#xfe0e; Download for offline use</button
+		>{STRING__BUTTON_DOWNLOAD_OFFLINE_USE_}</button
 	>
 {/if}
 

@@ -13,7 +13,19 @@ if git 'rev-parse' '--quiet' '--verify' 'refs/tags/v'"$version"; then
     exit 1
 fi
 
-digest=$(openssl 'dgst' '-binary' '-sha256' "$tbs" | xxd '-p' '-c' '256')
-signature=$(gpg2 '--armor' '--clear-sign' '--local-user' "$user" '--digest-algo' 'SHA256' '--output' '-' "$tbs" | sed "-n" '/^-----BEGIN PGP SIGNATURE-----/,$p' | sed "-e" "s/^/:/g")
-printf '%s\n\n::\n:%s\n%s\n' "v$version" "$digest" "$signature" | git 'tag' '-s' "v$version" '-F' '-'
+signedinfo=''
+
+for tag in $LOCALES; do
+    if [ x"$tag" = x'en' ]; then
+        tag=''
+        suffix=''
+    else
+        suffix=".${tag}"
+    fi
+    digest=$(openssl 'dgst' '-binary' '-sha256' "$tbs$suffix" | xxd '-p' '-c' '256')
+    signature=$(gpg2 '--armor' '--clear-sign' '--local-user' "$user" '--digest-algo' 'SHA256' '--output' '-' "$tbs$suffix" | sed "-n" '/^-----BEGIN PGP SIGNATURE-----/,$p' | sed "-e" "s/^/:/g")
+    signedinfo="$(printf '%s\n::%s\n:%s\n%s\n' "$signedinfo" "$tag" "$digest" "$signature")"
+done
+
+printf "%s\n\n%s" "v$version" "$signedinfo" | git 'tag' '-s' "v$version" '-F' '-'
 echo 'Created tag v'"$version"

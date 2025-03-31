@@ -15,6 +15,13 @@
 -->
 
 <script lang="typescript">
+	import {
+		STRING__AN_ERROR_OCCURRED_,
+		STRING__ERROR_MESSAGE_,
+		STRING__ERROR_MODAL_ICON_,
+		STRING__ERROR_NAME_,
+		STRING__ERROR_STACK_,
+	} from '~/i18n/strings.js';
 	import FullScreenModal from './FullScreenModal.svelte';
 
 	let error_: unknown;
@@ -24,22 +31,22 @@
 </script>
 
 <FullScreenModal dismissable={dismissable_}>
-	<div class="errormodal-icon">&#x1f645;&#xfe0e;</div>
+	<div class="errormodal-icon">{STRING__ERROR_MODAL_ICON_}</div>
 	<details>
-		<summary>An error occurred</summary>
+		<summary>{STRING__AN_ERROR_OCCURRED_}</summary>
 		<div>
 			{#if error_ instanceof Error}
 				<dl>
-					<dt class="sr-only">Name</dt>
+					<dt class="sr-only">{STRING__ERROR_NAME_}</dt>
 					<dd class="errormodal-errorname">
 						{error_.name ?? '(unknown)'}
 					</dd>
 					{#if error_.message}
-						<dt class="sr-only">Message</dt>
+						<dt class="sr-only">{STRING__ERROR_MESSAGE_}</dt>
 						<dd class="errormodal-message">{error_.message}</dd>
 					{/if}
 					{#if error_.stack}
-						<dt class="sr-only">Stack</dt>
+						<dt class="sr-only">{STRING__ERROR_STACK_}</dt>
 						<dd>
 							<pre class="errormodal-stack">{error_.stack}</pre>
 						</dd>
@@ -81,5 +88,14 @@
 		margin: 0.5em auto;
 		overflow: auto;
 		max-width: 75vw;
+		max-height: none;
+	}
+
+	.errormodal-stack {
+		margin-inline: auto;
+		margin-block: 0.5em;
+		max-inline-size: 75vw;
+		max-inline-size: 75vi;
+		max-block-size: none;
 	}
 </style>

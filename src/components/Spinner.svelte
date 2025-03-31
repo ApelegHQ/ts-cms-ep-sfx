@@ -20,7 +20,13 @@
 	* {
 		display: block;
 		position: relative;
+		width: auto;
 		height: 1.2em;
+	}
+
+	* {
+		inline-size: auto;
+		block-size: 1.2em;
 	}
 
 	::after {

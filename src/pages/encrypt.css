@@ -16,6 +16,7 @@
 .dropzone {
 	display: block;
 	color: #333;
+	min-width: none;
 	min-height: 6em;
 	text-align: center;
 	cursor: pointer;
@@ -23,6 +24,13 @@
 	padding: 8em 1.5em;
 	border: 2px dashed #a26135;
 	background-color: #fff;
+}
+
+.dropzone {
+	min-inline-size: none;
+	min-block-size: 6em;
+	padding-inline: 1.5em;
+	padding-block: 8em;
 }
 
 .dropzone-selected {
@@ -46,6 +54,13 @@
 	pointer-events: none;
 	user-select: none;
 	max-width: calc(100vw - 2rem - 3em - 4px);
+	max-height: none;
+}
+
+.dropzone-inner {
+	max-inline-size: calc(100vw - 2rem - 3em - 4px);
+	max-inline-size: calc(100vi - 2rem - 3em - 4px);
+	max-block-size: none;
 }
 
 .dropzone-icon {

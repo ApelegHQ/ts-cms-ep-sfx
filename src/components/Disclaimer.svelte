@@ -15,23 +15,22 @@
 -->
 
 <script lang="typescript">
+	import {
+		STRING__TITLE_WARRANTY_DISCLAIMER_,
+		STRING__WARANTY_DISCLAIMER_TEXT_,
+	} from '~/i18n/strings.js';
+
 	const labelId =
 		'disclaimer-title-' + (0, Math.random)().toFixed(6).slice(2);
 </script>
 
-<aside aria-labelledby={labelId} lang="en">
+<aside aria-labelledby={labelId}>
 	<div>
-		<h2 id={labelId}>Warranty disclaimer</h2>
-		<p>
-			To the extent permissible by applicable law, the Software is
-			provided &#x201c;as is&#x201d;, without warranty of any kind,
-			express or implied, including but not limited to the warranties of
-			merchantability, fitness for a particular purpose and
-			noninfringement. Except as required by applicable law, in no event
-			shall the authors or copyright holders be liable for any claim,
-			damages or other liability, whether in an action of contract, tort
-			or otherwise, arising from, out of or in connection with the
-			Software or the use or other dealings in the Software.
+		<h2 lang={STRING__TITLE_WARRANTY_DISCLAIMER_[0]} id={labelId}>
+			{STRING__TITLE_WARRANTY_DISCLAIMER_[1]}
+		</h2>
+		<p lang={STRING__WARANTY_DISCLAIMER_TEXT_[0]}>
+			{STRING__WARANTY_DISCLAIMER_TEXT_[1]}
 		</p>
 	</div>
 </aside>
@@ -39,26 +38,48 @@
 <style lang="postcss">
 	aside {
 		width: 100%;
+		height: auto;
 		font-size: 0.8em;
 		padding: 1em;
 		background-color: #fff;
 		color: #333;
 	}
 
+	aside {
+		inline-size: 100%;
+		block-size: auto;
+	}
+
 	div {
 		display: block;
 		width: 100%;
+		height: auto;
 		max-width: 800px;
+		max-height: none;
 		margin: 1em auto;
 		border: 0.5em solid currentColor;
 		padding: 1em;
+	}
+
+	div {
+		inline-size: 100%;
+		block-size: auto;
+		max-inline-size: 800px;
+		max-block-size: none;
+		margin-inline: auto;
+		margin-block: 1em;
 	}
 
 	h2 {
 		font-size: 1.5em;
 		font-weight: bold;
 		text-transform: uppercase;
-		margin-bottom: 0.5em;
+		margin: 0 0 0.5em 0;
+	}
+
+	h2 {
+		margin-inline: 0;
+		margin-block: 0 0.5em;
 	}
 
 	p {

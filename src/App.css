@@ -40,7 +40,13 @@
 #FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ #LOADING_ANIMATION_ELEMENT__ {
 	display: flex;
 	position: relative;
+	width: auto;
 	height: 100%;
+}
+
+#FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ #LOADING_ANIMATION_ELEMENT__ {
+	inline-size: auto;
+	block-size: 100%;
 }
 
 #FALLBACK_CONTENT_ELEMENT__
@@ -52,6 +58,8 @@
 	border: 0 solid transparent;
 	padding: 0.75rem;
 	margin: 0 auto;
+	margin-inline: auto;
+	margin-block: 0;
 	background-image:
 		linear-gradient(white, white),
 		linear-gradient(to left, #743ad5, #d53a9d);
@@ -85,6 +93,7 @@
 	display: block;
 	margin: 0 auto 2rem auto;
 	text-align: center;
+	width: auto;
 	height: 50%;
 	text-transform: uppercase;
 	font-family:
@@ -100,6 +109,15 @@
 		'Helvetica Neue',
 		sans-serif;
 	color: #111;
+}
+
+#FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ #LOADING_TEXT_ELEMENT__ {
+	padding-inline: 0;
+	padding-block: 2rem;
+	margin-inline: auto;
+	margin-block: 0 2rem;
+	inline-size: auto;
+	block-size: 50%;
 }
 
 #ERROR_WARNING_CONTAINER_ELEMENT__,
@@ -133,9 +151,13 @@
 	display: block;
 	color: #333;
 	width: 1024px;
+	height: auto;
 	max-width: 100%;
+	max-height: none;
 	font-size: 2.5rem;
 	margin: 0 auto;
+	margin-inline: auto;
+	margin-block: 0;
 	font-family:
 		system-ui,
 		-apple-system,
@@ -148,6 +170,14 @@
 		'Open Sans',
 		'Helvetica Neue',
 		sans-serif;
+}
+
+#ERROR_WARNING_TEXT_ELEMENT__,
+#NOSCRIPT_WARNING_TEXT_ELEMENT__ {
+	inline-size: 1024px;
+	block-size: auto;
+	max-inline-size: 100%;
+	max-block-size: auto;
 }
 
 #ERROR_ELEMENT__ {

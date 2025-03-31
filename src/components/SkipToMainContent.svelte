@@ -15,10 +15,11 @@
 -->
 
 <script lang="typescript">
+	import { STRING__SKIP_TO_MAIN_CONTENT_ } from '~/i18n/strings.js';
 	import { MAIN_CONTENT_ELEMENT_ID_ } from '~/lib/elementIds.js';
 </script>
 
-<a href={'#' + MAIN_CONTENT_ELEMENT_ID_}>Skip to main content</a>
+<a href={'#' + MAIN_CONTENT_ELEMENT_ID_}>{STRING__SKIP_TO_MAIN_CONTENT_}</a>
 
 <style lang="postcss">
 	* {
@@ -28,7 +29,7 @@
 		display: block;
 		font-size: 1em;
 		line-height: 1.5em;
-		margin: -5em 0.75em 0.75em;
+		margin: -50em 0.75em 0.75em;
 		padding: 0.75em;
 		position: absolute;
 		transition-duration: 0.15s;

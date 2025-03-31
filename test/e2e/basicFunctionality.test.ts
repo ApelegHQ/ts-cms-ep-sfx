@@ -83,9 +83,10 @@ test('Basic functionality', async (t) => {
 
 		await form$
 			.findElement(
-				By.css(`input[name="${EFormFields.FILE}"][type="file"]`),
+				By.css(
+					`fieldset:has(input[name="${EFormFields.FILE}"][type="file"])`,
+				),
 			)
-			.findElement(By.xpath('./ancestor::fieldset'))
 			.then((dropzone) => dragAndDropFile(dropzone, contents, fileName));
 
 		await driver.wait(until.elementIsEnabled(password$), 100);

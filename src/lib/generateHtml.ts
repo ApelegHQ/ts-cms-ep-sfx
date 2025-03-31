@@ -15,6 +15,18 @@
 
 import * as fallbackMessage from 'legacy:~/fallbackMessage.inline.js';
 import * as loader from 'legacy:~/loader.inline.js';
+import {
+	LANG_CODE_,
+	LANG_DIR_,
+	STRING__ALTERNATE_DECRYPTION_INSTRUCTIONS_COMMAND_,
+	STRING__ERROR_AN_ERROR_OCCURRED_,
+	STRING__ERROR_SCRIPTING_MUST_BE_ENABLED_,
+	STRING__EXAMPLE_COMMAND_OUTPUT_FILE_NAME_,
+	STRING__EXAMPLE_COMMAND_SOMEPASSWORD_,
+	STRING__EXAMPLE_COMMAND_THIS_FILE_NAME_,
+	STRING__LOADING_,
+	STRING__TITLE_HTML_CMS_TOOL_,
+} from '~/i18n/strings.js';
 import chunkString from './chunkString.js';
 import {
 	commentCdataEscapeSequenceEnd_ as commentCdataEscapeSequenceEnd,
@@ -71,7 +83,7 @@ export const tbsPayload_ = async (
 		// `form-action data:` is so that form action=modal works
 		` content="default-src 'none'; script-src 'self' 'unsafe-eval' blob: data:; script-src-elem blob: data: '${fallbackMessage.sri}' '${loader.sri}' '${mainScriptTextSriDigest}'; script-src-attr 'none'; style-src data: '${cssTextSriDigest}'; child-src blob:; connect-src blob: data:; frame-src blob:; worker-src blob:; form-action about:"` +
 		'/>' +
-		`<title>HTML CMS Tool</title>` +
+		`<title>${xmlEscape(STRING__TITLE_HTML_CMS_TOOL_)}</title>` +
 		`<script src="data:text/javascript;base64,${encodeURIComponent(fallbackMessage.contentBase64)}" integrity="${xmlEscapeAttr(fallbackMessage.sri)}" crossorigin="anonymous">` +
 		`</script>` +
 		'\r\n' +
@@ -111,8 +123,8 @@ const generateBody_ = (fallback?: number) => {
 		`<div id="${xmlEscapeAttr(ERROR_ELEMENT_ID_)}">` +
 		'<div id="ERROR_WARNING_CONTAINER_ELEMENT__">' +
 		'<div id="ERROR_WARNING_TEXT_CONTAINER_ELEMENT__">' +
-		'<p id="ERROR_WARNING_TEXT_ELEMENT__" lang="en" xml:lang="en">' +
-		'An error occurred' +
+		'<p id="ERROR_WARNING_TEXT_ELEMENT__">' +
+		xmlEscape(STRING__ERROR_AN_ERROR_OCCURRED_) +
 		'</p>' +
 		'</div>' +
 		'</div>' +
@@ -123,15 +135,23 @@ const generateBody_ = (fallback?: number) => {
 			? '<noscript>' +
 				'<div id="NOSCRIPT_WARNING_CONTAINER_ELEMENT__">' +
 				'<div id="NOSCRIPT_WARNING_TEXT_CONTAINER_ELEMENT__">' +
-				'<p id="NOSCRIPT_WARNING_TEXT_ELEMENT__" lang="en" xml:lang="en">' +
-				'Scripting must be enabled to use this application.' +
+				'<p id="NOSCRIPT_WARNING_TEXT_ELEMENT__">' +
+				xmlEscape(STRING__ERROR_SCRIPTING_MUST_BE_ENABLED_) +
 				'</p>' +
 				(fallback > 1
-					? '<p lang="en" xml:lang="en">' +
-						'Alternatively, you can try decrypting this file using the following command:' +
+					? '<p>' +
+						xmlEscape(
+							STRING__ALTERNATE_DECRYPTION_INSTRUCTIONS_COMMAND_,
+						) +
 						'</p>' +
 						'<pre><code>' +
-						'<b>openssl</b> cms -decrypt -pwri_password <var>SomePassword</var> -inform PEM -in <var>this-file-name.html</var> -out <var>desired-output-file-name.example</var>' +
+						'<b>openssl</b> cms -decrypt -pwri_password <var>' +
+						xmlEscape(STRING__EXAMPLE_COMMAND_SOMEPASSWORD_) +
+						'</var> -inform PEM -in <var>' +
+						xmlEscape(STRING__EXAMPLE_COMMAND_THIS_FILE_NAME_) +
+						'</var> -out <var>' +
+						xmlEscape(STRING__EXAMPLE_COMMAND_OUTPUT_FILE_NAME_) +
+						'</var>' +
 						'</code></pre>'
 					: '') +
 				'</div>' +
@@ -140,7 +160,9 @@ const generateBody_ = (fallback?: number) => {
 			: '') +
 		'<div id="LOADING_ELEMENT__">' +
 		'<div id="LOADING_ANIMATION_ELEMENT__"></div>' +
-		'<p id="LOADING_TEXT_ELEMENT__" lang="en" xml:lang="en">Loading</p>' +
+		'<p id="LOADING_TEXT_ELEMENT__">' +
+		xmlEscape(STRING__LOADING_) +
+		'</p>' +
 		'</div>' +
 		'</div>' +
 		'</div>' +
@@ -165,7 +187,7 @@ const generateHtml_ = async (
 
 	return (
 		'<!DOCTYPE html>' +
-		'<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">' +
+		`<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="${xmlEscapeAttr(LANG_CODE_)}" lang="${xmlEscapeAttr(LANG_CODE_)}" dir="${xmlEscapeAttr(LANG_DIR_)}">` +
 		'<head>' +
 		(openPgpSignatureText
 			? openPgpSignatureWrapper(tbsPayload, openPgpSignatureText)

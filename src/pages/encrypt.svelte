@@ -25,6 +25,35 @@
 	import Dropzone from '~/components/Dropzone.svelte';
 	import ErrorModal from '~/components/ErrorModal.svelte';
 	import Loading from '~/components/Loading.svelte';
+	import {
+		STRING__ACRONYM_PBKDF2_,
+		STRING__ADVANCED_OPTIONS_,
+		STRING__ALGO_ITERATION_COUNT_,
+		STRING__ARCHIVE_NAME_,
+		STRING__BUTTON_RESET_,
+		STRING__BUTTON_SAVE_,
+		STRING__CONFIRM_PASSWORD_,
+		STRING__DROP_YOUR_FILE_HERE_,
+		STRING__ERROR_PASSWORDS_DONT_MATCH_,
+		STRING__FILE_,
+		STRING__FILE_SELECTED_,
+		STRING__FILE_SELECTION_EMPTY_ICON_,
+		STRING__FILE_SELECTION_SELECTED_ICON_,
+		STRING__GETTING_THINGS_READY_,
+		STRING__HINT_,
+		STRING__LEGEND_ADVANCED_PASSWORD_OPTIONS_,
+		STRING__LEGEND_FILE_CONFIGURATION_,
+		STRING__LEGEND_FILE_SELECTION_,
+		STRING__LEGEND_FORM_ACTIONS_,
+		STRING__LEGEND_PASSWORD_CONFIGURATION_,
+		STRING__NO_FILE_NAME_,
+		STRING__OTHER_OPTIONS_,
+		STRING__OVERRIDE_FILE_NAME_,
+		STRING__PASSWORD_,
+		STRING__PROCESSING_DATA_,
+		STRING__TITLE_ENCRPYT_,
+		STRING__TITLE_ENCRPYT_A_FILE_,
+	} from '~/i18n/strings.js';
 	import EFormFields from '~/lib/EFormFields.js';
 	import blobToBuffer from '~/lib/blobToBuffer.js';
 	import downloadArchive from '~/lib/downloadArchive.js';
@@ -172,7 +201,7 @@
 						passwordConfirmInput$.setCustomValidity('');
 					} else {
 						passwordConfirmInput$.setCustomValidity(
-							"Passwords don't match",
+							STRING__ERROR_PASSWORDS_DONT_MATCH_,
 						);
 					}
 				}
@@ -190,7 +219,9 @@
 					if (passwordsEq(target.value, passwordInput$.value)) {
 						target.setCustomValidity('');
 					} else {
-						target.setCustomValidity("Passwords don't match");
+						target.setCustomValidity(
+							STRING__ERROR_PASSWORDS_DONT_MATCH_,
+						);
 					}
 				}
 			: () => {};
@@ -349,11 +380,11 @@
 </script>
 
 <svelte:head>
-	<title>Encrypt</title>
+	<title>{STRING__TITLE_ENCRPYT_}</title>
 </svelte:head>
 <main class="main" id={MAIN_CONTENT_ELEMENT_ID_}>
 	{#if !encryptionSandbox}
-		<Loading>Getting things ready</Loading>
+		<Loading>{STRING__GETTING_THINGS_READY_}</Loading>
 	{:else if encryptionSandbox instanceof Error}
 		<ErrorModal error={encryptionSandbox}></ErrorModal>
 	{:else}
@@ -361,10 +392,10 @@
 			<ErrorModal dismissable error={encryptionError}></ErrorModal>
 		{/if}
 		{#if working}
-			<Loading>Processing data&#x2026;</Loading>
+			<Loading>{STRING__PROCESSING_DATA_}</Loading>
 		{/if}
 		<div class="inner">
-			<h2 class="page-title">Encrypt a file</h2>
+			<h2 class="page-title">{STRING__TITLE_ENCRPYT_A_FILE_}</h2>
 			<form
 				on:submit|preventDefault={handleFormSubmit}
 				on:reset={handleFormReset}
@@ -390,22 +421,30 @@
 					name={EFormFields.FILE}
 					required
 				>
-					<legend class="sr-only">File selection</legend>
+					<legend class="sr-only"
+						>{STRING__LEGEND_FILE_SELECTION_}</legend
+					>
 					<label for={ENCRYPT_DROPZONE_ELEMENT_ID_} class="sr-only"
-						>File</label
+						>{STRING__FILE_}</label
 					>
 					<div class="dropzone-inner">
 						{#if filename === undefined}
-							<span class="dropzone-icon">&#x1f4ce;&#xfe0e;</span>
-							<p class="dropzone-text">Drop your file here</p>
+							<span class="dropzone-icon"
+								>{STRING__FILE_SELECTION_EMPTY_ICON_}</span
+							>
+							<p class="dropzone-text">
+								{STRING__DROP_YOUR_FILE_HERE_}
+							</p>
 						{:else}
-							<span class="dropzone-icon">&#x1f4c3;&#xfe0e;</span>
+							<span class="dropzone-icon"
+								>{STRING__FILE_SELECTION_SELECTED_ICON_}</span
+							>
 
 							<p class="dropzone-text">
 								{#if filename}
 									{filename}
 								{:else}
-									<em>File selected</em>
+									<em>{STRING__FILE_SELECTED_}</em>
 								{/if}
 							</p>
 						{/if}
@@ -416,9 +455,11 @@
 					class="fieldset"
 					disabled={filename === undefined || working || null}
 				>
-					<legend class="sr-only">Password configuration</legend>
+					<legend class="sr-only"
+						>{STRING__LEGEND_PASSWORD_CONFIGURATION_}</legend
+					>
 					<label class="label">
-						<span>Password</span>
+						<span>{STRING__PASSWORD_}</span>
 						<input
 							bind:this={passwordInput$}
 							on:input={handlePasswordInput}
@@ -430,7 +471,7 @@
 					</label>
 
 					<label class="label">
-						<span>Confirm password</span>
+						<span>{STRING__CONFIRM_PASSWORD_}</span>
 						<input
 							bind:this={passwordConfirmInput$}
 							on:input={handlePasswordConfirmInput}
@@ -442,17 +483,18 @@
 					</label>
 
 					<details class="fieldset">
-						<summary>Advanced options</summary>
+						<summary>{STRING__ADVANCED_OPTIONS_}</summary>
 						<fieldset>
 							<legend class="sr-only"
-								>Advanced password options</legend
+								>{STRING__LEGEND_ADVANCED_PASSWORD_OPTIONS_}</legend
 							>
 							<label class="label">
 								<span
-									><abbr
-										title="Password&#x2010;Based Key Derivation Function 2"
-										>PBKDF2</abbr
-									> iteration count</span
+									>{STRING__ALGO_ITERATION_COUNT_[0]}<abbr
+										lang={STRING__ACRONYM_PBKDF2_[0]}
+										title={STRING__ACRONYM_PBKDF2_[1]}
+										>{STRING__ACRONYM_PBKDF2_[2]}</abbr
+									>{STRING__ALGO_ITERATION_COUNT_[1]}</span
 								>
 								<input
 									name={EFormFields.PBKDF2_ITERATION_COUNT}
@@ -467,14 +509,16 @@
 				</fieldset>
 
 				<details class="fieldset" open>
-					<summary>Other options</summary>
+					<summary>{STRING__OTHER_OPTIONS_}</summary>
 					<fieldset
 						class="fieldset"
 						disabled={filename === undefined || working || null}
 					>
-						<legend class="sr-only">File configuration</legend>
+						<legend class="sr-only"
+							>{STRING__LEGEND_FILE_CONFIGURATION_}</legend
+						>
 						<label class="label">
-							<span>Override file name</span>
+							<span>{STRING__OVERRIDE_FILE_NAME_}</span>
 							<input
 								on:input={handleFileNameInput}
 								name={EFormFields.FILENAME}
@@ -493,11 +537,11 @@
 								name={EFormFields.NO_FILENAME}
 								type="checkbox"
 							/>
-							<span>No file name</span>
+							<span>{STRING__NO_FILE_NAME_}</span>
 						</label>
 
 						<label class="label">
-							<span>Hint</span>
+							<span>{STRING__HINT_}</span>
 							<textarea
 								name={EFormFields.HINT}
 								disabled={filename === undefined ? true : null}
@@ -505,7 +549,7 @@
 						</label>
 
 						<label class="label">
-							<span>Archive name</span>
+							<span>{STRING__ARCHIVE_NAME_}</span>
 							<input
 								name={EFormFields.ARCHIVE_FILENAME}
 								type="text"
@@ -522,13 +566,17 @@
 				</details>
 
 				<fieldset class="fieldset" disabled={working || null}>
-					<legend class="sr-only">Form actions</legend>
-					<button class="secondary-button" type="reset">Reset</button>
+					<legend class="sr-only"
+						>{STRING__LEGEND_FORM_ACTIONS_}</legend
+					>
+					<button class="secondary-button" type="reset"
+						>{STRING__BUTTON_RESET_}</button
+					>
 					<button
 						class="primary-button"
 						type="submit"
 						disabled={filename === undefined || working || null}
-						>&#x1f4be;&#xfe0e; Save</button
+						>{STRING__BUTTON_SAVE_}</button
 					>
 				</fieldset>
 			</form>

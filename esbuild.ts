@@ -58,7 +58,49 @@ type ApelegBuilderPluginOptions = {
 	jsOnly: boolean;
 };
 
-const exactRealtyBuilderPlugin = (
+type LocalePluginOptions = {
+	localeTag?: string;
+};
+
+const localePlugin = (options: LocalePluginOptions): esbuild.Plugin => ({
+	name: '@apeleghq/locale',
+
+	setup(build) {
+		if (options.localeTag) {
+			build.onResolve(
+				{ filter: /^~\/i18n\/strings\.js$/ },
+				(() => {
+					const skipResolve = {};
+
+					return async ({ kind, path, resolveDir, pluginData }) => {
+						if (pluginData === skipResolve) {
+							return;
+						}
+
+						const result = await build.resolve(path, {
+							kind,
+							resolveDir,
+							pluginData: skipResolve,
+						});
+
+						if (result.errors.length > 0) {
+							return { errors: result.errors };
+						}
+
+						return {
+							path: result.path.replace(
+								/(?<=strings)(?=\.ts$)/,
+								`.${options.localeTag}`,
+							),
+						};
+					};
+				})(),
+			);
+		}
+	},
+});
+
+const apelegBuilderPlugin = (
 	options: ApelegBuilderPluginOptions = { buildTarget: 'iso', jsOnly: false },
 ): esbuild.Plugin => ({
 	name: '@apeleghq/builder',
@@ -192,13 +234,14 @@ const exactRealtyBuilderPlugin = (
 	},
 });
 
-(async () => {
+const build = async (localeTag: string) => {
 	const plugins = [
 		inlineScripts(
 			{
 				target: 'es2015',
 				format: 'iife',
 				plugins: [
+					localePlugin({ localeTag }),
 					cc({
 						env: 'BROWSER',
 						compilation_level: 'ADVANCED',
@@ -212,6 +255,7 @@ const exactRealtyBuilderPlugin = (
 			target: 'es2020',
 			format: 'cjs',
 			plugins: [
+				localePlugin({ localeTag }),
 				cc({
 					env: 'BROWSER',
 					compilation_level: 'ADVANCED',
@@ -282,7 +326,11 @@ const exactRealtyBuilderPlugin = (
 				discloseVersion: false,
 			},
 		}),
-		exactRealtyBuilderPlugin({ buildTarget: 'client', jsOnly: false }),
+		localePlugin({ localeTag }),
+		apelegBuilderPlugin({
+			buildTarget: 'client',
+			jsOnly: false,
+		}),
 		cc({
 			compilation_level: 'ADVANCED',
 			language_out: 'ECMASCRIPT_2020',
@@ -363,7 +411,7 @@ const exactRealtyBuilderPlugin = (
 			.catch(() => fs.mkdir(TARGET_DIR, { recursive: true }));
 	};
 
-	const obtainSignatureInformation = () => {
+	const obtainSignatureInformation = (localeTag?: string) => {
 		const result = childProcess.spawnSync('git', [
 			'tag',
 			'-l',
@@ -374,18 +422,32 @@ const exactRealtyBuilderPlugin = (
 		]);
 
 		if (result.status === 0) {
-			const lines = result.stdout.toString('utf-8').split(/\r\n|\r|\n/);
-			const marker = lines.lastIndexOf('::');
-			if (marker < 0) {
+			const lines = (() => {
+				const lines = result.stdout
+					.toString('utf-8')
+					.split(/\r\n|\r|\n/);
+				const startMarker = lines.lastIndexOf('::' + (localeTag ?? ''));
+				if (startMarker < 0) {
+					return;
+				}
+				const endMarker = lines.findIndex((value, index) => {
+					if (index <= startMarker) return false;
+					if (value.startsWith('::')) return true;
+				});
+				return lines.slice(startMarker + 1, endMarker);
+			})();
+
+			if (!lines) {
 				console.warn('No signature information found in git tags');
 				return;
 			}
-			const expectedDigest = lines[marker + 1]
+
+			const expectedDigest = lines[0]
 				.trim()
 				.replace(/^:/, '')
 				.toLowerCase();
 			const openPgpSignature = lines
-				.slice(marker + 2)
+				.slice(1)
 				.map((s) => s.trim())
 				.filter((s) => s.startsWith(':'))
 				.map((s) => s.replace(/^:/, ''))
@@ -397,13 +459,14 @@ const exactRealtyBuilderPlugin = (
 		}
 	};
 
+	const outputFile = `index${localeTag ? '.' + localeTag : ''}.html`;
 	switch ((process.env.SIGNATURE_MODE || '').toLowerCase()) {
 		case '':
 		case 'unsigned': {
 			await prepOutDir();
 
 			await fs.writeFile(
-				join(TARGET_DIR, 'index.html'),
+				join(TARGET_DIR, outputFile),
 				await m.default(scriptText, cssText),
 			);
 			break;
@@ -412,7 +475,7 @@ const exactRealtyBuilderPlugin = (
 			await prepOutDir();
 
 			await fs.writeFile(
-				join(TARGET_DIR, 'tbs'),
+				join(TARGET_DIR, `tbs${localeTag ? '.' + localeTag : ''}`),
 				await m.tbsPayload(scriptText, cssText),
 			);
 			break;
@@ -421,7 +484,7 @@ const exactRealtyBuilderPlugin = (
 		case 'mandatory': {
 			// opportunistic or mandatory
 			const [expectedDigest, openPgpSignature] =
-				obtainSignatureInformation() || [];
+				obtainSignatureInformation(localeTag) || [];
 
 			const tbsPayload = await m.tbsPayload(scriptText, cssText);
 			const digest = Buffer.from(
@@ -442,7 +505,7 @@ const exactRealtyBuilderPlugin = (
 
 			await prepOutDir();
 			await fs.writeFile(
-				join(TARGET_DIR, 'index.html'),
+				join(TARGET_DIR, outputFile),
 				await m.default(scriptText, cssText, openPgpSignature || ''),
 			);
 			break;
@@ -450,7 +513,21 @@ const exactRealtyBuilderPlugin = (
 		default:
 			throw new Error('Unsupported SIGNATURE_MODE');
 	}
-})().catch((e) => {
-	console.dir(e);
-	process.exit(1);
-});
+};
+
+const localeTags = [
+	...new Set(
+		process.env.LOCALES?.split(' ').map((x) => (x === 'en' ? '' : x)) ?? [
+			'',
+		],
+	),
+];
+
+Promise.all(
+	localeTags.map((localeTag) => {
+		build(localeTag).catch((e) => {
+			console.dir(e);
+			process.exit(1);
+		});
+	}),
+);

@@ -28,6 +28,13 @@
 	* {
 		display: flex;
 		flex-direction: column;
+		min-width: 0;
 		min-height: 100vh;
+	}
+
+	* {
+		min-inline-size: 0;
+		min-block-size: 100vh;
+		min-block-size: 100vb;
 	}
 </style>

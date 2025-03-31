@@ -15,6 +15,21 @@
 -->
 
 <script lang="typescript">
+	import {
+		STRING__UNIT_BYTE_,
+		STRING__UNIT_BYTE_B_,
+		STRING__UNIT_GIBIBYTE_,
+		STRING__UNIT_GIBIBYTE_GiB_,
+		STRING__UNIT_KIBIBYTE_,
+		STRING__UNIT_KIBIBYTE_KiB_,
+		STRING__UNIT_MEBIBYTE_,
+		STRING__UNIT_MEBIBYTE_MiB_,
+		STRING__UNIT_PEBIBYTE_,
+		STRING__UNIT_PEBIBYTE_PiB_,
+		STRING__UNIT_TEBIBYTE_,
+		STRING__UNIT_TEBIBYTE_TiB_,
+	} from '~/i18n/strings.js';
+
 	let value_: number;
 
 	export { value_ as value };
@@ -22,22 +37,28 @@
 
 <data value={value_}>
 	{#if value_ >= 1125899906842624}
-		{(value_ / 1125899906842624).toFixed(2)}&#x202f;<abbr title="pebibyte"
-			>PiB</abbr
+		{(value_ / 1125899906842624).toFixed(2)}&#x202f;<abbr
+			title={STRING__UNIT_PEBIBYTE_}>{STRING__UNIT_PEBIBYTE_PiB_}</abbr
 		>
 	{:else if value_ >= 1099511627776}
-		{(value_ / 1099511627776).toFixed(2)}&#x202f;<abbr title="tebibyte"
-			>TiB</abbr
+		{(value_ / 1099511627776).toFixed(2)}&#x202f;<abbr
+			title={STRING__UNIT_TEBIBYTE_}>{STRING__UNIT_TEBIBYTE_TiB_}</abbr
 		>
 	{:else if value_ >= 1073741824}
-		{(value_ / 1073741824).toFixed(2)}&#x202f;<abbr title="gibibyte"
-			>GiB</abbr
+		{(value_ / 1073741824).toFixed(2)}&#x202f;<abbr
+			title={STRING__UNIT_GIBIBYTE_}>{STRING__UNIT_GIBIBYTE_GiB_}</abbr
 		>
 	{:else if value_ >= 1048576}
-		{(value_ / 1048576).toFixed(2)}&#x202f;<abbr title="mebibyte">MiB</abbr>
+		{(value_ / 1048576).toFixed(2)}&#x202f;<abbr
+			title={STRING__UNIT_MEBIBYTE_}>{STRING__UNIT_MEBIBYTE_MiB_}</abbr
+		>
 	{:else if value_ >= 1024}
-		{(value_ / 1024).toFixed(2)}&#x202f;<abbr title="kibibyte">KiB</abbr>
+		{(value_ / 1024).toFixed(2)}&#x202f;<abbr title={STRING__UNIT_KIBIBYTE_}
+			>{STRING__UNIT_KIBIBYTE_KiB_}</abbr
+		>
 	{:else}
-		{value_}&#x202f;<abbr title="byte">B</abbr>
+		{value_}&#x202f;<abbr title={STRING__UNIT_BYTE_}
+			>{STRING__UNIT_BYTE_B_}</abbr
+		>
 	{/if}
 </data>

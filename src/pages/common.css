@@ -34,23 +34,44 @@
 
 .main {
 	width: 100%;
+	height: auto;
 	background-color: #f2f0f0;
 	color: #333;
 	padding: 1em;
 	flex-grow: 1;
 }
 
+.main {
+	inline-size: 100%;
+	block-size: auto;
+}
+
 .inner {
 	display: block;
 	width: 100%;
+	height: auto;
 	max-width: 800px;
+	max-height: none;
 	margin: 0 auto;
+}
+
+.inner {
+	inline-size: 100%;
+	block-size: auto;
+	max-inline-size: 800px;
+	max-block-size: none;
+	margin-inline: auto;
+	margin-block: 0;
 }
 
 .fieldset {
 	display: block;
-	padding-block-start: 0.25em;
-	padding-block-end: 0.25em;
+	padding: 0.25em 0;
+}
+
+.fieldset {
+	padding-inline: 0;
+	padding-block: 0.25em;
 }
 
 .fieldset + .fieldset::before {
@@ -58,15 +79,27 @@
 	content: '';
 	width: 100%;
 	height: 2px;
-	margin-bottom: 0.125em;
+	margin: 0 0 0.125em 0;
 	background: transparent;
+}
+
+.fieldset + .fieldset::before {
+	inline-size: 100%;
+	block-size: 2px;
+	margin-inline: 0;
+	margin-block: 0 0.125em;
 }
 
 .label,
 .checkbox {
 	display: block;
-	padding-block-start: 0.25em;
-	padding-block-end: 0.25em;
+	padding: 0.25em 0;
+}
+
+.label,
+.checkbox {
+	padding-inline: 0;
+	padding-block: 0.25em;
 }
 
 .label span,
@@ -116,10 +149,22 @@
 	border-width: 2px;
 	border-color: currentColor;
 	width: 24em;
+	height: auto;
 	max-width: 85%;
 	max-width: calc(100vw - 2rem);
+	max-height: none;
 	font-size: 0.8em;
 	transition: font-size 0.2s ease-out;
+}
+
+.label input,
+.label textarea {
+	inline-size: 24em;
+	block-size: auto;
+	max-inline-size: 85%;
+	max-inline-size: calc(100vw - 2rem);
+	max-inline-size: calc(100vi - 2rem);
+	max-block-size: none;
 }
 
 .label input:focus,
@@ -136,7 +181,13 @@
 }
 
 .label textarea {
+	width: 24em;
 	height: 5em;
+}
+
+.label textarea {
+	inline-size: 24em;
+	block-size: 5em;
 }
 
 .label input:invalid {
@@ -149,13 +200,24 @@
 	margin: 0.5em 1%;
 	text-transform: uppercase;
 	max-width: 48%;
+	max-height: none;
 	width: 48%;
+	height: auto;
 	cursor: pointer;
 	border: 2px solid currentColor;
 	color: #fff;
 	background-color: #431c01;
 	appearance: button;
 	user-select: none;
+}
+
+.primary-button {
+	margin-inline: 1%;
+	margin-block: 0.5em;
+	max-inline-size: 48%;
+	max-block-size: none;
+	inline-size: 48%;
+	block-size: auto;
 }
 
 .primary-button:disabled {
@@ -169,13 +231,24 @@
 	padding: 0.25em;
 	margin: 0.5em 1%;
 	max-width: 48%;
+	max-height: none;
 	width: 48%;
+	height: auto;
 	text-transform: uppercase;
 	cursor: pointer;
 	border: 2px solid currentColor;
 	color: #a26135;
 	background-color: white;
 	user-select: none;
+}
+
+.secondary-button {
+	margin-inline: 1%;
+	margin-block: 0.5em;
+	max-inline-size: 48%;
+	max-block-size: none;
+	inline-size: 48%;
+	block-size: auto;
 }
 
 .secondary-button:disabled {
