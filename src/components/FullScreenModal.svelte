@@ -16,6 +16,7 @@
 
 <script lang="typescript">
 	import { STRING__MODAL_CLOSE_ } from '~/i18n/strings.js';
+	import { SR_ONLY_CLASSNAME_ } from '~/lib/classNames.js';
 
 	let dismissable_: boolean | null | undefined = false;
 	let open_: boolean | null | undefined = true;
@@ -29,7 +30,9 @@
 			{#if dismissable_}
 				<form method="dialog" action="about:blank">
 					<button type="submit">
-						<span class="sr-only">{STRING__MODAL_CLOSE_}</span>
+						<span class={SR_ONLY_CLASSNAME_}
+							>{STRING__MODAL_CLOSE_}</span
+						>
 					</button>
 				</form>
 			{/if}

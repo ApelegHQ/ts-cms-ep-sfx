@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-.sr-only {
+:classname(SR_ONLY_CLASSNAME_) {
 	position: absolute;
 	width: 1px;
 	height: 1px;
@@ -25,14 +25,14 @@
 	border-width: 0;
 }
 
-.page-title {
+:classname(PAGE_TITLE_CLASSNAME_) {
 	font-size: 1.5em;
 	font-weight: bold;
 	text-transform: uppercase;
 	margin-bottom: 0.5em;
 }
 
-.main {
+:classname(MAIN_CLASSNAME_) {
 	width: 100%;
 	height: auto;
 	background-color: #f2f0f0;
@@ -41,12 +41,12 @@
 	flex-grow: 1;
 }
 
-.main {
+:classname(MAIN_CLASSNAME_) {
 	inline-size: 100%;
 	block-size: auto;
 }
 
-.inner {
+:classname(INNER_CLASSNAME_) {
 	display: block;
 	width: 100%;
 	height: auto;
@@ -55,7 +55,7 @@
 	margin: 0 auto;
 }
 
-.inner {
+:classname(INNER_CLASSNAME_) {
 	inline-size: 100%;
 	block-size: auto;
 	max-inline-size: 800px;
@@ -64,17 +64,17 @@
 	margin-block: 0;
 }
 
-.fieldset {
+:classname(FIELDSET_CLASSNAME_) {
 	display: block;
 	padding: 0.25em 0;
 }
 
-.fieldset {
+:classname(FIELDSET_CLASSNAME_) {
 	padding-inline: 0;
 	padding-block: 0.25em;
 }
 
-.fieldset + .fieldset::before {
+:classname(FIELDSET_CLASSNAME_) + :classname(FIELDSET_CLASSNAME_)::before {
 	display: block;
 	content: '';
 	width: 100%;
@@ -83,27 +83,27 @@
 	background: transparent;
 }
 
-.fieldset + .fieldset::before {
+:classname(FIELDSET_CLASSNAME_) + :classname(FIELDSET_CLASSNAME_)::before {
 	inline-size: 100%;
 	block-size: 2px;
 	margin-inline: 0;
 	margin-block: 0 0.125em;
 }
 
-.label,
-.checkbox {
+:classname(LABEL_CLASSNAME_),
+:classname(CHECKBOX_CLASSNAME_) {
 	display: block;
 	padding: 0.25em 0;
 }
 
-.label,
-.checkbox {
+:classname(LABEL_CLASSNAME_),
+:classname(CHECKBOX_CLASSNAME_) {
 	padding-inline: 0;
 	padding-block: 0.25em;
 }
 
-.label span,
-.checkbox span {
+:classname(LABEL_CLASSNAME_) span,
+:classname(CHECKBOX_CLASSNAME_) span {
 	display: block;
 	font-size: 0.875em;
 	text-transform: uppercase;
@@ -111,36 +111,36 @@
 	cursor: pointer;
 }
 
-.checkbox input {
+:classname(CHECKBOX_CLASSNAME_) input {
 	/* Make it visible for tab navigation */
 	position: absolute;
 	transform: scale(0);
 }
 
-.checkbox input + span::before {
+:classname(CHECKBOX_CLASSNAME_) input + span::before {
 	content: '☐ ';
 	color: #431c01;
 }
 
-.checkbox input:checked + span::before {
+:classname(CHECKBOX_CLASSNAME_) input:checked + span::before {
 	content: '☑ ';
 	color: #006400;
 }
 
-.checkbox input:focus + span {
+:classname(CHECKBOX_CLASSNAME_) input:focus + span {
 	outline: auto;
 }
 
-.checkbox input:active + span {
+:classname(CHECKBOX_CLASSNAME_) input:active + span {
 	color: #333;
 }
 
-.checkbox input:disabled + span {
+:classname(CHECKBOX_CLASSNAME_) input:disabled + span {
 	cursor: not-allowed;
 }
 
-.label input,
-.label textarea {
+:classname(LABEL_CLASSNAME_) input,
+:classname(LABEL_CLASSNAME_) textarea {
 	display: block;
 	padding: 0.25em;
 	background-color: #fff;
@@ -157,8 +157,8 @@
 	transition: font-size 0.2s ease-out;
 }
 
-.label input,
-.label textarea {
+:classname(LABEL_CLASSNAME_) input,
+:classname(LABEL_CLASSNAME_) textarea {
 	inline-size: 24em;
 	block-size: auto;
 	max-inline-size: 85%;
@@ -167,34 +167,34 @@
 	max-block-size: none;
 }
 
-.label input:focus,
-.label textarea:focus {
+:classname(LABEL_CLASSNAME_) input:focus,
+:classname(LABEL_CLASSNAME_) textarea:focus {
 	font-size: 1em;
 	transition: font-size 0.2s ease-in;
 }
 
-.label input:disabled,
-.label textarea:disabled {
+:classname(LABEL_CLASSNAME_) input:disabled,
+:classname(LABEL_CLASSNAME_) textarea:disabled {
 	cursor: not-allowed;
 	color: #333;
 	background-color: #ddd;
 }
 
-.label textarea {
+:classname(LABEL_CLASSNAME_) textarea {
 	width: 24em;
 	height: 5em;
 }
 
-.label textarea {
+:classname(LABEL_CLASSNAME_) textarea {
 	inline-size: 24em;
 	block-size: 5em;
 }
 
-.label input:invalid {
+:classname(LABEL_CLASSNAME_) input:invalid {
 	border-color: red;
 }
 
-.primary-button {
+:classname(PRIMARY_BUTTON_CLASSNAME_) {
 	display: inline-block;
 	padding: 0.25em;
 	margin: 0.5em 1%;
@@ -211,7 +211,7 @@
 	user-select: none;
 }
 
-.primary-button {
+:classname(PRIMARY_BUTTON_CLASSNAME_) {
 	margin-inline: 1%;
 	margin-block: 0.5em;
 	max-inline-size: 48%;
@@ -220,13 +220,13 @@
 	block-size: auto;
 }
 
-.primary-button:disabled {
+:classname(PRIMARY_BUTTON_CLASSNAME_):disabled {
 	cursor: not-allowed;
 	color: #fff;
 	background-color: #61574f;
 }
 
-.secondary-button {
+:classname(SECONDARY_BUTTON_CLASSNAME_) {
 	display: inline-block;
 	padding: 0.25em;
 	margin: 0.5em 1%;
@@ -242,7 +242,7 @@
 	user-select: none;
 }
 
-.secondary-button {
+:classname(SECONDARY_BUTTON_CLASSNAME_) {
 	margin-inline: 1%;
 	margin-block: 0.5em;
 	max-inline-size: 48%;
@@ -251,7 +251,7 @@
 	block-size: auto;
 }
 
-.secondary-button:disabled {
+:classname(SECONDARY_BUTTON_CLASSNAME_):disabled {
 	cursor: not-allowed;
 	background-color: #ddd;
 }

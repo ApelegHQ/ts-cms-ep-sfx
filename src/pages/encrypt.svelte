@@ -56,6 +56,23 @@
 	} from '~/i18n/strings.js';
 	import EFormFields from '~/lib/EFormFields.js';
 	import blobToBuffer from '~/lib/blobToBuffer.js';
+	import {
+		CHECKBOX_CLASSNAME_,
+		DROPZONE_ACTIVE_CLASSNAME_,
+		DROPZONE_CLASSNAME_,
+		DROPZONE_ICON_CLASSNAME_,
+		DROPZONE_INNER_CLASSNAME_,
+		DROPZONE_SELECTED_CLASSNAME_,
+		DROPZONE_TEXT_CLASSNAME_,
+		FIELDSET_CLASSNAME_,
+		INNER_CLASSNAME_,
+		LABEL_CLASSNAME_,
+		MAIN_CLASSNAME_,
+		PAGE_TITLE_CLASSNAME_,
+		PRIMARY_BUTTON_CLASSNAME_,
+		SECONDARY_BUTTON_CLASSNAME_,
+		SR_ONLY_CLASSNAME_,
+	} from '~/lib/classNames.js';
 	import downloadArchive from '~/lib/downloadArchive.js';
 	import {
 		ENCRYPT_DROPZONE_ELEMENT_ID_,
@@ -66,7 +83,6 @@
 	import setupConstructCmsSandbox from '~/lib/setupConstructCmsSandbox.js';
 	import setupEncryptionSandbox from '~/lib/setupEncryptionSandbox.js';
 	import './common.css';
-	import './encrypt.css';
 
 	const passwordsEq = (a: string, b: string) => {
 		let r = a.length ^ b.length;
@@ -382,7 +398,7 @@
 <svelte:head>
 	<title>{STRING__TITLE_ENCRPYT_}</title>
 </svelte:head>
-<main class="main" id={MAIN_CONTENT_ELEMENT_ID_}>
+<main class={MAIN_CLASSNAME_} id={MAIN_CONTENT_ELEMENT_ID_}>
 	{#if !encryptionSandbox}
 		<Loading>{STRING__GETTING_THINGS_READY_}</Loading>
 	{:else if encryptionSandbox instanceof Error}
@@ -394,8 +410,10 @@
 		{#if working}
 			<Loading>{STRING__PROCESSING_DATA_}</Loading>
 		{/if}
-		<div class="inner">
-			<h2 class="page-title">{STRING__TITLE_ENCRPYT_A_FILE_}</h2>
+		<div class={INNER_CLASSNAME_}>
+			<h2 class={PAGE_TITLE_CLASSNAME_}>
+				{STRING__TITLE_ENCRPYT_A_FILE_}
+			</h2>
 			<form
 				on:submit|preventDefault={handleFormSubmit}
 				on:reset={handleFormReset}
@@ -410,9 +428,9 @@
 					on:drop={handleDrop}
 					on:change={handleFileChange}
 					class={[
-						'dropzone',
-						dropzoneActive && 'dropzone-active',
-						filename !== undefined && 'dropzone-selected',
+						DROPZONE_CLASSNAME_,
+						dropzoneActive && DROPZONE_ACTIVE_CLASSNAME_,
+						filename !== undefined && DROPZONE_SELECTED_CLASSNAME_,
 					]
 						.filter(Boolean)
 						.join(' ')}
@@ -421,26 +439,27 @@
 					name={EFormFields.FILE}
 					required
 				>
-					<legend class="sr-only"
+					<legend class={SR_ONLY_CLASSNAME_}
 						>{STRING__LEGEND_FILE_SELECTION_}</legend
 					>
-					<label for={ENCRYPT_DROPZONE_ELEMENT_ID_} class="sr-only"
-						>{STRING__FILE_}</label
+					<label
+						for={ENCRYPT_DROPZONE_ELEMENT_ID_}
+						class={SR_ONLY_CLASSNAME_}>{STRING__FILE_}</label
 					>
-					<div class="dropzone-inner">
+					<div class={DROPZONE_INNER_CLASSNAME_}>
 						{#if filename === undefined}
-							<span class="dropzone-icon"
+							<span class={DROPZONE_ICON_CLASSNAME_}
 								>{STRING__FILE_SELECTION_EMPTY_ICON_}</span
 							>
-							<p class="dropzone-text">
+							<p class={DROPZONE_TEXT_CLASSNAME_}>
 								{STRING__DROP_YOUR_FILE_HERE_}
 							</p>
 						{:else}
-							<span class="dropzone-icon"
+							<span class={DROPZONE_ICON_CLASSNAME_}
 								>{STRING__FILE_SELECTION_SELECTED_ICON_}</span
 							>
 
-							<p class="dropzone-text">
+							<p class={DROPZONE_TEXT_CLASSNAME_}>
 								{#if filename}
 									{filename}
 								{:else}
@@ -452,13 +471,13 @@
 				</Dropzone>
 
 				<fieldset
-					class="fieldset"
+					class={FIELDSET_CLASSNAME_}
 					disabled={filename === undefined || working || null}
 				>
-					<legend class="sr-only"
+					<legend class={SR_ONLY_CLASSNAME_}
 						>{STRING__LEGEND_PASSWORD_CONFIGURATION_}</legend
 					>
-					<label class="label">
+					<label class={LABEL_CLASSNAME_}>
 						<span>{STRING__PASSWORD_}</span>
 						<input
 							bind:this={passwordInput$}
@@ -470,7 +489,7 @@
 						/>
 					</label>
 
-					<label class="label">
+					<label class={LABEL_CLASSNAME_}>
 						<span>{STRING__CONFIRM_PASSWORD_}</span>
 						<input
 							bind:this={passwordConfirmInput$}
@@ -482,13 +501,13 @@
 						/>
 					</label>
 
-					<details class="fieldset">
+					<details class={FIELDSET_CLASSNAME_}>
 						<summary>{STRING__ADVANCED_OPTIONS_}</summary>
 						<fieldset>
-							<legend class="sr-only"
+							<legend class={SR_ONLY_CLASSNAME_}
 								>{STRING__LEGEND_ADVANCED_PASSWORD_OPTIONS_}</legend
 							>
-							<label class="label">
+							<label class={LABEL_CLASSNAME_}>
 								<span
 									>{STRING__ALGO_ITERATION_COUNT_[0]}<abbr
 										lang={STRING__ACRONYM_PBKDF2_[0]}
@@ -508,16 +527,16 @@
 					</details>
 				</fieldset>
 
-				<details class="fieldset" open>
+				<details class={FIELDSET_CLASSNAME_} open>
 					<summary>{STRING__OTHER_OPTIONS_}</summary>
 					<fieldset
-						class="fieldset"
+						class={FIELDSET_CLASSNAME_}
 						disabled={filename === undefined || working || null}
 					>
-						<legend class="sr-only"
+						<legend class={SR_ONLY_CLASSNAME_}
 							>{STRING__LEGEND_FILE_CONFIGURATION_}</legend
 						>
-						<label class="label">
+						<label class={LABEL_CLASSNAME_}>
 							<span>{STRING__OVERRIDE_FILE_NAME_}</span>
 							<input
 								on:input={handleFileNameInput}
@@ -531,7 +550,7 @@
 							/>
 						</label>
 
-						<label class="checkbox">
+						<label class={CHECKBOX_CLASSNAME_}>
 							<input
 								on:change={handleNoFilenameSelection}
 								name={EFormFields.NO_FILENAME}
@@ -540,7 +559,7 @@
 							<span>{STRING__NO_FILE_NAME_}</span>
 						</label>
 
-						<label class="label">
+						<label class={LABEL_CLASSNAME_}>
 							<span>{STRING__HINT_}</span>
 							<textarea
 								name={EFormFields.HINT}
@@ -548,7 +567,7 @@
 							></textarea>
 						</label>
 
-						<label class="label">
+						<label class={LABEL_CLASSNAME_}>
 							<span>{STRING__ARCHIVE_NAME_}</span>
 							<input
 								name={EFormFields.ARCHIVE_FILENAME}
@@ -565,15 +584,18 @@
 					</fieldset>
 				</details>
 
-				<fieldset class="fieldset" disabled={working || null}>
-					<legend class="sr-only"
+				<fieldset
+					class={FIELDSET_CLASSNAME_}
+					disabled={working || null}
+				>
+					<legend class={SR_ONLY_CLASSNAME_}
 						>{STRING__LEGEND_FORM_ACTIONS_}</legend
 					>
-					<button class="secondary-button" type="reset"
+					<button class={SECONDARY_BUTTON_CLASSNAME_} type="reset"
 						>{STRING__BUTTON_RESET_}</button
 					>
 					<button
-						class="primary-button"
+						class={PRIMARY_BUTTON_CLASSNAME_}
 						type="submit"
 						disabled={filename === undefined || working || null}
 						>{STRING__BUTTON_SAVE_}</button
@@ -583,3 +605,87 @@
 		</div>
 	{/if}
 </main>
+
+<style lang="postcss">
+	/* Copyright © 2024 Apeleg Limited. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License") with LLVM
+ * exceptions; you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ *
+ * http://llvm.org/foundation/relicensing/LICENSE.txt
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+	:global(:classname(DROPZONE_CLASSNAME_)) {
+		display: block;
+		color: #333;
+		min-width: none;
+		min-height: 6em;
+		text-align: center;
+		cursor: pointer;
+		transition: padding 0.2s ease-out;
+		padding: 8em 1.5em;
+		border: 2px dashed #a26135;
+		background-color: #fff;
+	}
+
+	:global(:classname(DROPZONE_CLASSNAME_)) {
+		min-inline-size: none;
+		min-block-size: 6em;
+		padding-inline: 1.5em;
+		padding-block: 8em;
+	}
+
+	:global(:classname(DROPZONE_SELECTED_CLASSNAME_)) {
+		padding: 1.5em;
+		border-color: #006400;
+		background-color: #efe;
+	}
+
+	:global(:classname(DROPZONE_ACTIVE_CLASSNAME_)) {
+		border-color: #086fff;
+		background-color: #ecf4ff;
+	}
+
+	:global(:classname(DROPZONE_CLASSNAME_)):disabled {
+		background-color: #ddd;
+		cursor: no-drop;
+	}
+
+	:classname(DROPZONE_INNER_CLASSNAME_) {
+		text-align: center;
+		pointer-events: none;
+		user-select: none;
+		max-width: calc(100vw - 2rem - 3em - 4px);
+		max-height: none;
+	}
+
+	:classname(DROPZONE_INNER_CLASSNAME_) {
+		max-inline-size: calc(100vw - 2rem - 3em - 4px);
+		max-inline-size: calc(100vi - 2rem - 3em - 4px);
+		max-block-size: none;
+	}
+
+	:classname(DROPZONE_ICON_CLASSNAME_) {
+		display: block;
+		text-rendering: geometricprecision;
+		font-size: 2em;
+	}
+
+	:classname(DROPZONE_TEXT_CLASSNAME_) {
+		display: block;
+		font-size: 0.7em;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	:classname(DROPZONE_TEXT_CLASSNAME_) em {
+		font-style: oblique;
+	}
+</style>

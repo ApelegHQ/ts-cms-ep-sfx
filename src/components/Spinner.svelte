@@ -14,7 +14,7 @@
  * limitations under the License.
 -->
 
-<span class="spinner" role="progressbar"></span>
+<span role="progressbar"></span>
 
 <style lang="postcss">
 	* {

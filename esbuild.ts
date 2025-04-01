@@ -29,8 +29,28 @@ import fs from 'node:fs/promises';
 import { join } from 'node:path';
 import vm from 'node:vm';
 import postcssCssVariables from 'postcss-css-variables';
+import functions from 'postcss-functions';
 import { sveltePreprocess } from 'svelte-preprocess';
 import packageJson from './package.json' with { type: 'json' };
+import * as classNames from './src/lib/classNames.js';
+import * as elementIds from './src/lib/elementIds.js';
+
+const functionsPlugin = functions({
+	functions: {
+		['classname'](name: string) {
+			if (!Object.prototype.hasOwnProperty.call(classNames, name)) {
+				throw new Error('Undefined class: ' + name);
+			}
+			return '.' + classNames[name as keyof typeof classNames];
+		},
+		['elementid'](name: string) {
+			if (!Object.prototype.hasOwnProperty.call(elementIds, name)) {
+				throw new Error('Undefined ID: ' + name);
+			}
+			return '#' + elementIds[name as keyof typeof elementIds];
+		},
+	},
+});
 
 const gitCommitHash = (() => {
 	try {
@@ -266,6 +286,7 @@ const build = async (localeTag: string) => {
 		stylePlugin({
 			postcss: {
 				plugins: [
+					functionsPlugin,
 					tailwindcss(),
 					postcssCssVariables(),
 					cssnano({ preset: 'default' }),
@@ -277,7 +298,7 @@ const build = async (localeTag: string) => {
 				typescript: {},
 				postcss: {
 					plugins: [
-						// tailwindcss(tailwindConfig),
+						functionsPlugin,
 						postcssCssVariables(),
 						cssnano({ preset: 'default' }),
 					],

@@ -22,6 +22,13 @@
 		STRING__ERROR_NAME_,
 		STRING__ERROR_STACK_,
 	} from '~/i18n/strings.js';
+	import {
+		ERRORMODAL_ERRORNAME_CLASSNAME_,
+		ERRORMODAL_ICON_CLASSNAME_,
+		ERRORMODAL_MESSAGE_CLASSNAME_,
+		ERRORMODAL_STACK_CLASSNAME_,
+		SR_ONLY_CLASSNAME_,
+	} from '~/lib/classNames.js';
 	import FullScreenModal from './FullScreenModal.svelte';
 
 	let error_: unknown;
@@ -31,24 +38,31 @@
 </script>
 
 <FullScreenModal dismissable={dismissable_}>
-	<div class="errormodal-icon">{STRING__ERROR_MODAL_ICON_}</div>
+	<div class={ERRORMODAL_ICON_CLASSNAME_}>{STRING__ERROR_MODAL_ICON_}</div>
 	<details>
 		<summary>{STRING__AN_ERROR_OCCURRED_}</summary>
 		<div>
 			{#if error_ instanceof Error}
 				<dl>
-					<dt class="sr-only">{STRING__ERROR_NAME_}</dt>
-					<dd class="errormodal-errorname">
+					<dt class={SR_ONLY_CLASSNAME_}>{STRING__ERROR_NAME_}</dt>
+					<dd class={ERRORMODAL_ERRORNAME_CLASSNAME_}>
 						{error_.name ?? '(unknown)'}
 					</dd>
 					{#if error_.message}
-						<dt class="sr-only">{STRING__ERROR_MESSAGE_}</dt>
-						<dd class="errormodal-message">{error_.message}</dd>
+						<dt class={SR_ONLY_CLASSNAME_}>
+							{STRING__ERROR_MESSAGE_}
+						</dt>
+						<dd class={ERRORMODAL_MESSAGE_CLASSNAME_}>
+							{error_.message}
+						</dd>
 					{/if}
 					{#if error_.stack}
-						<dt class="sr-only">{STRING__ERROR_STACK_}</dt>
+						<dt class={SR_ONLY_CLASSNAME_}>
+							{STRING__ERROR_STACK_}
+						</dt>
 						<dd>
-							<pre class="errormodal-stack">{error_.stack}</pre>
+							<pre
+								class={ERRORMODAL_STACK_CLASSNAME_}>{error_.stack}</pre>
 						</dd>
 					{/if}
 				</dl>
@@ -60,7 +74,7 @@
 </FullScreenModal>
 
 <style lang="postcss">
-	.errormodal-icon {
+	:classname(ERRORMODAL_ICON_CLASSNAME_) {
 		font-size: 6em;
 		color: #333;
 		text-align: center;
@@ -70,28 +84,28 @@
 		font-size: 1.5rem;
 	}
 
-	.errormodal-errorname {
+	:classname(ERRORMODAL_ERRORNAME_CLASSNAME_) {
 		text-decoration: underline;
 		font-weight: bold;
 		display: inline;
 	}
 
-	.errormodal-message::before {
+	:classname(ERRORMODAL_MESSAGE_CLASSNAME_)::before {
 		content: ': ';
 	}
 
-	.errormodal-message {
+	:classname(ERRORMODAL_MESSAGE_CLASSNAME_) {
 		display: inline;
 	}
 
-	.errormodal-stack {
+	:classname(ERRORMODAL_STACK_CLASSNAME_) {
 		margin: 0.5em auto;
 		overflow: auto;
 		max-width: 75vw;
 		max-height: none;
 	}
 
-	.errormodal-stack {
+	:classname(ERRORMODAL_STACK_CLASSNAME_) {
 		margin-inline: auto;
 		margin-block: 0.5em;
 		max-inline-size: 75vw;

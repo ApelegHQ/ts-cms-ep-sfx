@@ -46,6 +46,20 @@
 	} from '~/i18n/strings.js';
 	import EFormFields from '~/lib/EFormFields.js';
 	import bufferEqual from '~/lib/bufferEqual.js';
+	import {
+		CHECKBOX_CLASSNAME_,
+		DECRYPT_DETAIL_NAME_CLASSNAME_,
+		DECRYPT_DETAIL_VALUE_CLASSNAME_,
+		DECRYPT_SUCCESS_,
+		FIELDSET_CLASSNAME_,
+		INNER_CLASSNAME_,
+		LABEL_CLASSNAME_,
+		MAIN_CLASSNAME_,
+		PAGE_TITLE_CLASSNAME_,
+		PRIMARY_BUTTON_CLASSNAME_,
+		SECONDARY_BUTTON_CLASSNAME_,
+		SR_ONLY_CLASSNAME_,
+	} from '~/lib/classNames.js';
 	import cmsPemToDer from '~/lib/cmsPemToDer.js';
 	import commentCdataExtractor from '~/lib/commentCdataExtractor.js';
 	import downloadBlob from '~/lib/downloadBlob.js';
@@ -63,7 +77,6 @@
 	import setupDecryptionSandbox from '~/lib/setupDecryptionSandbox.js';
 	import setupParseCmsDataSandbox from '~/lib/setupParseCmsSandbox.js';
 	import './common.css';
-	import './decrypt.css';
 
 	let initError: Error | undefined;
 	let dataAttributes:
@@ -371,7 +384,7 @@
 <svelte:head>
 	<title>{STRING__TITLE_DECRPYT_}</title>
 </svelte:head>
-<main class="main" id={MAIN_CONTENT_ELEMENT_ID_}>
+<main class={MAIN_CLASSNAME_} id={MAIN_CONTENT_ELEMENT_ID_}>
 	{#if (!sandbox || !dataAttributes) && !initError}
 		<Loading>{STRING__GETTING_THINGS_READY_}</Loading>
 	{:else if initError instanceof Error}
@@ -383,8 +396,10 @@
 		{#if working}
 			<Loading>{STRING__PROCESSING_DATA_}</Loading>
 		{/if}
-		<div class="inner">
-			<h2 class="page-title">{STRING__TITLE_DECRPYT_A_FILE_}</h2>
+		<div class={INNER_CLASSNAME_}>
+			<h2 class={PAGE_TITLE_CLASSNAME_}>
+				{STRING__TITLE_DECRPYT_A_FILE_}
+			</h2>
 			<form
 				on:submit|preventDefault={handleFormSubmit}
 				on:reset={handleFormReset}
@@ -394,11 +409,14 @@
 				rel={blob instanceof Blob ? '' : 'next'}
 			>
 				{#if !(blob instanceof Blob)}
-					<fieldset class="fieldset" disabled={working || null}>
-						<legend class="sr-only"
+					<fieldset
+						class={FIELDSET_CLASSNAME_}
+						disabled={working || null}
+					>
+						<legend class={SR_ONLY_CLASSNAME_}
 							>{STRING__LEGEND_PASSWORD_CONFIGURATION_}</legend
 						>
-						<label class="label">
+						<label class={LABEL_CLASSNAME_}>
 							<span>{STRING__PASSWORD_}</span>
 							<input
 								name={EFormFields.PASSWORD}
@@ -408,70 +426,70 @@
 						</label>
 					</fieldset>
 
-					<details class="fieldset" open>
+					<details class={FIELDSET_CLASSNAME_} open>
 						<summary>{STRING__PROVIDED_INFORMATION_}</summary>
 						<dl>
 							{#if dataAttributes}
-								<dt class="decrypt-detail-name">
+								<dt class={DECRYPT_DETAIL_NAME_CLASSNAME_}>
 									{STRING__APPROXIMATE_FILE_SIZE_}
 								</dt>
-								<dd class="decrypt-detail-value">
+								<dd class={DECRYPT_DETAIL_VALUE_CLASSNAME_}>
 									<HumanFileSize
 										value={dataAttributes[5].byteLength}
 									/>
 								</dd>
 							{/if}
 							{#if hint}
-								<dt class="decrypt-detail-name">
+								<dt class={DECRYPT_DETAIL_NAME_CLASSNAME_}>
 									{STRING__HINT_}
 								</dt>
-								<dd class="decrypt-detail-value">
+								<dd class={DECRYPT_DETAIL_VALUE_CLASSNAME_}>
 									<pre>{hint}</pre>
 								</dd>
 							{/if}
 						</dl>
 					</details>
 				{:else}
-					<div class="decrypt-success">
+					<div class={DECRYPT_SUCCESS_}>
 						{STRING__FILE_SUCCESSFULLY_DECRYPTED_}
 					</div>
-					<details class="fieldset" open>
+					<details class={FIELDSET_CLASSNAME_} open>
 						<summary>{STRING__REVIEW_FILE_INFORMATION_}</summary>
 						<dl>
-							<dt class="decrypt-detail-name">
+							<dt class={DECRYPT_DETAIL_NAME_CLASSNAME_}>
 								{STRING__FILE_NAME_}
 							</dt>
-							<dd class="decrypt-detail-value">
+							<dd class={DECRYPT_DETAIL_VALUE_CLASSNAME_}>
 								{#if filename}
 									{filename}
 								{:else}
 									<em>{STRING__NO_FILE_NAME_PROVIDED_}</em>
 								{/if}
 							</dd>
-							<dt class="decrypt-detail-name">
+							<dt class={DECRYPT_DETAIL_NAME_CLASSNAME_}>
 								{STRING__FILE_SIZE_}
 							</dt>
-							<dd class="decrypt-detail-value">
+							<dd class={DECRYPT_DETAIL_VALUE_CLASSNAME_}>
 								<HumanFileSize value={blob.size} />
 							</dd>
 							{#if hint}
-								<dt class="decrypt-detail-name">
+								<dt class={DECRYPT_DETAIL_NAME_CLASSNAME_}>
 									{STRING__HINT_}
 								</dt>
-								<dd class="decrypt-detail-value">
+								<dd class={DECRYPT_DETAIL_VALUE_CLASSNAME_}>
 									<pre>{hint}</pre>
 								</dd>
 							{/if}
 						</dl>
 					</details>
 
-					<details class="fieldset">
+					<details class={FIELDSET_CLASSNAME_}>
 						<summary>{STRING__ADVANCED_OPTIONS_}</summary>
 						<fieldset disabled={working || null}>
-							<legend class="sr-only"
+							<legend class={SR_ONLY_CLASSNAME_}
 								>{STRING__LEGEND_FILE_CONFIGURATION_}</legend
 							>
-							<label class="label">
+							<label class={LABEL_CLASSNAME_}>
 								<span>{STRING__OVERRIDE_FILE_NAME_}</span>
 								<input
 									name={EFormFields.FILENAME}
@@ -481,7 +499,7 @@
 									maxlength="255"
 								/>
 							</label>
-							<label class="checkbox">
+							<label class={CHECKBOX_CLASSNAME_}>
 								<input
 									on:change={handleNoFilenameSelection}
 									name={EFormFields.NO_FILENAME}
@@ -493,22 +511,25 @@
 					</details>
 				{/if}
 
-				<fieldset class="fieldset" disabled={working || null}>
-					<legend class="sr-only"
+				<fieldset
+					class={FIELDSET_CLASSNAME_}
+					disabled={working || null}
+				>
+					<legend class={SR_ONLY_CLASSNAME_}
 						>{STRING__LEGEND_FORM_ACTIONS_}</legend
 					>
 					{#if !(blob instanceof Blob)}
-						<button class="secondary-button" type="reset"
+						<button class={SECONDARY_BUTTON_CLASSNAME_} type="reset"
 							>{STRING__BUTTON_RESET_}</button
 						>
-						<button class="primary-button" type="submit"
+						<button class={PRIMARY_BUTTON_CLASSNAME_} type="submit"
 							>{STRING__BUTTON_NEXT_}</button
 						>
 					{:else}
-						<button class="secondary-button" type="reset"
+						<button class={SECONDARY_BUTTON_CLASSNAME_} type="reset"
 							>{STRING__BUTTON_CANCEL_}</button
 						>
-						<button class="primary-button" type="submit"
+						<button class={PRIMARY_BUTTON_CLASSNAME_} type="submit"
 							>{STRING__BUTTON_DOWNLOAD_}</button
 						>
 					{/if}
@@ -517,3 +538,40 @@
 		</div>
 	{/if}
 </main>
+
+<style lang="postcss">
+	:classname(DECRYPT_SUCCESS_) {
+		padding: 0.5em;
+		border: 1px solid #006400;
+		background-color: #efe;
+		font-size: 1.2em;
+		margin: 0.5em 0;
+	}
+
+	:classname(DECRYPT_DETAIL_NAME_CLASSNAME_) {
+		display: block;
+		font-size: 0.875em;
+		text-transform: uppercase;
+		color: rgb(162, 97, 53);
+	}
+
+	:classname(DECRYPT_DETAIL_VALUE_CLASSNAME_) {
+		max-height: 5em;
+		overflow: auto;
+		display: block;
+		padding: 0.25em;
+		color: #333;
+		background-color: #ddd;
+		border-style: solid;
+		border-width: 2px;
+		border-color: currentColor;
+		width: 24em;
+		max-width: 85%;
+		font-size: 0.8em;
+		margin-bottom: 0.5em;
+	}
+
+	:classname(DECRYPT_DETAIL_VALUE_CLASSNAME_) pre {
+		font-family: 'Courier New', Courier, monospace;
+	}
+</style>

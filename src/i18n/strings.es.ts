@@ -16,8 +16,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 export const LANG_CODE_ = 'es';
 export const LANG_DIR_ = 'ltr';
-export const LANG_TEXT_ORIENTATION_ = 'upright';
-export const LANG_WRITING_SYSTEM_ = 'tb-rl';
+export const LANG_TEXT_ORIENTATION_ = null;
+export const LANG_WRITING_SYSTEM_ = null;
 export const STRING__ACRONYM_PBKDF2_ = [
 	'en',
 	'Password\u2010Based Key Derivation Function 2',
@@ -127,12 +127,13 @@ export const STRING__UNIT_PEBIBYTE_PiB_ = 'PiB';
 export const STRING__UNIT_TEBIBYTE_ = 'tebibyte';
 export const STRING__UNIT_TEBIBYTE_TiB_ = 'TiB';
 export const STRING__WARANTY_DISCLAIMER_TEXT_ = [
-	null,
-	'En la medida permitida por la ley aplicable, el Software se entrega ' +
-		'"tal cual", sin garantía de ningún tipo, expresa o implícita, ' +
-		'incluyendo entre otras, las garantías de comerciabilidad, idoneidad ' +
-		'para un propósito particular y no infracción. Salvo que la ley aplicable exija lo contrario, ' +
-		'en ningún caso los autores o titulares de derechos serán responsables por ninguna ' +
-		'reclamación, daño o cualquier otra responsabilidad, sea en acción de contrato, agravio u otra, ' +
-		'derivada de, relacionada o en conexión con el Software o el uso u otras tratos con el Software.',
+	'en',
+	'To the extent permissible by applicable law, the Software is provided' +
+		'\u201cas is\u201d, without warranty of any kind, express or implied, ' +
+		'including but not limited to the warranties of merchantability, fitness ' +
+		'for a particular purpose and noninfringement. Except as required by ' +
+		'applicable law, in no event shall the authors or copyright holders be ' +
+		'liable for any claim, damages or other liability, whether in an action ' +
+		'of contract, tort or otherwise, arising from, out of or in connection ' +
+		'with the Software or the use or other dealings in the Software.',
 ];

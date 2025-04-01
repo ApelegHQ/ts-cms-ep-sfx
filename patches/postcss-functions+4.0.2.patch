@@ -1,0 +1,18 @@
+diff --git a/node_modules/postcss-functions/dest/lib/transformer.js b/node_modules/postcss-functions/dest/lib/transformer.js
+index a13058f..eba4a63 100644
+--- a/node_modules/postcss-functions/dest/lib/transformer.js
++++ b/node_modules/postcss-functions/dest/lib/transformer.js
+@@ -19,6 +19,13 @@ function transformString(str, functions) {
+     promises.push(transformNode(part, functions));
+   });
+   if ((0, _helpers.hasPromises)(promises)) promises = Promise.all(promises);
++  promises = promises.forEach((x, i, a) => {
++    // Remove ':' in selectors
++    if (x.type === 'div' && x.value === ':' && a[i + 1] && a[i + 1].type === 'word' && Array.isArray(a[i + 1].nodes)) {
++      x.type = 'word';
++      x.value = '';
++    }
++  })
+   return (0, _helpers.then)(promises, function () {
+     return values.toString();
+   });

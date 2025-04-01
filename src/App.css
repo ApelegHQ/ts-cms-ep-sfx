@@ -26,7 +26,7 @@
 	--default-font-family: --theme(--font-sans, initial);
 }
 
-#FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ {
+:elementid(FALLBACK_CONTENT_ELEMENT_ID_) :elementid(LOADING_ELEMENT_ID_) {
 	display: flex;
 	flex-direction: column;
 	position: absolute;
@@ -37,21 +37,25 @@
 	background-color: #f2f0f0;
 }
 
-#FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ #LOADING_ANIMATION_ELEMENT__ {
+:elementid(FALLBACK_CONTENT_ELEMENT_ID_)
+	:elementid(LOADING_ELEMENT_ID_)
+	:elementid(LOADING_ANIMATION_ELEMENT_ID_) {
 	display: flex;
 	position: relative;
 	width: auto;
 	height: 100%;
 }
 
-#FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ #LOADING_ANIMATION_ELEMENT__ {
+:elementid(FALLBACK_CONTENT_ELEMENT_ID_)
+	:elementid(LOADING_ELEMENT_ID_)
+	:elementid(LOADING_ANIMATION_ELEMENT_ID_) {
 	inline-size: auto;
 	block-size: 100%;
 }
 
-#FALLBACK_CONTENT_ELEMENT__
-	#LOADING_ELEMENT__
-	#LOADING_ANIMATION_ELEMENT__::after {
+:elementid(FALLBACK_CONTENT_ELEMENT_ID_)
+	:elementid(LOADING_ELEMENT_ID_)
+	:elementid(LOADING_ANIMATION_ELEMENT_ID_)::after {
 	content: '';
 	font-size: 6rem;
 	border-radius: 9999px;
@@ -87,7 +91,9 @@
 	}
 }
 
-#FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ #LOADING_TEXT_ELEMENT__ {
+:elementid(FALLBACK_CONTENT_ELEMENT_ID_)
+	:elementid(LOADING_ELEMENT_ID_)
+	:elementid(LOADING_TEXT_ELEMENT_ID_) {
 	font-size: 2.5rem;
 	padding: 2rem 0;
 	display: block;
@@ -111,7 +117,9 @@
 	color: #111;
 }
 
-#FALLBACK_CONTENT_ELEMENT__ #LOADING_ELEMENT__ #LOADING_TEXT_ELEMENT__ {
+:elementid(FALLBACK_CONTENT_ELEMENT_ID_)
+	:elementid(LOADING_ELEMENT_ID_)
+	:elementid(LOADING_TEXT_ELEMENT_ID_) {
 	padding-inline: 0;
 	padding-block: 2rem;
 	margin-inline: auto;
@@ -120,8 +128,8 @@
 	block-size: 50%;
 }
 
-#ERROR_WARNING_CONTAINER_ELEMENT__,
-#NOSCRIPT_WARNING_CONTAINER_ELEMENT__ {
+:elementid(ERROR_WARNING_CONTAINER_ELEMENT_ID_),
+:elementid(NOSCRIPT_WARNING_CONTAINER_ELEMENT_ID_) {
 	display: block;
 	position: absolute;
 	width: 100%;
@@ -136,8 +144,8 @@
 	background: #ffffff;
 }
 
-#ERROR_WARNING_TEXT_CONTAINER_ELEMENT__,
-#NOSCRIPT_WARNING_TEXT_CONTAINER_ELEMENT__ {
+:elementid(ERROR_WARNING_TEXT_CONTAINER_ELEMENT_ID_),
+:elementid(NOSCRIPT_WARNING_TEXT_CONTAINER_ELEMENT_ID_) {
 	display: block;
 	background-color: #ffffde;
 	border-bottom: 2px solid #8c8475;
@@ -146,8 +154,8 @@
 	width: 100%;
 }
 
-#ERROR_WARNING_TEXT_ELEMENT__,
-#NOSCRIPT_WARNING_TEXT_ELEMENT__ {
+:elementid(ERROR_WARNING_TEXT_ELEMENT_ID_),
+:elementid(NOSCRIPT_WARNING_TEXT_ELEMENT_ID_) {
 	display: block;
 	color: #333;
 	width: 1024px;
@@ -172,15 +180,15 @@
 		sans-serif;
 }
 
-#ERROR_WARNING_TEXT_ELEMENT__,
-#NOSCRIPT_WARNING_TEXT_ELEMENT__ {
+:elementid(ERROR_WARNING_TEXT_ELEMENT_ID_),
+:elementid(NOSCRIPT_WARNING_TEXT_ELEMENT_ID_) {
 	inline-size: 1024px;
 	block-size: auto;
 	max-inline-size: 100%;
 	max-block-size: auto;
 }
 
-#ERROR_ELEMENT__ {
+:elementid(ERROR_ELEMENT_ID_) {
 	display: none;
 }
 

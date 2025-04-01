@@ -37,9 +37,20 @@ import {
 	CMS_FILENAME_ELEMENT_ID_,
 	CMS_HINT_ELEMENT_ID_,
 	ERROR_ELEMENT_ID_,
+	ERROR_WARNING_CONTAINER_ELEMENT_ID_,
+	ERROR_WARNING_TEXT_CONTAINER_ELEMENT_ID_,
+	ERROR_WARNING_TEXT_ELEMENT_ID_,
+	FALLBACK_CONTENT_ELEMENT_ID_,
+	LOADING_ANIMATION_ELEMENT_ID_,
+	LOADING_ELEMENT_ID_,
+	LOADING_TEXT_ELEMENT_ID_,
 	MAIN_SCRIPT_SRC_ELEMENT_ID_,
 	MAIN_STYLESHEET_ELEMENT_ID_,
+	NOSCRIPT_WARNING_CONTAINER_ELEMENT_ID_,
+	NOSCRIPT_WARNING_TEXT_CONTAINER_ELEMENT_ID_,
+	NOSCRIPT_WARNING_TEXT_ELEMENT_ID_,
 	OPENPGP_SIGNATURE_ELEMENT_ID_,
+	ROOT_ELEMENT_ID_,
 } from './elementIds.js';
 import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
 import {
@@ -121,21 +132,21 @@ const generateBody_ = (fallback?: number) => {
 	return (
 		'<body>' +
 		`<div id="${xmlEscapeAttr(ERROR_ELEMENT_ID_)}">` +
-		'<div id="ERROR_WARNING_CONTAINER_ELEMENT__">' +
-		'<div id="ERROR_WARNING_TEXT_CONTAINER_ELEMENT__">' +
-		'<p id="ERROR_WARNING_TEXT_ELEMENT__">' +
+		`<div id="${xmlEscapeAttr(ERROR_WARNING_CONTAINER_ELEMENT_ID_)}">` +
+		`<div id="${xmlEscapeAttr(ERROR_WARNING_TEXT_CONTAINER_ELEMENT_ID_)}">` +
+		`<p id="${xmlEscapeAttr(ERROR_WARNING_TEXT_ELEMENT_ID_)}">` +
 		xmlEscape(STRING__ERROR_AN_ERROR_OCCURRED_) +
 		'</p>' +
 		'</div>' +
 		'</div>' +
 		'</div>' +
-		'<div id="ROOT_ELEMENT__">' +
-		'<div id="FALLBACK_CONTENT_ELEMENT__">' +
+		`<div id="${xmlEscapeAttr(ROOT_ELEMENT_ID_)}">` +
+		`<div id="${xmlEscapeAttr(FALLBACK_CONTENT_ELEMENT_ID_)}">` +
 		(fallback
 			? '<noscript>' +
-				'<div id="NOSCRIPT_WARNING_CONTAINER_ELEMENT__">' +
-				'<div id="NOSCRIPT_WARNING_TEXT_CONTAINER_ELEMENT__">' +
-				'<p id="NOSCRIPT_WARNING_TEXT_ELEMENT__">' +
+				`<div id="${xmlEscapeAttr(NOSCRIPT_WARNING_CONTAINER_ELEMENT_ID_)}">` +
+				`<div id="${xmlEscapeAttr(NOSCRIPT_WARNING_TEXT_CONTAINER_ELEMENT_ID_)}">` +
+				`<p id="${xmlEscapeAttr(NOSCRIPT_WARNING_TEXT_ELEMENT_ID_)}">` +
 				xmlEscape(STRING__ERROR_SCRIPTING_MUST_BE_ENABLED_) +
 				'</p>' +
 				(fallback > 1
@@ -158,9 +169,9 @@ const generateBody_ = (fallback?: number) => {
 				'</div>' +
 				'</noscript>'
 			: '') +
-		'<div id="LOADING_ELEMENT__">' +
-		'<div id="LOADING_ANIMATION_ELEMENT__"></div>' +
-		'<p id="LOADING_TEXT_ELEMENT__">' +
+		`<div id="${xmlEscapeAttr(LOADING_ELEMENT_ID_)}">` +
+		`<div id="${xmlEscapeAttr(LOADING_ANIMATION_ELEMENT_ID_)}"></div>` +
+		`<p id="${xmlEscapeAttr(LOADING_TEXT_ELEMENT_ID_)}">` +
 		xmlEscape(STRING__LOADING_) +
 		'</p>' +
 		'</div>' +
