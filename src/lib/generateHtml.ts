@@ -27,6 +27,11 @@ import {
 	STRING__LOADING_,
 	STRING__TITLE_HTML_CMS_TOOL_,
 } from '~/i18n/strings.js';
+import {
+	gitCommitHash_ as gitCommitHash,
+	packageName_ as packageName,
+	packageVersion_ as packageVersion,
+} from '~/lib/packageInfo.js';
 import chunkString from './chunkString.js';
 import {
 	commentCdataEscapeSequenceEnd_ as commentCdataEscapeSequenceEnd,
@@ -83,6 +88,7 @@ export const tbsPayload_ = async (
 	const cssTextSriDigest = cssText ? await sriDigest(cssText) : '';
 
 	return (
+		`${packageName} v${packageVersion || '*'}; hash ${gitCommitHash || '*'}` +
 		commentCdataEscapeSequenceEnd +
 		'</script>' +
 		'<meta charset="UTF-8"/>' +

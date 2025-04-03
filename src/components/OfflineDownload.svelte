@@ -52,7 +52,7 @@
 {#if mainScript$_ && mainStylesheet$_ && openPgpSignature$_}
 	<button on:click={handleClick}
 		>{#if expand$_}
-			<span role="img"
+			<span aria-hidden="true"
 				>{STRING__BUTTON_DOWNLOAD_OFFLINE_USE_EXPAND_[0]}</span
 			><span class={SR_ONLY_CLASSNAME_}
 				>{STRING__BUTTON_DOWNLOAD_OFFLINE_USE_EXPAND_[1]}</span
@@ -64,7 +64,7 @@
 {/if}
 
 <style lang="postcss">
-	* {
+	button {
 		display: block;
 		padding: 0.4em;
 		margin: 0.5em;
