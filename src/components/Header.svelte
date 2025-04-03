@@ -19,11 +19,13 @@
 	import { STRING__TITLE_HTML_BASED_FILE_UTILITY_ } from '~/i18n/strings.js';
 	import OfflineDownload from './OfflineDownload.svelte';
 
+	let expand$_: boolean;
 	let mainScript$_: HTMLScriptElement | undefined;
 	let mainStylesheet$_: HTMLLinkElement | undefined;
 	let openPgpSignature$_: HTMLScriptElement | undefined;
 
 	export {
+		expand$_ as expand$,
 		mainScript$_ as mainScript$,
 		mainStylesheet$_ as mainStylesheet$,
 		openPgpSignature$_ as openPgpSignature$,
@@ -35,6 +37,7 @@
 	<div>
 		<h1>{STRING__TITLE_HTML_BASED_FILE_UTILITY_}</h1>
 		<OfflineDownload
+			expand$={expand$_}
 			mainScript$={mainScript$_}
 			mainStylesheet$={mainStylesheet$_}
 			openPgpSignature$={openPgpSignature$_}

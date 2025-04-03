@@ -15,14 +15,24 @@
 -->
 
 <script lang="typescript">
-	import { STRING__BUTTON_DOWNLOAD_OFFLINE_USE_ } from '~/i18n/strings.js';
+	import {
+		STRING__BUTTON_DOWNLOAD_OFFLINE_USE_,
+		STRING__BUTTON_DOWNLOAD_OFFLINE_USE_EXPAND_,
+	} from '~/i18n/strings.js';
+	import { SR_ONLY_CLASSNAME_ } from '~/lib/classNames.js';
 	import downloadArchive from '~/lib/downloadArchive.js';
 
 	let mainScript$_: HTMLScriptElement | undefined;
 	let mainStylesheet$_: HTMLLinkElement | undefined;
 	let openPgpSignature$_: HTMLScriptElement | undefined;
+	let expand$_: boolean = true;
 
 	const handleClick = () => {
+		if (expand$_) {
+			expand$_ = false;
+			return;
+		}
+
 		downloadArchive(
 			mainScript$_!,
 			mainStylesheet$_!,
@@ -32,6 +42,7 @@
 	};
 
 	export {
+		expand$_ as expand$,
 		mainScript$_ as mainScript$,
 		mainStylesheet$_ as mainStylesheet$,
 		openPgpSignature$_ as openPgpSignature$,
@@ -40,7 +51,15 @@
 
 {#if mainScript$_ && mainStylesheet$_ && openPgpSignature$_}
 	<button on:click={handleClick}
-		>{STRING__BUTTON_DOWNLOAD_OFFLINE_USE_}</button
+		>{#if expand$_}
+			<span role="img"
+				>{STRING__BUTTON_DOWNLOAD_OFFLINE_USE_EXPAND_[0]}</span
+			><span class={SR_ONLY_CLASSNAME_}
+				>{STRING__BUTTON_DOWNLOAD_OFFLINE_USE_EXPAND_[1]}</span
+			>
+		{:else}
+			{STRING__BUTTON_DOWNLOAD_OFFLINE_USE_}
+		{/if}</button
 	>
 {/if}
 

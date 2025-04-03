@@ -21,8 +21,8 @@ import {
 } from './pwriKeyWrapping.js';
 import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
 
-describe('x', () => {
-	it('y', async () => {
+describe('pwriKeyWrapping', () => {
+	it('Correctly wraps and unwraps PWRI keys', async () => {
 		const KEK = await crypto.subtle.generateKey(
 			{ ['name']: 'AES-CBC', ['length']: 256 },
 			false,

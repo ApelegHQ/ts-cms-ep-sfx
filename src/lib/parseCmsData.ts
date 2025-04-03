@@ -16,16 +16,24 @@
 import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
 
 const derIntegerToUint = (buffer: Uint8Array): number => {
+	// No negative values
 	if (buffer[0] & 0x80) {
 		throw new RangeError('Value out of range');
 	}
-	if (buffer.length > 7 && (buffer[0] & 0xf0) !== 0x00) {
+	// No values over 2**53
+	if (
+		buffer.length > 7 ||
+		(buffer.length === 7 && (buffer[0] & 0xf0) !== 0x00)
+	) {
 		throw new RangeError('Value out of range');
 	}
 	let value = 0;
-	for (const c of buffer) {
-		// TODO: This won't work for values over 2**31 - 1
-		value = (value << 8) | c;
+	for (let i = 0; i < buffer.length; i++) {
+		if (i <= 3) {
+			value = (value << 8) | buffer[i];
+		} else {
+			value = value * 256 + buffer[i];
+		}
 	}
 	return value;
 };

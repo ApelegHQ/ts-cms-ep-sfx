@@ -41,6 +41,10 @@ export const STRING__BUILD_INFORMATION_VERSION_ = [
 ];
 export const STRING__BUTTON_DOWNLOAD_OFFLINE_USE_ =
 	'\u2b07\ufe0e Last ned for frakoblet bruk';
+export const STRING__BUTTON_DOWNLOAD_OFFLINE_USE_EXPAND_ = [
+	'\u22ee',
+	'Flere alternativer\u2026',
+];
 export const STRING__BUTTON_DOWNLOAD_ = '\u{1f4be}\ufe0e Last ned';
 export const STRING__BUTTON_NEXT_ = 'Neste \u2192';
 export const STRING__BUTTON_RESET_ = 'Tilbakestill';
@@ -120,7 +124,7 @@ export const STRING__UNIT_TEBIBYTE_ = 'tebibyte';
 export const STRING__UNIT_TEBIBYTE_TiB_ = 'TiB';
 export const STRING__WARANTY_DISCLAIMER_TEXT_ = [
 	'en',
-	'To the extent permissible by applicable law, the Software is provided' +
+	'To the extent permissible by applicable law, the Software is provided ' +
 		'\u201cas is\u201d, without warranty of any kind, express or implied, ' +
 		'including but not limited to the warranties of merchantability, fitness ' +
 		'for a particular purpose and noninfringement. Except as required by ' +

@@ -1,6 +1,6 @@
 {
 	"name": "@apeleghq/cms-ep-sfx",
-	"version": "1.1.7",
+	"version": "1.1.8",
 	"description": "Secure File Sharing Utility",
 	"type": "module",
 	"main": "-",

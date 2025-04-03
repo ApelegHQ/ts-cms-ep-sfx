@@ -217,6 +217,14 @@ describe('CMS primitives', () => {
 		}
 	});
 
+	it.skip('Can encrypt and decrypt very large payloads', async () => {
+		// 2 GiB - 1 byte: The maximum Node.js supports. See
+		// `lib/internal/crypto/util.js:validateMaxBufferLength`
+		const data = randomFill(new Uint8Array(2147483648 - 1));
+
+		await testEncryptionDecryption(generateRandomPassword(), null, 6, data);
+	});
+
 	it('OpenSSL compatibility', async (t) => {
 		const openssl =
 			process.platform === 'win32' ? 'openssl.exe' : 'openssl';

@@ -63,7 +63,12 @@
 </script>
 
 <DemoBanner />
-<Header {mainScript$} {mainStylesheet$} {openPgpSignature$} />
+<Header
+	expand$={hasCmsData}
+	{mainScript$}
+	{mainStylesheet$}
+	{openPgpSignature$}
+/>
 {#if hasCmsData}
 	<Decrypt />
 {:else}
