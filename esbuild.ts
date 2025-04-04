@@ -28,6 +28,7 @@ import { randomUUID, webcrypto } from 'node:crypto';
 import fs from 'node:fs/promises';
 import { join } from 'node:path';
 import vm from 'node:vm';
+import type { Plugin } from 'postcss';
 import postcssCssVariables from 'postcss-css-variables';
 import functions from 'postcss-functions';
 import { sveltePreprocess } from 'svelte-preprocess';
@@ -35,22 +36,62 @@ import packageJson from './package.json' with { type: 'json' };
 import * as classNames from './src/lib/classNames.js';
 import * as elementIds from './src/lib/elementIds.js';
 
-const functionsPlugin = functions({
-	functions: {
-		['classname'](name: string) {
-			if (!Object.prototype.hasOwnProperty.call(classNames, name)) {
-				throw new Error('Undefined class: ' + name);
+const atNonTbLr = (
+	dir: string,
+	_textOrientation: string,
+	writingMode: string,
+): Plugin => ({
+	postcssPlugin: 'at-nontblr',
+	AtRule: {
+		media: (atRule) => {
+			if (atRule.params !== 'not (writing-mode: tb-lr)') return;
+			if (
+				(!dir || dir === 'ltr') &&
+				(!writingMode || writingMode === 'horizontal-lr')
+			) {
+				atRule.remove();
+			} else {
+				if (atRule.parent && atRule.nodes) {
+					for (const node of atRule.nodes.reverse()) {
+						atRule.parent.insertAfter(atRule, node);
+					}
+				}
 			}
-			return '.' + classNames[name as keyof typeof classNames];
-		},
-		['elementid'](name: string) {
-			if (!Object.prototype.hasOwnProperty.call(elementIds, name)) {
-				throw new Error('Undefined ID: ' + name);
-			}
-			return '#' + elementIds[name as keyof typeof elementIds];
 		},
 	},
 });
+
+const functionsPlugin = (
+	dir: string,
+	textOrientation: string,
+	writingMode: string,
+) => {
+	return functions({
+		functions: {
+			['--x-direction']() {
+				return dir || 'ltr';
+			},
+			['--x-text-orientation']() {
+				return textOrientation || 'mixed';
+			},
+			['--x-writing-mode']() {
+				return writingMode || 'horizontal-tb';
+			},
+			['classname'](name: string) {
+				if (!Object.prototype.hasOwnProperty.call(classNames, name)) {
+					throw new Error('Undefined class: ' + name);
+				}
+				return '.' + classNames[name as keyof typeof classNames];
+			},
+			['elementid'](name: string) {
+				if (!Object.prototype.hasOwnProperty.call(elementIds, name)) {
+					throw new Error('Undefined ID: ' + name);
+				}
+				return '#' + elementIds[name as keyof typeof elementIds];
+			},
+		},
+	});
+};
 
 const gitCommitHash = (() => {
 	try {
@@ -255,6 +296,10 @@ const apelegBuilderPlugin = (
 });
 
 const build = async (localeTag: string) => {
+	const { LANG_DIR_, LANG_TEXT_ORIENTATION_, LANG_WRITING_MODE_ } =
+		await import(
+			`./src/i18n/strings${localeTag ? '.' + localeTag : ''}.js`
+		);
 	const plugins = [
 		inlineScripts(
 			{
@@ -286,7 +331,16 @@ const build = async (localeTag: string) => {
 		stylePlugin({
 			postcss: {
 				plugins: [
-					functionsPlugin,
+					functionsPlugin(
+						LANG_DIR_,
+						LANG_TEXT_ORIENTATION_,
+						LANG_WRITING_MODE_,
+					),
+					atNonTbLr(
+						LANG_DIR_,
+						LANG_TEXT_ORIENTATION_,
+						LANG_WRITING_MODE_,
+					),
 					tailwindcss(),
 					postcssCssVariables(),
 					cssnano({ preset: 'default' }),
@@ -298,7 +352,16 @@ const build = async (localeTag: string) => {
 				typescript: {},
 				postcss: {
 					plugins: [
-						functionsPlugin,
+						functionsPlugin(
+							LANG_DIR_,
+							LANG_TEXT_ORIENTATION_,
+							LANG_WRITING_MODE_,
+						),
+						atNonTbLr(
+							LANG_DIR_,
+							LANG_TEXT_ORIENTATION_,
+							LANG_WRITING_MODE_,
+						),
 						postcssCssVariables(),
 						cssnano({ preset: 'default' }),
 					],

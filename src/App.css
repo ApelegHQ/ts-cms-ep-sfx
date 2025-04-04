@@ -44,9 +44,11 @@
 	height: 100%;
 }
 
-:elementid(LOADING_ANIMATION_ELEMENT_ID_) {
-	inline-size: auto;
-	block-size: 100%;
+@media not (writing-mode: tb-lr) {
+	:elementid(LOADING_ANIMATION_ELEMENT_ID_) {
+		inline-size: auto;
+		block-size: 100%;
+	}
 }
 
 :elementid(LOADING_ANIMATION_ELEMENT_ID_)::after {
@@ -56,8 +58,6 @@
 	border: 0 solid transparent;
 	padding: 0.75rem;
 	margin: 0 auto;
-	margin-inline: auto;
-	margin-block: 0;
 	background-image:
 		linear-gradient(white, white),
 		linear-gradient(to left, #431c01, #a26135);
@@ -71,6 +71,13 @@
 	height: 1.2em;
 	transform: translate(-50%, -50%);
 	animation: 5s ease-out 0s infinite loading-animation-bg-KF_;
+}
+
+@media not (writing-mode: tb-lr) {
+	:elementid(LOADING_ANIMATION_ELEMENT_ID_)::after {
+		margin-inline: auto;
+		margin-block: 0;
+	}
 }
 
 @keyframes loading-animation-bg-KF_ {
@@ -109,13 +116,15 @@
 	color: #111;
 }
 
-:elementid(LOADING_TEXT_ELEMENT_ID_) {
-	padding-inline: 0;
-	padding-block: 2rem;
-	margin-inline: auto;
-	margin-block: 0 2rem;
-	inline-size: auto;
-	block-size: 50%;
+@media not (writing-mode: tb-lr) {
+	:elementid(LOADING_TEXT_ELEMENT_ID_) {
+		padding-inline: 0;
+		padding-block: 2rem;
+		margin-inline: auto;
+		margin-block: 0 2rem;
+		inline-size: auto;
+		block-size: 50%;
+	}
 }
 
 :elementid(ERROR_WARNING_CONTAINER_ELEMENT_ID_),
@@ -154,8 +163,6 @@
 	max-height: none;
 	font-size: 2.5rem;
 	margin: 0 auto;
-	margin-inline: auto;
-	margin-block: 0;
 	font-family:
 		system-ui,
 		-apple-system,
@@ -170,16 +177,27 @@
 		sans-serif;
 }
 
-:elementid(ERROR_WARNING_TEXT_ELEMENT_ID_),
-:elementid(NOSCRIPT_WARNING_TEXT_ELEMENT_ID_) {
-	inline-size: 1024px;
-	block-size: auto;
-	max-inline-size: 100%;
-	max-block-size: auto;
+@media not (writing-mode: tb-lr) {
+	:elementid(ERROR_WARNING_TEXT_ELEMENT_ID_),
+	:elementid(NOSCRIPT_WARNING_TEXT_ELEMENT_ID_) {
+		inline-size: 1024px;
+		block-size: auto;
+		max-inline-size: 100%;
+		max-block-size: auto;
+		margin-inline: auto;
+		margin-block: 0;
+	}
 }
 
 :elementid(ERROR_ELEMENT_ID_) {
 	display: none;
+}
+
+html,
+:host {
+	direction: --x-direction();
+	text-orientation: --x-text-orientation();
+	writing-mode: --x-writing-mode();
 }
 
 @media (prefers-color-scheme: dark) {

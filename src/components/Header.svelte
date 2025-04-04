@@ -65,8 +65,13 @@
 		font-weight: bold;
 		text-transform: uppercase;
 		margin: 0 0 0.5em 0;
-		margin-inline: 0;
-		margin-block: 0 0.5em;
 		display: inline;
+	}
+
+	@media not (writing-mode: tb-lr) {
+		h1 {
+			margin-inline: 0;
+			margin-block: 0 0.5em;
+		}
 	}
 </style>

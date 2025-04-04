@@ -105,11 +105,13 @@
 		max-height: none;
 	}
 
-	:classname(ERRORMODAL_STACK_CLASSNAME_) {
-		margin-inline: auto;
-		margin-block: 0.5em;
-		max-inline-size: 75vw;
-		max-inline-size: 75vi;
-		max-block-size: none;
+	@media not (writing-mode: tb-lr) {
+		:classname(ERRORMODAL_STACK_CLASSNAME_) {
+			margin-inline: auto;
+			margin-block: 0.5em;
+			max-inline-size: 75vw;
+			max-inline-size: 75vi;
+			max-block-size: none;
+		}
 	}
 </style>

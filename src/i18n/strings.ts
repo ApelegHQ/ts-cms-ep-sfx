@@ -17,7 +17,7 @@
 export const LANG_CODE_ = 'en';
 export const LANG_DIR_ = 'ltr';
 export const LANG_TEXT_ORIENTATION_ = null;
-export const LANG_WRITING_SYSTEM_ = null;
+export const LANG_WRITING_MODE_ = null;
 export const STRING__ACRONYM_PBKDF2_ = [
 	null,
 	'Password\u2010Based Key Derivation Function 2',

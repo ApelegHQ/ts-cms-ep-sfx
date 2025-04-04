@@ -635,11 +635,13 @@
 		background-color: #fff;
 	}
 
-	:global(:classname(DROPZONE_CLASSNAME_)) {
-		min-inline-size: none;
-		min-block-size: 6em;
-		padding-inline: 1.5em;
-		padding-block: 8em;
+	@media not (writing-mode: tb-lr) {
+		:global(:classname(DROPZONE_CLASSNAME_)) {
+			min-inline-size: none;
+			min-block-size: 6em;
+			padding-inline: 1.5em;
+			padding-block: 8em;
+		}
 	}
 
 	:global(:classname(DROPZONE_SELECTED_CLASSNAME_)) {
@@ -666,10 +668,12 @@
 		max-height: none;
 	}
 
-	:classname(DROPZONE_INNER_CLASSNAME_) {
-		max-inline-size: calc(100vw - 2rem - 3em - 4px);
-		max-inline-size: calc(100vi - 2rem - 3em - 4px);
-		max-block-size: none;
+	@media not (writing-mode: tb-lr) {
+		:classname(DROPZONE_INNER_CLASSNAME_) {
+			max-inline-size: calc(100vw - 2rem - 3em - 4px);
+			max-inline-size: calc(100vi - 2rem - 3em - 4px);
+			max-block-size: none;
+		}
 	}
 
 	:classname(DROPZONE_ICON_CLASSNAME_) {

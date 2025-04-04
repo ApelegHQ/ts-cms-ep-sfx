@@ -77,11 +77,13 @@
 		overflow: auto;
 	}
 
-	dialog > div > div {
-		margin-inline: 1em;
-		margin-block: 2em 1em;
-		padding-inline: 1em;
-		padding-block: 0;
+	@media not (writing-mode: tb-lr) {
+		dialog > div > div {
+			margin-inline: 1em;
+			margin-block: 2em 1em;
+			padding-inline: 1em;
+			padding-block: 0;
+		}
 	}
 
 	form {
@@ -90,9 +92,11 @@
 		height: 0;
 	}
 
-	form {
-		inline-size: auto;
-		block-size: 0;
+	@media not (writing-mode: tb-lr) {
+		form {
+			inline-size: auto;
+			block-size: 0;
+		}
 	}
 
 	button::before {

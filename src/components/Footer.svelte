@@ -106,9 +106,11 @@
 		color: white;
 	}
 
-	footer {
-		inline-size: 100%;
-		block-size: auto;
+	@media not (writing-mode: tb-lr) {
+		footer {
+			inline-size: 100%;
+			block-size: auto;
+		}
 	}
 
 	div {
@@ -120,13 +122,15 @@
 		margin: 0 auto;
 	}
 
-	div {
-		inline-size: 100%;
-		block-size: auto;
-		max-inline-size: 800px;
-		max-block-size: none;
-		margin-inline: auto;
-		margin-block: 0;
+	@media not (writing-mode: tb-lr) {
+		div {
+			inline-size: 100%;
+			block-size: auto;
+			max-inline-size: 800px;
+			max-block-size: none;
+			margin-inline: auto;
+			margin-block: 0;
+		}
 	}
 
 	aside {

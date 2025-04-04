@@ -45,9 +45,11 @@
 		color: #333;
 	}
 
-	aside {
-		inline-size: 100%;
-		block-size: auto;
+	@media not (writing-mode: tb-lr) {
+		aside {
+			inline-size: 100%;
+			block-size: auto;
+		}
 	}
 
 	div {
@@ -61,13 +63,15 @@
 		padding: 1em;
 	}
 
-	div {
-		inline-size: 100%;
-		block-size: auto;
-		max-inline-size: 800px;
-		max-block-size: none;
-		margin-inline: auto;
-		margin-block: 1em;
+	@media not (writing-mode: tb-lr) {
+		div {
+			inline-size: 100%;
+			block-size: auto;
+			max-inline-size: 800px;
+			max-block-size: none;
+			margin-inline: auto;
+			margin-block: 1em;
+		}
 	}
 
 	h2 {
@@ -77,9 +81,11 @@
 		margin: 0 0 0.5em 0;
 	}
 
-	h2 {
-		margin-inline: 0;
-		margin-block: 0 0.5em;
+	@media not (writing-mode: tb-lr) {
+		h2 {
+			margin-inline: 0;
+			margin-block: 0 0.5em;
+		}
 	}
 
 	p {

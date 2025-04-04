@@ -24,9 +24,11 @@
 		height: 1.2em;
 	}
 
-	* {
-		inline-size: auto;
-		block-size: 1.2em;
+	@media not (writing-mode: tb-lr) {
+		* {
+			inline-size: auto;
+			block-size: 1.2em;
+		}
 	}
 
 	::after {

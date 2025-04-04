@@ -41,9 +41,11 @@
 	flex-grow: 1;
 }
 
-:classname(MAIN_CLASSNAME_) {
-	inline-size: 100%;
-	block-size: auto;
+@media not (writing-mode: tb-lr) {
+	:classname(MAIN_CLASSNAME_) {
+		inline-size: 100%;
+		block-size: auto;
+	}
 }
 
 :classname(INNER_CLASSNAME_) {
@@ -55,13 +57,15 @@
 	margin: 0 auto;
 }
 
-:classname(INNER_CLASSNAME_) {
-	inline-size: 100%;
-	block-size: auto;
-	max-inline-size: 800px;
-	max-block-size: none;
-	margin-inline: auto;
-	margin-block: 0;
+@media not (writing-mode: tb-lr) {
+	:classname(INNER_CLASSNAME_) {
+		inline-size: 100%;
+		block-size: auto;
+		max-inline-size: 800px;
+		max-block-size: none;
+		margin-inline: auto;
+		margin-block: 0;
+	}
 }
 
 :classname(FIELDSET_CLASSNAME_) {
@@ -69,9 +73,11 @@
 	padding: 0.25em 0;
 }
 
-:classname(FIELDSET_CLASSNAME_) {
-	padding-inline: 0;
-	padding-block: 0.25em;
+@media not (writing-mode: tb-lr) {
+	:classname(FIELDSET_CLASSNAME_) {
+		padding-inline: 0;
+		padding-block: 0.25em;
+	}
 }
 
 :classname(FIELDSET_CLASSNAME_) + :classname(FIELDSET_CLASSNAME_)::before {
@@ -83,11 +89,13 @@
 	background: transparent;
 }
 
-:classname(FIELDSET_CLASSNAME_) + :classname(FIELDSET_CLASSNAME_)::before {
-	inline-size: 100%;
-	block-size: 2px;
-	margin-inline: 0;
-	margin-block: 0 0.125em;
+@media not (writing-mode: tb-lr) {
+	:classname(FIELDSET_CLASSNAME_) + :classname(FIELDSET_CLASSNAME_)::before {
+		inline-size: 100%;
+		block-size: 2px;
+		margin-inline: 0;
+		margin-block: 0 0.125em;
+	}
 }
 
 :classname(LABEL_CLASSNAME_),
@@ -96,10 +104,12 @@
 	padding: 0.25em 0;
 }
 
-:classname(LABEL_CLASSNAME_),
-:classname(CHECKBOX_CLASSNAME_) {
-	padding-inline: 0;
-	padding-block: 0.25em;
+@media not (writing-mode: tb-lr) {
+	:classname(LABEL_CLASSNAME_),
+	:classname(CHECKBOX_CLASSNAME_) {
+		padding-inline: 0;
+		padding-block: 0.25em;
+	}
 }
 
 :classname(LABEL_CLASSNAME_) span,
@@ -157,14 +167,16 @@
 	transition: font-size 0.2s ease-out;
 }
 
-:classname(LABEL_CLASSNAME_) input,
-:classname(LABEL_CLASSNAME_) textarea {
-	inline-size: 24em;
-	block-size: auto;
-	max-inline-size: 85%;
-	max-inline-size: calc(100vw - 2rem);
-	max-inline-size: calc(100vi - 2rem);
-	max-block-size: none;
+@media not (writing-mode: tb-lr) {
+	:classname(LABEL_CLASSNAME_) input,
+	:classname(LABEL_CLASSNAME_) textarea {
+		inline-size: 24em;
+		block-size: auto;
+		max-inline-size: 85%;
+		max-inline-size: calc(100vw - 2rem);
+		max-inline-size: calc(100vi - 2rem);
+		max-block-size: none;
+	}
 }
 
 :classname(LABEL_CLASSNAME_) input:focus,
@@ -185,9 +197,11 @@
 	height: 5em;
 }
 
-:classname(LABEL_CLASSNAME_) textarea {
-	inline-size: 24em;
-	block-size: 5em;
+@media not (writing-mode: tb-lr) {
+	:classname(LABEL_CLASSNAME_) textarea {
+		inline-size: 24em;
+		block-size: 5em;
+	}
 }
 
 :classname(LABEL_CLASSNAME_) input:invalid {
@@ -211,13 +225,15 @@
 	user-select: none;
 }
 
-:classname(PRIMARY_BUTTON_CLASSNAME_) {
-	margin-inline: 1%;
-	margin-block: 0.5em;
-	max-inline-size: 48%;
-	max-block-size: none;
-	inline-size: 48%;
-	block-size: auto;
+@media not (writing-mode: tb-lr) {
+	:classname(PRIMARY_BUTTON_CLASSNAME_) {
+		margin-inline: 1%;
+		margin-block: 0.5em;
+		max-inline-size: 48%;
+		max-block-size: none;
+		inline-size: 48%;
+		block-size: auto;
+	}
 }
 
 :classname(PRIMARY_BUTTON_CLASSNAME_):disabled {
@@ -242,13 +258,15 @@
 	user-select: none;
 }
 
-:classname(SECONDARY_BUTTON_CLASSNAME_) {
-	margin-inline: 1%;
-	margin-block: 0.5em;
-	max-inline-size: 48%;
-	max-block-size: none;
-	inline-size: 48%;
-	block-size: auto;
+@media not (writing-mode: tb-lr) {
+	:classname(SECONDARY_BUTTON_CLASSNAME_) {
+		margin-inline: 1%;
+		margin-block: 0.5em;
+		max-inline-size: 48%;
+		max-block-size: none;
+		inline-size: 48%;
+		block-size: auto;
+	}
 }
 
 :classname(SECONDARY_BUTTON_CLASSNAME_):disabled {

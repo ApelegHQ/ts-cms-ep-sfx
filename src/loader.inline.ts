@@ -14,10 +14,6 @@
  */
 
 import {
-	LANG_TEXT_ORIENTATION_,
-	LANG_WRITING_SYSTEM_,
-} from '~/i18n/strings.js';
-import {
 	MAIN_SCRIPT_ELEMENT_ID_,
 	MAIN_SCRIPT_SRC_ELEMENT_ID_,
 } from '~/lib/elementIds.js';
@@ -28,15 +24,6 @@ import commentCdataExtractor from './lib/commentCdataExtractor.js';
 (() => {
 	const ns = 'http://www.w3.org/1999/xhtml';
 
-	if (LANG_TEXT_ORIENTATION_) {
-		const textOrientationStr = 'textOrientation';
-		document.documentElement.style[textOrientationStr] =
-			LANG_TEXT_ORIENTATION_;
-	}
-	if (LANG_WRITING_SYSTEM_) {
-		const writingModeStr = 'writingMode';
-		document.documentElement.style[writingModeStr] = LANG_WRITING_SYSTEM_;
-	}
 	const mainScript$ = document.getElementById(MAIN_SCRIPT_SRC_ELEMENT_ID_);
 	if (!mainScript$ || !(mainScript$ instanceof HTMLScriptElement)) {
 		throw new Error('Missing main script element');

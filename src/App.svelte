@@ -32,9 +32,11 @@
 		min-height: 100vh;
 	}
 
-	* {
-		min-inline-size: 0;
-		min-block-size: 100vh;
-		min-block-size: 100vb;
+	@media not (writing-mode: tb-lr) {
+		* {
+			min-inline-size: 0;
+			min-block-size: 100vh;
+			min-block-size: 100vb;
+		}
 	}
 </style>

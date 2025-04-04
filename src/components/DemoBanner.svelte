@@ -43,9 +43,11 @@
 		pointer-events: none;
 	}
 
-	aside {
-		inline-size: 100%;
-		block-size: auto;
+	@media not (writing-mode: tb-lr) {
+		aside {
+			inline-size: 100%;
+			block-size: auto;
+		}
 	}
 
 	div {
@@ -58,12 +60,14 @@
 		text-align: center;
 	}
 
-	div {
-		inline-size: 100%;
-		inline-block: auto;
-		max-inline-size: 800px;
-		max-block-size: none;
-		margin-inline: auto;
-		margin-block: 0.5em;
+	@media not (writing-mode: tb-lr) {
+		div {
+			inline-size: 100%;
+			inline-block: auto;
+			max-inline-size: 800px;
+			max-block-size: none;
+			margin-inline: auto;
+			margin-block: 0.5em;
+		}
 	}
 </style>

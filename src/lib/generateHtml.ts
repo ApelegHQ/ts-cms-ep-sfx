@@ -88,7 +88,7 @@ export const tbsPayload_ = async (
 	const cssTextSriDigest = cssText ? await sriDigest(cssText) : '';
 
 	return (
-		`${packageName} v${packageVersion || '*'}; hash ${gitCommitHash || '*'}` +
+		`${packageName} v${packageVersion || '*'}; revision ${gitCommitHash || '*'}` +
 		commentCdataEscapeSequenceEnd +
 		'</script>' +
 		'<meta charset="UTF-8"/>' +
