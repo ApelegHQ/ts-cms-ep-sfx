@@ -14,12 +14,12 @@
  */
 
 import browserSandbox from '@apeleghq/lot/browser';
-import * as deriveKEK from 'inline:~/sandbox/deriveKEK.js';
+import * as deriveKek from 'inline:~/sandbox/deriveKek.js';
 import * as fileDecryptionCms from 'inline:~/sandbox/fileDecryptionCms.js';
 import getWrappedCryptoFunctions from './getWrappedCryptoFunctions.js';
 import type { fileDecryptionCms$SEP_ } from './sandboxEntrypoints.js';
 import {
-	deriveKEK$SEP_,
+	deriveKek$SEP_,
 	external$decrypt$SEP_,
 	external$deriveKey$SEP_,
 	external$encrypt$SEP_,
@@ -35,7 +35,7 @@ const setupDecryptionSandbox_ = (
 	const wrappedCryptoFunctions = getWrappedCryptoFunctions();
 
 	return browserSandbox<{
-		[deriveKEK$SEP_]: {
+		[deriveKek$SEP_]: {
 			(
 				password: string,
 				iterationCount: number,
@@ -48,7 +48,7 @@ const setupDecryptionSandbox_ = (
 			];
 		};
 	}>(
-		deriveKEK.default,
+		deriveKek.default,
 		null,
 		{
 			[external$deriveKey$SEP_]: wrappedCryptoFunctions.deriveKey_,
@@ -77,9 +77,9 @@ const setupDecryptionSandbox_ = (
 			fileDecryptionCms.default,
 			null,
 			{
-				[deriveKEK$SEP_]: async () => {
+				[deriveKek$SEP_]: async () => {
 					const [KEK] = await sandbox(
-						deriveKEK$SEP_,
+						deriveKek$SEP_,
 						passwordGetter(),
 						iterationCountGetter(),
 						['encrypt', 'decrypt'],

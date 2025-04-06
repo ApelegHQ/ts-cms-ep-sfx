@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-const deriveKEK_ = async (
+const deriveKek_ = async (
 	password: string,
 	iterationCount: number,
 	keyUsages: KeyUsage[],
@@ -67,4 +67,4 @@ const deriveKEK_ = async (
 	return [KEK, salt, iterationCount];
 };
 
-export default deriveKEK_;
+export default deriveKek_;

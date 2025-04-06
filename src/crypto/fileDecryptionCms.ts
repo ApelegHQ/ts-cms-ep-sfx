@@ -17,7 +17,7 @@ import { pwriKeyUnwrap_ as pwriKeyUnwrap } from './pwriKeyWrapping.js';
 import sharedBufferConcat from './sharedBufferConcat.js';
 
 const fileDecryptionCms_ = async (
-	deriveKEK: {
+	deriveKek: {
 		(): Promise<CryptoKey>;
 	},
 	ivPWRI: AllowSharedBufferSource,
@@ -26,7 +26,7 @@ const fileDecryptionCms_ = async (
 	encryptedContent: AllowSharedBufferSource,
 	tag: AllowSharedBufferSource,
 ): Promise<AllowSharedBufferSource> => {
-	const KEK = await deriveKEK();
+	const KEK = await deriveKek();
 
 	const rawCEK = await pwriKeyUnwrap(KEK, ivPWRI, encryptedKey);
 	const CEK = await crypto.subtle.importKey(

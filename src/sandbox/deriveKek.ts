@@ -15,7 +15,7 @@
 
 import '~/lib/fixBrokenSandboxSecureContext.js';
 
-import deriveKEK from '~/lib/deriveKEK.js';
-import { deriveKEK$SEP_ } from '~/lib/sandboxEntrypoints.js';
+import deriveKek from '~/crypto/deriveKek.js';
+import { deriveKek$SEP_ } from '~/lib/sandboxEntrypoints.js';
 
-exports[deriveKEK$SEP_] = deriveKEK;
+exports[deriveKek$SEP_] = deriveKek;

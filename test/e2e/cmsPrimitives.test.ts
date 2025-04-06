@@ -15,11 +15,11 @@
 
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import constructCmsData from '../../src/lib/constructCmsData.js';
-import deriveKEK from '../../src/lib/deriveKEK.js';
-import fileDecryptionCms from '../../src/lib/fileDecryptionCms.js';
-import fileEncryptionCms from '../../src/lib/fileEncryptionCms.js';
-import parseCmsData from '../../src/lib/parseCmsData.js';
+import constructCmsData from '../../src/crypto/constructCmsData.js';
+import deriveKek from '../../src/crypto/deriveKek.js';
+import fileDecryptionCms from '../../src/crypto/fileDecryptionCms.js';
+import fileEncryptionCms from '../../src/crypto/fileEncryptionCms.js';
+import parseCmsData from '../../src/crypto/parseCmsData.js';
 import sharedBufferToUint8Array from '../../src/lib/sharedBufferToUint8Array.js';
 import { execSync } from 'node:child_process';
 
@@ -37,7 +37,7 @@ const testEncryptionDecryption = async (
 	inputData: AllowSharedBufferSource,
 ) => {
 	const encryptionResult = await fileEncryptionCms(
-		() => deriveKEK(inputPassword, inputIterations, ['encrypt']),
+		() => deriveKek(inputPassword, inputIterations, ['encrypt']),
 		inputData,
 	).catch((e) => {
 		throw new InterceptedError('Encryption error', { cause: e });
@@ -104,7 +104,7 @@ const testEncryptionDecryption = async (
 
 		return fileDecryptionCms(
 			() =>
-				deriveKEK(
+				deriveKek(
 					decryptionPassword ?? inputPassword,
 					iterationCount,
 					['decrypt', 'encrypt'],
@@ -247,7 +247,7 @@ describe('CMS primitives', () => {
 		const inputData = randomFill(Buffer.alloc(32));
 
 		const encryptionResult = await fileEncryptionCms(
-			() => deriveKEK('MyPassword', 1024, ['encrypt']),
+			() => deriveKek('MyPassword', 1024, ['encrypt']),
 			inputData,
 		);
 		const data = sharedBufferToUint8Array(

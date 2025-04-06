@@ -14,7 +14,7 @@
  */
 
 export const constructCmsData$SEP_ = 'constructCmsData';
-export const deriveKEK$SEP_ = 'deriveKEK';
+export const deriveKek$SEP_ = 'deriveKek';
 export const fileDecryptionCms$SEP_ = 'fileDecryptionCms';
 export const fileEncryptionCms$SEP_ = 'fileEncryptionCms';
 export const parseCmsData$SEP_ = 'parseCmsData';

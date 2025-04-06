@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-import parseCmsData from '~/crypto/parseCmsData.js';
-import { parseCmsData$SEP_ } from '~/lib/sandboxEntrypoints.js';
-
-exports[parseCmsData$SEP_] = parseCmsData;
+// Simple re-export using `..` to avoid needing a custom resolver to run tests
+export * from '../lib/sharedBufferConcat.js';
+export { default } from '../lib/sharedBufferConcat.js';

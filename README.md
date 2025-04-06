@@ -73,16 +73,22 @@ Even though we have tested with older versions for compatibility support and
 reporting, we strongly recommend using up-to-date browsers that still receive
 security updates.
 
+- 360安全浏览器: ✅️ 12.1.2103.0–
+- Brave: ✅️ 0.62.30–
 - Chrome: ✅️ 73–
 - Dillo: ❌ Not supported
 - Edge: ✅️ 79–
+- Falkon: ✅️ 22.03.80–
 - Firefox: ✅️ 65–
+- GNOME Web: ✅️ 43.0–
 - Internet Explorer: ❌ Not supported
 - NetSurf: ❌ Not supported
 - Opera: ✅️ 60–
 - Pale Moon: ✅️ 33.3.0–
+- Tor Browser: ✅️ 9.0–
 - Safari: ✅️ 15–
 - SeaMonkey: ✅️ 2.53.18–
+- Vivaldi: ✅️ 2.4–
 
 ### Other platforms
 

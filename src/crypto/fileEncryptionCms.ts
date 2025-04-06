@@ -37,7 +37,7 @@ const gcmEncrypt = async (
 };
 
 const fileEncryptionCms_ = async (
-	deriveKEK: {
+	deriveKek: {
 		(): Promise<
 			[
 				KEK: CryptoKey,
@@ -72,7 +72,7 @@ const fileEncryptionCms_ = async (
 			'encrypt',
 		])
 		.then((CEK) => {
-			const KEKp = deriveKEK().then(([lKEK, lSalt, lIterationCount]) => {
+			const KEKp = deriveKek().then(([lKEK, lSalt, lIterationCount]) => {
 				iterationCount = lIterationCount;
 				salt = lSalt;
 				return lKEK;

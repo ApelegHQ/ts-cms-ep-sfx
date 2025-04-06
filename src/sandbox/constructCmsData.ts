@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import constructCmsData from '~/lib/constructCmsData.js';
+import constructCmsData from '~/crypto/constructCmsData.js';
 import { constructCmsData$SEP_ } from '~/lib/sandboxEntrypoints.js';
 
 const entrypoint_ = (

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import parseCmsData from '~/crypto/parseCmsData.js';
-import { parseCmsData$SEP_ } from '~/lib/sandboxEntrypoints.js';
-
-exports[parseCmsData$SEP_] = parseCmsData;
+/* eslint-disable @typescript-eslint/naming-convention */
+export * from './strings.js';
+export const LANG_TEXT_ORIENTATION_ = 'upright';
+export const LANG_WRITING_MODE_ = 'vertical-rl';

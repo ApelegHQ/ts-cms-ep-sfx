@@ -76,7 +76,7 @@ for encrypted payloads.
 ### Password-based key derivation
 
 The user-supplied password is used to derive the Key Encryption Key (KEK) using
-the PBKDF2 algorithm. This is implemented in the file `src/lib/deriveKEK.ts`.
+the PBKDF2 algorithm. This is implemented in the file `src/crypto/deriveKek.ts`.
 
 ### Data encryption and decryption
 
@@ -84,17 +84,17 @@ the PBKDF2 algorithm. This is implemented in the file `src/lib/deriveKEK.ts`.
 
 User-supplied data (file and file name) are encrypted in two separate steps, one
 for file contents and another for a file name. The base implementation for
-encryption can be found in the file `src/lib/fileEncryptionCms.ts`. Additionally,
-the file `src/sandbox/fileEncryptionCms.ts` implements the two distinct steps
-used for contents and name.
+encryption can be found in the file `src/crypto/fileEncryptionCms.ts`.
+Additionally, the file `src/sandbox/fileEncryptionCms.ts` implements the two
+distinct steps used for contents and name.
 
 #### Data decryption
 
 User-supplied data (file and file name) are decrypted in two separate steps, one
 for file contents and another for a file name. The base implementation for
-decryption can be found in the file `src/lib/fileDecryptionCms.ts`. Additionally,
-the file `src/sandbox/fileDecryptionCms.ts` implements the two distinct steps
-used for contents and name.
+decryption can be found in the file `src/crypto/fileDecryptionCms.ts`.
+Additionally, the file `src/sandbox/fileDecryptionCms.ts` implements the two
+distinct steps used for contents and name.
 
 #### Initialisation vector (IV) reuse
 
@@ -104,7 +104,7 @@ initialisation vectors each time one is needed.
 
 #### Other relevant files
 
-- **`src/lib/constructCmsData.ts`:** This file implements construction of a
+- **`src/crypto/constructCmsData.ts`:** This file implements construction of a
   CMS payload (used after encryption). It does not handle unprotected user data,
   but is used to produce a payload that is derived from user input.
 - **`src/lib/fixBrokenSandboxSecureContext.ts`:** This file is used to define
@@ -114,27 +114,28 @@ initialisation vectors each time one is needed.
   file is used to define those methods with an external implementation, provided
   by the top document. While this is necessary in these situations, it negates
   some of the isolation that a fully sandboxed environment would provide.
-- **`src/lib/parseCmsData.ts`:** This file implements partial parsing of a CMS
-  payload (used before decryption). It does not handle unprotected user data,
-  but it receives user-supplied input that will ultimately be used to recover
-  encrypted user data.
-- **`src/lib/pwriKeyWrapping.ts`:** This file implements PWRI key wrapping and
-  unwrapping as described in RFC 3211, section 2.3.
+- **`src/crypto/parseCmsData.ts`:** This file implements partial parsing of a
+  CMS payload (used before decryption). It does not handle unprotected user
+  data, but it receives user-supplied input that will ultimately be used to
+  recover encrypted user data.
+- **`src/crypto/pwriKeyWrapping.ts`:** This file implements PWRI key wrapping
+  and unwrapping as described in RFC 3211, section 2.3.
 - **`src/lib/setupConstructCmsSandbox.ts`:** This file implements the creation
   of a sandbox for constructing a CMS payload. The sandbox entrypoint is that
   from `src/sandbox/constructCmsData.ts`.
 - **`src/lib/setupDecryptionSandbox.ts`:** This file implements the creation of
   two sandboxes used during decryption, one to derive the KEK and another one to
   decrypt data. The sandbox entrypoints are those from
-  `src/sandbox/deriveKEK.ts` and `src/lib/fileDecryptionCms.ts`.
+  `src/sandbox/deriveKek.ts` and `src/crypto/fileDecryptionCms.ts`.
 - **`src/lib/setupEncryptionSandbox.ts`:** This file implements the creation of
   two sandboxes used during encryption, one to derive the KEK and another one to
   encrypt data. The sandbox entrypoints are those from
-  `src/sandbox/deriveKEK.ts` and `src/lib/fileEncryptionCms.ts`.
+  `src/sandbox/deriveKek.ts` and `src/crypto/fileEncryptionCms.ts`.
 - **`src/lib/setupParseCmsSandbox.ts`:** This file implements the creation
   of a sandbox for parsing a CMS payload. The sandbox entrypoint is that
   from `src/sandbox/parseCmsData.ts`.
 - **`src/sandbox/constructCmsData.ts`:** Wrapper around
-  `src/lib/constructCmsData.ts`.
-- **`src/sandbox/deriveKEK.ts`:** Wrapper around `src/sandbox/deriveKEK.ts`.
-- **`src/sandbox/parseCmsData.ts`:** Wrapper around `src/lib/parseCmsData.ts`.
+  `src/crypto/constructCmsData.ts`.
+- **`src/sandbox/deriveKek.ts`:** Wrapper around `src/sandbox/deriveKek.ts`.
+- **`src/sandbox/parseCmsData.ts`:** Wrapper around
+  `src/crypto/parseCmsData.ts`.

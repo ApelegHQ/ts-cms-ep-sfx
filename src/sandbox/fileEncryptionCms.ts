@@ -15,14 +15,14 @@
 
 import '~/lib/fixBrokenSandboxSecureContext.js';
 
-import fileEncryptionCms from '~/lib/fileEncryptionCms.js';
+import fileEncryptionCms from '~/crypto/fileEncryptionCms.js';
 import { fileEncryptionCms$SEP_ } from '~/lib/sandboxEntrypoints.js';
 
-declare function deriveKEK(): Promise<
+declare function deriveKek(): Promise<
 	[KEK: CryptoKey, salt: AllowSharedBufferSource, iterationCount: number]
 >;
 
-if (typeof deriveKEK !== 'function') throw new Error('Missing deriveKEK');
+if (typeof deriveKek !== 'function') throw new Error('Missing deriveKek');
 
 const entrypoint_ = async (
 	data: AllowSharedBufferSource,
@@ -45,13 +45,13 @@ const entrypoint_ = async (
 > => {
 	const cachedDeriveKEK = (() => {
 		const unset: Record<never, never> = {};
-		let cached: typeof unset | ReturnType<typeof deriveKEK> = unset;
+		let cached: typeof unset | ReturnType<typeof deriveKek> = unset;
 
-		return (): ReturnType<typeof deriveKEK> => {
+		return (): ReturnType<typeof deriveKek> => {
 			if (cached === unset) {
-				cached = deriveKEK();
+				cached = deriveKek();
 			}
-			return cached as unknown as ReturnType<typeof deriveKEK>;
+			return cached as unknown as ReturnType<typeof deriveKek>;
 		};
 	})();
 

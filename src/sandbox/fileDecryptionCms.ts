@@ -15,13 +15,13 @@
 
 import '~/lib/fixBrokenSandboxSecureContext.js';
 
-import fileDecryptionCms from '~/lib/fileDecryptionCms.js';
+import fileDecryptionCms from '~/crypto/fileDecryptionCms.js';
 import { fileDecryptionCms$SEP_ } from '~/lib/sandboxEntrypoints.js';
-import sharedBufferToUint8Array from '~/lib/sharedBufferToUint8Array';
+import sharedBufferToUint8Array from '~/lib/sharedBufferToUint8Array.js';
 
-declare function deriveKEK(): Promise<CryptoKey>;
+declare function deriveKek(): Promise<CryptoKey>;
 
-if (typeof deriveKEK !== 'function') throw new Error('Missing deriveKEK');
+if (typeof deriveKek !== 'function') throw new Error('Missing deriveKek');
 
 const entrypoint_ = async (
 	ivPWRI: AllowSharedBufferSource,
@@ -37,13 +37,13 @@ const entrypoint_ = async (
 ): Promise<[AllowSharedBufferSource] | [AllowSharedBufferSource, string]> => {
 	const cachedDeriveKEK = (() => {
 		const unset: Record<never, never> = {};
-		let cached: typeof unset | ReturnType<typeof deriveKEK> = unset;
+		let cached: typeof unset | ReturnType<typeof deriveKek> = unset;
 
-		return (): ReturnType<typeof deriveKEK> => {
+		return (): ReturnType<typeof deriveKek> => {
 			if (cached === unset) {
-				cached = deriveKEK();
+				cached = deriveKek();
 			}
-			return cached as unknown as ReturnType<typeof deriveKEK>;
+			return cached as unknown as ReturnType<typeof deriveKek>;
 		};
 	})();
 
