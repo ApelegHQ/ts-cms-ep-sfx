@@ -23,7 +23,7 @@ const derIntegerToUint = (buffer: Uint8Array): number => {
 	// No values over 2**53
 	if (
 		buffer.length > 7 ||
-		(buffer.length === 7 && (buffer[0] & 0xf0) !== 0x00)
+		(buffer.length === 7 && (buffer[0] & 0xe0) !== 0x00)
 	) {
 		throw new RangeError('Value out of range');
 	}
@@ -190,23 +190,39 @@ const parseCmsData_ = (
 	pos += lenOffset(u8Buf, pos);
 	// OBJECT            :pkcs7-data
 	// SEQUENCE
+	assertDeepEq(
+		u8Buf.subarray(pos, pos + 12),
+		[
+			0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x07, 0x01,
+			0x30,
+		],
+	);
+	pos += 12;
+	const aesGcmParamsSequenceLength = u8Buf[pos++];
 	//   OBJECT            :aes-256-gcm
 	//   SEQUENCE
 	//     OCTET STRING
 	assertDeepEq(
-		u8Buf.subarray(pos, pos + 28),
+		u8Buf.subarray(pos, pos + 15),
 		[
-			0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x07, 0x01,
-			0x30, 0x1e, 0x06, 0x09, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04,
-			0x01, 0x2e, 0x30, 0x11, 0x04, 0x0c,
+			0x06, 0x09, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x01, 0x2e,
+			0x30, 0x11, 0x04, 0x0c,
 		],
 	);
-	pos += 28;
+	pos += 15;
 	const nonceECI = u8Buf.subarray(pos, pos + 12);
 	pos += 12;
-	// INTEGER           :10
-	assertDeepEq(u8Buf.subarray(pos, pos + 3), [0x02, 0x01, 0x10]);
-	pos += 3;
+	let tagLength;
+	if (aesGcmParamsSequenceLength === 0x1e) {
+		// INTEGER           :
+		assertDeepEq(u8Buf.subarray(pos, pos + 2), [0x02, 0x01]);
+		pos += 2;
+		tagLength = derIntegerToUint(u8Buf.subarray(pos, ++pos));
+	} else if (aesGcmParamsSequenceLength === 0x1b) {
+		tagLength = 12;
+	} else {
+		throw new Error('Invalid params length');
+	}
 	// cont [ 0 ]
 	assertEq(u8Buf[pos], 0x80);
 	const offset = lenOffset(u8Buf, pos);
@@ -227,10 +243,10 @@ const parseCmsData_ = (
 	const encryptedData = u8Buf.subarray(pos, pos + len);
 	pos += len;
 	// OCTET STRING
-	assertDeepEq(u8Buf.subarray(pos, pos + 2), [0x04, 0x10]);
-	pos += 2;
-	const tag = u8Buf.subarray(pos, pos + 16);
-	pos += 16;
+	assertEq(u8Buf[pos++], 0x04);
+	assertEq(u8Buf[pos++], tagLength);
+	const tag = u8Buf.subarray(pos, pos + tagLength);
+	pos += tagLength;
 	assertEq(pos, u8Buf.byteLength);
 
 	return [

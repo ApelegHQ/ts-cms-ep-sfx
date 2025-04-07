@@ -58,8 +58,8 @@ const fileEncryptionCms_ = async (
 		tag: AllowSharedBufferSource,
 	]
 > => {
-	let iterationCount: number = NaN;
-	let salt: AllowSharedBufferSource = new Uint8Array(0);
+	let iterationCount: number;
+	let salt: AllowSharedBufferSource;
 
 	const ivPWRI = new Uint8Array(16);
 	const nonceECI = new Uint8Array(12);
@@ -89,8 +89,8 @@ const fileEncryptionCms_ = async (
 		});
 
 	return [
-		salt,
-		iterationCount,
+		salt!,
+		iterationCount!,
 		ivPWRI,
 		encryptedKey,
 		nonceECI,

@@ -67,7 +67,10 @@ const constructCmsData_ = (
 				]),
 				new EncryptedContentInfo(
 					new ContentType(OID_PKCS7_DATA),
-					ContentEncryptionAlgorithmIdentifier.aes256gcm16(nonceECI),
+					ContentEncryptionAlgorithmIdentifier.aes256gcm(
+						nonceECI,
+						tag.byteLength,
+					),
 					new EncryptedContent(encryptedContent),
 				),
 				new MessageAuthenticationCode(tag),

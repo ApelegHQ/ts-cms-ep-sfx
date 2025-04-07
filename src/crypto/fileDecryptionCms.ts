@@ -37,13 +37,12 @@ const fileDecryptionCms_ = async (
 		['decrypt'],
 	);
 
-	const tagLength = 16;
 	const buffer = sharedBufferConcat(encryptedContent, tag);
 	const data = await crypto.subtle.decrypt(
 		{
 			['name']: 'AES-GCM',
 			['iv']: nonceECI,
-			['tagLength']: tagLength * 8,
+			['tagLength']: tag.byteLength * 8,
 		},
 		CEK,
 		buffer,
