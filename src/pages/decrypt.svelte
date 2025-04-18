@@ -45,7 +45,6 @@
 		STRING__TITLE_DECRPYT_A_FILE_,
 	} from '~/i18n/strings.js';
 	import EFormFields from '~/lib/EFormFields.js';
-	import bufferEqual from '~/lib/bufferEqual.js';
 	import {
 		CHECKBOX_CLASSNAME_,
 		DECRYPT_DETAIL_NAME_CLASSNAME_,
@@ -65,15 +64,11 @@
 	import downloadBlob from '~/lib/downloadBlob.js';
 	import {
 		CMS_DATA_ELEMENT_ID_,
-		CMS_FILENAME_ELEMENT_ID_,
 		CMS_HINT_ELEMENT_ID_,
 		MAIN_CONTENT_ELEMENT_ID_,
 	} from '~/lib/elementIds.js';
 	import isTrustedEvent from '~/lib/isTrustedEvent.js';
-	import {
-		fileDecryptionCms$SEP_,
-		parseCmsData$SEP_,
-	} from '~/lib/sandboxEntrypoints.js';
+	import { parseCmsData$SEP_ } from '~/lib/sandboxEntrypoints.js';
 	import setupDecryptionSandbox from '~/lib/setupDecryptionSandbox.js';
 	import setupParseCmsDataSandbox from '~/lib/setupParseCmsSandbox.js';
 	import './common.css';
@@ -90,20 +85,9 @@
 				tag: AllowSharedBufferSource,
 		  ]
 		| undefined;
-	let filenameAttributes:
-		| [
-				salt: AllowSharedBufferSource,
-				iterationCount: number,
-				ivPWRI: AllowSharedBufferSource,
-				encryptedKey: AllowSharedBufferSource,
-				nonceECI: AllowSharedBufferSource,
-				encryptedContent: AllowSharedBufferSource,
-				tag: AllowSharedBufferSource,
-		  ]
-		| undefined;
 	let hint: string | undefined;
 
-	let sandbox: Awaited<ReturnType<typeof setupDecryptionSandbox>> | undefined;
+	let decrypt: Awaited<ReturnType<typeof setupDecryptionSandbox>> | undefined;
 	let abort: { (): void } | undefined;
 
 	let instance: Record<never, never>;
@@ -125,7 +109,7 @@
 	onMount(() => {
 		const abortController = new AbortController();
 		const _abort = () => {
-			sandbox = undefined;
+			decrypt = undefined;
 			abortController.abort(new Error('Component destroyed'));
 		};
 		abort = _abort;
@@ -140,9 +124,6 @@
 					false,
 				);
 				const cmsData$ = document.getElementById(CMS_DATA_ELEMENT_ID_);
-				const cmsFilename$ = document.getElementById(
-					CMS_FILENAME_ELEMENT_ID_,
-				);
 				const cmsHint$ = document.getElementById(CMS_HINT_ELEMENT_ID_);
 
 				if (!cmsData$ || !(cmsData$ instanceof HTMLScriptElement)) {
@@ -158,34 +139,6 @@
 						parseCmsData$SEP_,
 						cmsPemToDer(cmsData$.text),
 					);
-
-					if (
-						cmsFilename$ &&
-						cmsFilename$ instanceof HTMLScriptElement
-					) {
-						try {
-							filenameAttributes = await sandbox(
-								parseCmsData$SEP_,
-								cmsPemToDer(cmsFilename$.text),
-							);
-
-							if (
-								filenameAttributes[1] !== dataAttributes[1] ||
-								!bufferEqual(
-									filenameAttributes[0],
-									dataAttributes[0],
-								)
-							) {
-								throw new Error(
-									'Mismatched iterations count or salt',
-								);
-							}
-						} catch (e) {
-							console.warn('Error parsing filename CMS data', e);
-						}
-					} else {
-						console.info('No filename present');
-					}
 				} catch (e) {
 					const message = 'Error processing CMS payload';
 					console.error(message, e);
@@ -250,7 +203,7 @@
 					);
 
 					init();
-					sandbox = _sandbox;
+					decrypt = _sandbox;
 				} catch (e) {
 					const message = 'Error preparing decryption sandbox';
 					console.error(message, e);
@@ -314,33 +267,18 @@
 					throw new TypeError('attributes is not an array');
 				}
 
-				if (typeof sandbox !== 'function') {
+				if (typeof decrypt !== 'function') {
 					throw new TypeError('sandbox is not a function');
 				}
 
 				try {
-					const [data, _filename] = await (filenameAttributes
-						? sandbox(
-								fileDecryptionCms$SEP_,
-								dataAttributes[2],
-								dataAttributes[3],
-								dataAttributes[4],
-								dataAttributes[5],
-								dataAttributes[6],
-								filenameAttributes[2],
-								filenameAttributes[3],
-								filenameAttributes[4],
-								filenameAttributes[5],
-								filenameAttributes[6],
-							)
-						: sandbox(
-								fileDecryptionCms$SEP_,
-								dataAttributes[2],
-								dataAttributes[3],
-								dataAttributes[4],
-								dataAttributes[5],
-								dataAttributes[6],
-							));
+					const [_filename, data] = await decrypt(
+						dataAttributes[2],
+						dataAttributes[3],
+						dataAttributes[4],
+						dataAttributes[5],
+						dataAttributes[6],
+					);
 
 					blob = new Blob([data], {
 						['type']: 'application/octet-stream',
@@ -385,7 +323,7 @@
 	<title>{STRING__TITLE_DECRPYT_}</title>
 </svelte:head>
 <main class={MAIN_CLASSNAME_} id={MAIN_CONTENT_ELEMENT_ID_}>
-	{#if (!sandbox || !dataAttributes) && !initError}
+	{#if (!decrypt || !dataAttributes) && !initError}
 		<Loading>{STRING__GETTING_THINGS_READY_}</Loading>
 	{:else if initError instanceof Error}
 		<ErrorModal error={initError}></ErrorModal>

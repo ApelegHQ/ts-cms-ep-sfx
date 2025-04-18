@@ -14,10 +14,7 @@
  */
 
 import chunkString from './chunkString.js';
-import {
-	constructCmsData$SEP_,
-	fileEncryptionCms$SEP_,
-} from './sandboxEntrypoints.js';
+import { constructCmsData$SEP_ } from './sandboxEntrypoints.js';
 import type setupConstructCmsSandbox from './setupConstructCmsSandbox.js';
 import type setupEncryptionSandbox from './setupEncryptionSandbox.js';
 import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
@@ -46,7 +43,7 @@ const prepareDownloadableCmsPayload_ = async (
 	encryptionSandbox: Awaited<ReturnType<typeof setupEncryptionSandbox>>,
 	buffer: AllowSharedBufferSource,
 	filename: string,
-): Promise<[dataCms: string, filenameCms: string]> => {
+): Promise<string> => {
 	if (
 		typeof cmsSandbox !== 'function' ||
 		typeof encryptionSandbox !== 'function'
@@ -54,36 +51,20 @@ const prepareDownloadableCmsPayload_ = async (
 		throw new TypeError('sandbox is not a function');
 	}
 
-	const data = await encryptionSandbox(
-		fileEncryptionCms$SEP_,
-		buffer,
-		filename,
-	);
+	const data = await encryptionSandbox(filename, buffer);
 
-	return (
-		await Promise.all([
-			cmsSandbox(
-				constructCmsData$SEP_,
-				data[0],
-				data[1],
-				data[2],
-				data[3],
-				data[4],
-				data[5],
-				data[6],
-			),
-			cmsSandbox(
-				constructCmsData$SEP_,
-				data[0],
-				data[1],
-				data[7],
-				data[8],
-				data[9],
-				data[10],
-				data[11],
-			),
-		])
-	).map((x) => derToPem(x)) as [string, string];
+	return derToPem(
+		await cmsSandbox(
+			constructCmsData$SEP_,
+			data[0],
+			data[1],
+			data[2],
+			data[3],
+			data[4],
+			data[5],
+			data[6],
+		),
+	);
 };
 
 export default prepareDownloadableCmsPayload_;

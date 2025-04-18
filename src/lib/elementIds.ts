@@ -16,7 +16,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 export const CMS_DATA_ELEMENT_ID_ = 'i1';
-export const CMS_FILENAME_ELEMENT_ID_ = 'i2';
 export const CMS_HINT_ELEMENT_ID_ = 'i3';
 export const ENCRYPT_DROPZONE_ELEMENT_ID_ = 'i4';
 export const ERROR_ELEMENT_ID_ = 'i5';

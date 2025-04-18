@@ -16,8 +16,8 @@
 import browserSandbox from '@apeleghq/lot/browser';
 import * as deriveKek from 'inline:~/sandbox/deriveKek.js';
 import * as fileEncryptionCms from 'inline:~/sandbox/fileEncryptionCms.js';
+import * as zip from 'inline:~/sandbox/zip.js';
 import getWrappedCryptoFunctions from './getWrappedCryptoFunctions.js';
-import type { fileEncryptionCms$SEP_ } from './sandboxEntrypoints.js';
 import {
 	deriveKek$SEP_,
 	external$deriveKey$SEP_,
@@ -25,73 +25,99 @@ import {
 	external$exportKey$SEP_,
 	external$generateKey$SEP_,
 	external$importKey$SEP_,
+	fileEncryptionCms$SEP_,
+	zip$SEP_,
 } from './sandboxEntrypoints.js';
 
-const setupEncryptionSandbox_ = (
+const setupEncryptionSandbox_ = async (
 	passwordGetter: { (): string },
 	iterationCountGetter: { (): number },
 	signal?: AbortSignal,
 ) => {
 	const wrappedCryptoFunctions = getWrappedCryptoFunctions();
 
-	return browserSandbox<{
-		[deriveKek$SEP_]: {
-			(
-				password: string,
-				iterationCount: number,
-				keyUsages: KeyUsage[],
-				salt?: Uint8Array | undefined,
-			): [KEK: CryptoKey, salt: Uint8Array, iterationCount: number];
-		};
-	}>(
-		deriveKek.default,
-		null,
-		{
-			[external$deriveKey$SEP_]: wrappedCryptoFunctions.deriveKey_,
-			[external$importKey$SEP_]: wrappedCryptoFunctions.importKey_,
-		},
-		signal,
-	).then((sandbox) =>
+	const [deriveKekSandbox, zipSandbox] = await Promise.all([
 		browserSandbox<{
-			[fileEncryptionCms$SEP_]: {
+			[deriveKek$SEP_]: {
 				(
-					data: AllowSharedBufferSource,
-					filename: string,
-				): [
-					salt: AllowSharedBufferSource,
+					password: string,
 					iterationCount: number,
-					ivPWRI: AllowSharedBufferSource,
-					encryptedKey: AllowSharedBufferSource,
-					nonceECI: AllowSharedBufferSource,
-					encryptedContent: AllowSharedBufferSource,
-					tag: AllowSharedBufferSource,
-					filenameIvPWRI: AllowSharedBufferSource,
-					filenameEncryptedKey: AllowSharedBufferSource,
-					filenameNonceECI: AllowSharedBufferSource,
-					filenameEncryptedContent: AllowSharedBufferSource,
-					filenameTag: AllowSharedBufferSource,
-				];
+					keyUsages: KeyUsage[],
+					salt?: Uint8Array | undefined,
+				): [KEK: CryptoKey, salt: Uint8Array, iterationCount: number];
 			};
 		}>(
-			fileEncryptionCms.default,
+			deriveKek.default,
 			null,
 			{
-				[deriveKek$SEP_]: () => {
-					return sandbox(
-						deriveKek$SEP_,
-						passwordGetter(),
-						iterationCountGetter(),
-						['encrypt'],
-					);
-				},
-				[external$encrypt$SEP_]: wrappedCryptoFunctions.encrypt_,
-				[external$exportKey$SEP_]: wrappedCryptoFunctions.exportKey_,
-				[external$generateKey$SEP_]:
-					wrappedCryptoFunctions.generateKey_,
+				[external$deriveKey$SEP_]: wrappedCryptoFunctions.deriveKey_,
+				[external$importKey$SEP_]: wrappedCryptoFunctions.importKey_,
 			},
 			signal,
 		),
+		browserSandbox<{
+			[zip$SEP_]: {
+				(
+					name: string,
+					contents: AllowSharedBufferSource,
+				): AllowSharedBufferSource;
+			};
+		}>(zip.default, null, null, signal),
+	]);
+
+	const encryptionSandbox = await browserSandbox<{
+		[fileEncryptionCms$SEP_]: {
+			(
+				data: AllowSharedBufferSource,
+			): [
+				salt: AllowSharedBufferSource,
+				iterationCount: number,
+				ivPWRI: AllowSharedBufferSource,
+				encryptedKey: AllowSharedBufferSource,
+				nonceECI: AllowSharedBufferSource,
+				encryptedContent: AllowSharedBufferSource,
+				tag: AllowSharedBufferSource,
+			];
+		};
+	}>(
+		fileEncryptionCms.default,
+		null,
+		{
+			[deriveKek$SEP_]: () => {
+				return deriveKekSandbox(
+					deriveKek$SEP_,
+					passwordGetter(),
+					iterationCountGetter(),
+					['encrypt'],
+				);
+			},
+			[external$encrypt$SEP_]: wrappedCryptoFunctions.encrypt_,
+			[external$exportKey$SEP_]: wrappedCryptoFunctions.exportKey_,
+			[external$generateKey$SEP_]: wrappedCryptoFunctions.generateKey_,
+		},
+		signal,
 	);
+
+	const encrypt = async (
+		name: string,
+		data: AllowSharedBufferSource,
+	): Promise<
+		[
+			salt: AllowSharedBufferSource,
+			iterationCount: number,
+			ivPWRI: AllowSharedBufferSource,
+			encryptedKey: AllowSharedBufferSource,
+			nonceECI: AllowSharedBufferSource,
+			encryptedContent: AllowSharedBufferSource,
+			tag: AllowSharedBufferSource,
+		]
+	> => {
+		const archive = await zipSandbox(zip$SEP_, name, data);
+
+		return encryptionSandbox(fileEncryptionCms$SEP_, archive);
+	};
+
+	return encrypt;
 };
 
 export default setupEncryptionSandbox_;

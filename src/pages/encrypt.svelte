@@ -546,7 +546,7 @@
 								disabled={filename === undefined || noFilename
 									? true
 									: null}
-								maxlength="255"
+								maxlength="32768"
 							/>
 						</label>
 
@@ -578,7 +578,7 @@
 									? ((!noFilename && filenameOverride) ||
 											filename) + '.html'
 									: ''}
-								maxlength="255"
+								maxlength="32768"
 							/>
 						</label>
 					</fieldset>

@@ -39,7 +39,6 @@ import {
 } from './commentCdataEscapeSequence.js';
 import {
 	CMS_DATA_ELEMENT_ID_,
-	CMS_FILENAME_ELEMENT_ID_,
 	CMS_HINT_ELEMENT_ID_,
 	ERROR_ELEMENT_ID_,
 	ERROR_WARNING_CONTAINER_ELEMENT_ID_,
@@ -191,7 +190,7 @@ const generateHtml_ = async (
 	mainScriptText: AllowSharedBufferSource,
 	cssText: AllowSharedBufferSource,
 	openPgpSignatureText?: string | null | undefined,
-	encryptedContent?: string[],
+	encryptedContent?: string,
 	hint?: string,
 ) => {
 	const pkcs7MimeType = 'application/pkcs7-mime';
@@ -213,19 +212,12 @@ const generateHtml_ = async (
 				tbsPayload +
 				commentCdataEscapeSequenceEnd +
 				'</script>') +
-		(Array.isArray(encryptedContent) && encryptedContent.length > 1
+		(encryptedContent
 			? `<script type="${xmlEscapeAttr(pkcs7MimeType)}" id="${xmlEscapeAttr(CMS_DATA_ELEMENT_ID_)}">` +
 				commentCdataEscapeSequenceStart +
-				encryptedContent[0] +
+				encryptedContent +
 				commentCdataEscapeSequenceEnd +
 				`</script>` +
-				(encryptedContent[1]
-					? `<script type="${xmlEscapeAttr(pkcs7MimeType)}" id="${xmlEscapeAttr(CMS_FILENAME_ELEMENT_ID_)}">` +
-						commentCdataEscapeSequenceStart +
-						encryptedContent[1] +
-						commentCdataEscapeSequenceEnd +
-						`</script>`
-					: '') +
 				(hint
 					? `<script type="application/json" id="${xmlEscapeAttr(CMS_HINT_ELEMENT_ID_)}">` +
 						commentCdataEscapeSequenceStart +

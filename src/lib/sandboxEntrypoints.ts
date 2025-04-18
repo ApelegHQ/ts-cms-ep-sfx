@@ -19,6 +19,9 @@ export const fileDecryptionCms$SEP_ = 'fileDecryptionCms';
 export const fileEncryptionCms$SEP_ = 'fileEncryptionCms';
 export const parseCmsData$SEP_ = 'parseCmsData';
 
+export const unzip$SEP_ = 'unzip';
+export const zip$SEP_ = 'zip';
+
 export const external$decrypt$SEP_ = 'external$decrypt';
 export const external$deriveKey$SEP_ = 'external$deriveKey';
 export const external$encrypt$SEP_ = 'external$encrypt';

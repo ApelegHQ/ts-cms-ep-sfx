@@ -104,7 +104,8 @@ openssl cms \
   -pwri_password MyPassword \
   -inform PEM \
   -in encrypted.html \
-  -out decrypted.example
+  -out decrypted.example.zip
+unzip decrypted.example.zip
 ```
 
 ## ⚡ Performance

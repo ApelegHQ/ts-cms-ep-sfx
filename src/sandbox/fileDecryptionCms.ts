@@ -17,7 +17,6 @@ import '~/lib/fixBrokenSandboxSecureContext.js';
 
 import fileDecryptionCms from '~/crypto/fileDecryptionCms.js';
 import { fileDecryptionCms$SEP_ } from '~/lib/sandboxEntrypoints.js';
-import sharedBufferToUint8Array from '~/lib/sharedBufferToUint8Array.js';
 
 declare function deriveKek(): Promise<CryptoKey>;
 
@@ -29,12 +28,7 @@ const entrypoint_ = async (
 	nonceECI: AllowSharedBufferSource,
 	encryptedContent: AllowSharedBufferSource,
 	tag: AllowSharedBufferSource,
-	filenameIvPWRI?: AllowSharedBufferSource,
-	filenameEncryptedKey?: AllowSharedBufferSource,
-	filenameNonceECI?: AllowSharedBufferSource,
-	filenameEncryptedContent?: AllowSharedBufferSource,
-	filenameTag?: AllowSharedBufferSource,
-): Promise<[AllowSharedBufferSource] | [AllowSharedBufferSource, string]> => {
+): Promise<AllowSharedBufferSource> => {
 	const cachedDeriveKEK = (() => {
 		const unset: Record<never, never> = {};
 		let cached: typeof unset | ReturnType<typeof deriveKek> = unset;
@@ -56,50 +50,7 @@ const entrypoint_ = async (
 		tag,
 	);
 
-	if (
-		!filenameIvPWRI ||
-		!filenameEncryptedKey ||
-		!filenameNonceECI ||
-		!filenameEncryptedContent ||
-		!filenameTag
-	) {
-		return [data];
-	}
-
-	try {
-		const filenameData = await fileDecryptionCms(
-			cachedDeriveKEK,
-			filenameIvPWRI,
-			filenameEncryptedKey,
-			filenameNonceECI,
-			filenameEncryptedContent,
-			filenameTag,
-		);
-
-		const filenameBufferU8 = sharedBufferToUint8Array(filenameData);
-		const filenameBufferU16 = new Uint16Array(
-			filenameBufferU8.buffer,
-			filenameBufferU8.byteOffset,
-			filenameBufferU8.byteLength / 2,
-		);
-
-		if (filenameBufferU8[0] !== 0) {
-			throw new Error('Unsupported format');
-		}
-
-		const length = filenameBufferU8[1];
-		if (filenameData.byteLength < (length << 1) + 2) {
-			throw new Error('Mismatched lengths');
-		}
-
-		const filename = String.fromCharCode(
-			...Array.from(filenameBufferU16.subarray(1, 1 + length)),
-		);
-
-		return [data, filename];
-	} catch {
-		return [data];
-	}
+	return data;
 };
 
 exports[fileDecryptionCms$SEP_] = entrypoint_;

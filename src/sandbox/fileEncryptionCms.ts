@@ -26,7 +26,6 @@ if (typeof deriveKek !== 'function') throw new Error('Missing deriveKek');
 
 const entrypoint_ = async (
 	data: AllowSharedBufferSource,
-	filename: string,
 ): Promise<
 	[
 		salt: AllowSharedBufferSource,
@@ -36,58 +35,11 @@ const entrypoint_ = async (
 		nonceECI: AllowSharedBufferSource,
 		encryptedContent: AllowSharedBufferSource,
 		tag: AllowSharedBufferSource,
-		filenameIvPWRI: AllowSharedBufferSource,
-		filenameEncryptedKey: AllowSharedBufferSource,
-		filenameNonceECI: AllowSharedBufferSource,
-		filenameEncryptedContent: AllowSharedBufferSource,
-		filenameTag: AllowSharedBufferSource,
 	]
 > => {
-	const cachedDeriveKEK = (() => {
-		const unset: Record<never, never> = {};
-		let cached: typeof unset | ReturnType<typeof deriveKek> = unset;
+	const dataResult = await fileEncryptionCms(deriveKek, data);
 
-		return (): ReturnType<typeof deriveKek> => {
-			if (cached === unset) {
-				cached = deriveKek();
-			}
-			return cached as unknown as ReturnType<typeof deriveKek>;
-		};
-	})();
-
-	const dataResult = await fileEncryptionCms(cachedDeriveKEK, data);
-
-	const filenameBuffer = new ArrayBuffer(512);
-	const filenameBufferU8 = new Uint8Array(filenameBuffer);
-	const filenameBufferU16 = new Uint16Array(filenameBuffer);
-	filenameBufferU8[0] = 0;
-	filenameBufferU8[1] = filename.length <= 255 ? filename.length : 255;
-	filename
-		.slice(0, 255)
-		.split('')
-		.forEach((c, i) => {
-			filenameBufferU16[1 + i] = c.charCodeAt(0);
-		});
-
-	const filenameResult = await fileEncryptionCms(
-		cachedDeriveKEK,
-		filenameBuffer,
-	);
-
-	return [
-		dataResult[0],
-		dataResult[1],
-		dataResult[2],
-		dataResult[3],
-		dataResult[4],
-		dataResult[5],
-		dataResult[6],
-		filenameResult[2],
-		filenameResult[3],
-		filenameResult[4],
-		filenameResult[5],
-		filenameResult[6],
-	];
+	return dataResult;
 };
 
 exports[fileEncryptionCms$SEP_] = entrypoint_;

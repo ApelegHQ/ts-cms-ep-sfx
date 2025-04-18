@@ -22,7 +22,7 @@ const downloadArchive_ = async (
 	mainStylesheet$: HTMLLinkElement,
 	openPgpSignature$: HTMLScriptElement,
 	archiveName: string,
-	encryptedContent?: string[] | undefined,
+	encryptedContent?: string | undefined,
 	hint?: string | undefined,
 ) => {
 	const handleResponseText = (r: Response) => {
