@@ -82,6 +82,14 @@ describe('Unzip', () => {
 		assert.deepEqual(Buffer.from(data), givenData);
 	});
 
+	it('Can extract from a ZIP64 archive using ZIP64 extra fields', () => {
+		const givenFilename = 'empty.bin';
+		const givenData = Buffer.from([]);
+		const [filename, data] = unzip(zip(givenFilename, givenData, 2));
+		assert.equal(filename, givenFilename);
+		assert.deepEqual(Buffer.from(data), givenData);
+	});
+
 	it('Can extract from an external ZIP archive', () => {
 		const givenFilename = 'test.txt';
 		const givenData = Buffer.from('Test Test Test Test\n');

@@ -51,7 +51,7 @@ const processEndCentralHeader = (
 		assertEq(totalNoOfDisks, 1);
 
 		if (offsetToCentralDir64 > echPos - 76) {
-			throw new Error('Overlapping ZIP64 header');
+			throw new RangeError('Overlapping ZIP64 header');
 		}
 
 		const zip64Header = u32(dv, offsetToCentralDir64);
@@ -61,14 +61,14 @@ const processEndCentralHeader = (
 
 		const zip64Size = u64(dv, offsetToCentralDir64 + 4);
 		if (offsetToCentralDir64 + zip64Size > echPos - 32) {
-			throw new Error('Overlapping sections');
+			throw new RangeError('Overlapping sections');
 		}
 
 		const sizeCentralDir = u64(dv, offsetToCentralDir64 + 40);
 		const offsetToCentralDir = u64(dv, offsetToCentralDir64 + 48);
 
 		if (offsetToCentralDir + sizeCentralDir > offsetToCentralDir64) {
-			throw new Error('Overlapping sections');
+			throw new RangeError('Overlapping sections');
 		}
 
 		const versionNeeded = u8(dv, offsetToCentralDir64 + 14);
@@ -78,7 +78,7 @@ const processEndCentralHeader = (
 		const totalEntries = u64(dv, offsetToCentralDir64 + 32);
 
 		if (versionNeeded > 45) {
-			throw new Error('Unsupported version');
+			throw new RangeError('Unsupported version');
 		}
 
 		return [
@@ -94,7 +94,7 @@ const processEndCentralHeader = (
 		const offsetToCentralDir = u32(dv, echPos + 16);
 
 		if (offsetToCentralDir + sizeCentralDir > echPos) {
-			throw new Error('Overlapping sections');
+			throw new RangeError('Overlapping sections');
 		}
 
 		const diskNumber = u16(dv, echPos + 4);
@@ -131,7 +131,7 @@ const processExtraZip64 = (
 		offset += 4 + size;
 	}
 	if (offset > max - 4) {
-		throw new Error('Overlapping sections');
+		throw new RangeError('Overlapping sections');
 	}
 	const size = u16(dv, offset + 2);
 	if (
@@ -184,7 +184,7 @@ const processCentralDir = (
 ] => {
 	assertEq(u32(dv, offsetToCentralDir), 0x02014b50);
 	if (u8(dv, offsetToCentralDir + 6) > 45) {
-		throw new Error('Unsupported version');
+		throw new RangeError('Unsupported version');
 	}
 	const flags = u16(dv, offsetToCentralDir + 8);
 	const compressionMethod = u16(dv, offsetToCentralDir + 10);
@@ -196,7 +196,7 @@ const processCentralDir = (
 	let diskStartNumber = u16(dv, offsetToCentralDir + 34);
 	let offsetToLocalHeader = u32(dv, offsetToCentralDir + 42);
 
-	if (isZip64) {
+	if (extraLength && isZip64) {
 		const [
 			uncompressedLength64,
 			compressedLength64,
@@ -226,7 +226,7 @@ const processCentralDir = (
 		offsetToLocalHeader + filenameLength + compressedLength >
 		offsetToCentralDir - 30
 	) {
-		throw new Error('Overlapping sections');
+		throw new RangeError('Overlapping sections');
 	}
 
 	return [
@@ -257,7 +257,7 @@ const processLocalHeader = (
 ] => {
 	assertEq(u32(dv, offsetToLocalHeader), 0x04034b50);
 	if (u8(dv, offsetToLocalHeader + 4) > 45) {
-		throw new Error('Unsupported version');
+		throw new RangeError('Unsupported version');
 	}
 	const flags = u16(dv, offsetToLocalHeader + 6);
 	const compressionMethod = u16(dv, offsetToLocalHeader + 8);
@@ -267,7 +267,7 @@ const processLocalHeader = (
 	const filenameLength = u16(dv, offsetToLocalHeader + 26);
 	const extraLength = u16(dv, offsetToLocalHeader + 28);
 
-	if (isZip64) {
+	if (extraLength && isZip64) {
 		const [
 			uncompressedLength64,
 			compressedLength64,
@@ -293,7 +293,7 @@ const processLocalHeader = (
 		offsetToLocalHeader + filenameLength + compressedLength + extraLength >
 		offsetToCentralDir - 30
 	) {
-		throw new Error('Overlapping sections');
+		throw new RangeError('Overlapping sections');
 	}
 
 	return [
@@ -372,9 +372,6 @@ const unzip_ = (
 	);
 
 	assertEq(u32(dv, cOffsetToLocalHeader), 0x04034b50);
-	if (u8(dv, offsetToCentralDir + 4) > 45) {
-		throw new Error('Unsupported version');
-	}
 
 	const [
 		lFlags,

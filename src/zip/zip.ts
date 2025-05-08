@@ -42,7 +42,7 @@ const u8a = (a: number[]) => new Uint8Array(a);
 const zip_ = (
 	name: string,
 	input: AllowSharedBufferSource,
-	coerceZip64?: boolean,
+	coerceZip64?: boolean | number,
 	pad?: boolean,
 ) => {
 	const textEncoder = new TextEncoder();
@@ -60,12 +60,14 @@ const zip_ = (
 	// 0x1e is the position of the central dir offset without considering data
 	// (file name and contents), i.e., the size of the local header.
 	const useZip64 = coerceZip64 || !!(len + nameLen + 0x1e > -1 >>> 0);
+	const needsZip64Extra =
+		coerceZip64 === 2 || (useZip64 && !!(len > -1 >>> 0));
 
 	const crc = crc32(input);
 
 	// Create 'extra' segment data for ZIP64 if needed.
 	// If ZIP64 is used, provide extra fields containing the 64-bit sizes.
-	const segment2 = useZip64
+	const segment2 = needsZip64Extra
 		? [
 				// Extra ID #0001
 				// ZIP64 (0x0001)
@@ -122,15 +124,15 @@ const zip_ = (
 		(crc >>> 0o20) & 0xff,
 		(crc >>> 0o30) & 0xff,
 		// Compressed Length; if using ZIP64, use 0xff as a placeholder
-		useZip64 ? 0xff : (len >>> 0o00) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o10) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o20) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o30) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o00) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o10) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o20) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o30) & 0xff,
 		// Uncompressed Length; if using ZIP64, use 0xff as a placeholder
-		useZip64 ? 0xff : (len >>> 0o00) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o10) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o20) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o30) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o00) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o10) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o20) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o30) & 0xff,
 		// Filename Length
 		(nameLen >>> 0o00) & 0xff,
 		(nameLen >>> 0o10) & 0xff,
@@ -151,7 +153,8 @@ const zip_ = (
 		0x01,
 		0x02,
 		// Created Zip Spec, Created OS
-		useZip64 ? 0x2d : 0x0a,
+		// 6.3, which is where EFS is defined
+		0x3f,
 		0x00,
 		// Extract Zip Spec, Extract Zip OS
 		useZip64 ? 0x2d : 0x0a,
@@ -173,15 +176,15 @@ const zip_ = (
 		(crc >>> 0o20) & 0xff,
 		(crc >>> 0o30) & 0xff,
 		// Compressed Length
-		useZip64 ? 0xff : (len >>> 0o00) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o10) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o20) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o30) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o00) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o10) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o20) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o30) & 0xff,
 		// Uncompressed Length
-		useZip64 ? 0xff : (len >>> 0o00) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o10) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o20) & 0xff,
-		useZip64 ? 0xff : (len >>> 0o30) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o00) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o10) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o20) & 0xff,
+		needsZip64Extra ? 0xff : (len >>> 0o30) & 0xff,
 		// Filename Length
 		(nameBuffer.byteLength >>> 0o00) & 0xff,
 		(nameBuffer.byteLength >>> 0o10) & 0xff,

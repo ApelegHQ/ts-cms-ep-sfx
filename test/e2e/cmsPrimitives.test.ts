@@ -21,7 +21,7 @@ import fileDecryptionCms from '../../src/crypto/fileDecryptionCms.js';
 import fileEncryptionCms from '../../src/crypto/fileEncryptionCms.js';
 import parseCmsData from '../../src/crypto/parseCmsData.js';
 import sharedBufferToUint8Array from '../../src/lib/sharedBufferToUint8Array.js';
-import { execSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 
 class InterceptedError extends Error {}
 
@@ -230,12 +230,12 @@ describe('CMS primitives', () => {
 			process.platform === 'win32' ? 'openssl.exe' : 'openssl';
 
 		try {
-			const output = execSync(`${openssl} version`, {
+			const { stdout } = spawnSync(openssl, ['version'], {
 				stdio: ['ignore'],
 			});
 			if (
-				output.subarray(0, 8).toString() !== 'OpenSSL ' ||
-				!(parseInt(output.subarray(8, 12).toString(), 10) >= 3)
+				stdout.subarray(0, 8).toString() !== 'OpenSSL ' ||
+				!(parseInt(stdout.subarray(8, 12).toString(), 10) >= 3)
 			) {
 				throw new Error('OpenSSL expected');
 			}
@@ -254,12 +254,20 @@ describe('CMS primitives', () => {
 			constructCmsData(...encryptionResult).derEncode(),
 		);
 
-		const decryptionResult = execSync(
-			`${openssl} cms -decrypt -pwri_password MyPassword -inform DER`,
+		const decryptionResult = spawnSync(
+			openssl,
+			[
+				'cms',
+				'-decrypt',
+				'-pwri_password',
+				'MyPassword',
+				'-inform',
+				'DER',
+			],
 			{
 				input: data,
 			},
 		);
-		assert.deepEqual(decryptionResult, inputData);
+		assert.deepEqual(decryptionResult.stdout, inputData);
 	});
 });

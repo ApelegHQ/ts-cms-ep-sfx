@@ -14,12 +14,18 @@
  */
 
 import * as assert from 'node:assert/strict';
-import { execSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { mkdtemp, rmdir, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import type { TestContext } from 'node:test';
 import { after, before, describe, it } from 'node:test';
 import zip from './zip.js';
+
+const exeify = (() => {
+	const isWin32 = process.platform === 'win32';
+	return (cmd: TemplateStringsArray) => `${cmd[0]}${isWin32 ? '.exe' : ''}`;
+})();
 
 describe('ZIP', () => {
 	let testTempDir: string;
@@ -33,36 +39,117 @@ describe('ZIP', () => {
 		await rmdir(testTempDir);
 	});
 
-	it('unzip compatibility', async (t) => {
-		const unzip = process.platform === 'win32' ? 'unzip.exe' : 'unzip';
-
-		try {
-			const output = execSync(`${unzip} -v`, {
-				stdio: ['ignore'],
-			});
-			if (output.subarray(0, 6).toString() !== 'UnZip ') {
-				throw new Error('UnZip expected');
+	const verifyCmd = (
+		t: TestContext,
+		cmd: string | string[],
+		args: string[],
+		checker: (output: Uint8Array) => boolean,
+	) => {
+		let command: string | false = false;
+		if (!Array.isArray(cmd)) cmd = [cmd];
+		for (const cmd_ of cmd) {
+			try {
+				const { stdout } = spawnSync(cmd_, args, {
+					stdio: ['ignore'],
+				});
+				if (checker(stdout)) {
+					command = cmd_;
+					break;
+				}
+			} catch {
+				// empty
 			}
-		} catch {
-			t.skip();
-			return;
 		}
 
-		const givenFilename = 'ABCDFE';
-		const givenInputData = Buffer.from(new Uint8Array(242));
-		const r = zip(givenFilename, givenInputData, false);
+		if (!command) {
+			t.skip();
+		}
 
-		assert.ok(r.byteLength % 256 === 0);
+		return command;
+	};
 
-		const zipPath = join(testTempDir, `${crypto.randomUUID()}.zip`);
-		await writeFile(zipPath, Buffer.from(r));
-		t.after(() => {
-			return unlink(zipPath);
-		});
+	const runTest = async (
+		t: TestContext,
+		cmd: string | string[],
+		checkArgs: string[],
+		checker: (output: Uint8Array) => boolean,
+		cmdArgs: (zipPath: string, givenFilename: string) => string[],
+	) => {
+		const command = verifyCmd(t, cmd, checkArgs, checker);
+		if (!command) return;
 
-		const decompressionResult = execSync(
-			`${unzip} -p "${zipPath}" "${givenFilename}"`,
+		for (const coerceZip64 of [false, true, 2]) {
+			const givenFilename = crypto
+				.randomUUID()
+				.slice(0, (6 + (0, Math.random)() * 30) | 0);
+			const givenInputData = Buffer.from(
+				new Uint8Array((17 + (0, Math.random)() * 256) | 0),
+			);
+			crypto.getRandomValues(givenInputData);
+			const r = zip(givenFilename, givenInputData, coerceZip64);
+
+			assert.ok(r.byteLength % 256 === 0);
+
+			const zipPath = join(testTempDir, `${crypto.randomUUID()}.zip`);
+			await writeFile(zipPath, Buffer.from(r));
+			t.after(() => {
+				return unlink(zipPath);
+			});
+
+			const decompressionResult: { ['stdout']: Buffer } = spawnSync(
+				command,
+				cmdArgs(zipPath, givenFilename),
+			);
+			assert.deepEqual(decompressionResult.stdout, givenInputData);
+		}
+	};
+
+	it('unzip compatibility', async (t) => {
+		const $unzip = exeify`unzip`;
+
+		await runTest(
+			t,
+			$unzip,
+			['-v'],
+			(output) => output.subarray(0, 6).toString() === 'UnZip ',
+			(zipPath, givenFilename) => ['-p', zipPath, givenFilename],
 		);
-		assert.deepEqual(decompressionResult, givenInputData);
+	});
+
+	it('7z compatibility', async (t) => {
+		const $7z = exeify`7z`;
+
+		await runTest(
+			t,
+			$7z,
+			[],
+			(output) => output.subarray(0, 6).toString().trim() === '7-Zip',
+			(zipPath: string, givenFilename: string) => [
+				'-tzip',
+				'-so',
+				'e',
+				'--',
+				zipPath,
+				givenFilename,
+			],
+		);
+	});
+
+	it('bsdtar compatibility', async (t) => {
+		const $bsdtar = exeify`bsdtar`;
+		const $tar = exeify`tar`;
+
+		await runTest(
+			t,
+			[$bsdtar, $tar],
+			['--version'],
+			(output) => output.subarray(0, 7).toString() === 'bsdtar ',
+			(zipPath: string, givenFilename: string) => [
+				'-xOf',
+				zipPath,
+				'--',
+				givenFilename,
+			],
+		);
 	});
 });
