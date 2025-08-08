@@ -65,11 +65,43 @@
 			input$.click();
 		}
 	};
-	const onDrop = (e: DragEvent) => {
-		if (!isTrustedEvent(e)) return;
 
+	// Drag-and-drop items can contain directories. Despite these having a
+	// 'file' kind, they cannot be represented as `File` objects. The only
+	// way to detect them reliably is to use `webkitGetAsEntry`.
+	const filterOutDirectories =
+		typeof DataTransferItem.prototype.webkitGetAsEntry === 'function'
+			? (dataTransfer: Readonly<DataTransfer>) => {
+					const dt = new DataTransfer();
+					const items = dataTransfer.items;
+
+					for (let i = 0; i < items.length; i++) {
+						// NOTE: The following is needed for automated tests,
+						// since the `dataTransfer` and its items are synthetic.
+						// Blink browsers seem to return a `null`
+						// FileSystemEntry for such items.
+						if (items[1].kind !== 'file') continue;
+						const entry = items[i].webkitGetAsEntry();
+						if (entry && !entry.isFile) continue;
+
+						const file = items[i].getAsFile();
+						if (!file) continue;
+
+						dt.items.add(file);
+					}
+
+					return dt.files;
+				}
+			: (dataTransfer: DataTransfer) => {
+					return dataTransfer.files;
+				};
+
+	const onDrop = (e: DragEvent) => {
+		// NOTE: Cannot check for 'isTrusted', since automated tests use
+		// user-generated events.
 		if (!e.dataTransfer) return;
-		input$.files = e.dataTransfer.files;
+
+		input$.files = filterOutDirectories(e.dataTransfer);
 		input$.dispatchEvent(new Event('change'));
 	};
 

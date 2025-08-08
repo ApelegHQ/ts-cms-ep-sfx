@@ -379,11 +379,22 @@
 			});
 	};
 
-	const handleDragEnter = () => {
+	const handleDragEnter = (e: DragEvent) => {
+		if (
+			!isTrustedEvent(e) ||
+			!e.dataTransfer ||
+			e.dataTransfer.items.length !== 1 ||
+			e.dataTransfer.items[0].kind !== 'file'
+		) {
+			return;
+		}
+
 		dropzoneActive = true;
 	};
 	const handleDragOver = handleDragEnter;
-	const handleDragLeave = () => {
+	const handleDragLeave = (e: DragEvent) => {
+		if (!isTrustedEvent(e)) return;
+
 		dropzoneActive = false;
 	};
 	const handleDrop = handleDragLeave;
