@@ -89,7 +89,7 @@ test('Basic functionality', async (t) => {
 			)
 			.then((dropzone) => dragAndDropFile(dropzone, contents, fileName));
 
-		await driver.wait(until.elementIsEnabled(password$), 100);
+		await driver.wait(until.elementIsEnabled(password$), 1000);
 
 		await password$.sendKeys(password);
 

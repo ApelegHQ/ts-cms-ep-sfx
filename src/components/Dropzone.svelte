@@ -80,7 +80,7 @@
 						// since the `dataTransfer` and its items are synthetic.
 						// Blink browsers seem to return a `null`
 						// FileSystemEntry for such items.
-						if (items[1].kind !== 'file') continue;
+						if (items[i].kind !== 'file') continue;
 						const entry = items[i].webkitGetAsEntry();
 						if (entry && !entry.isFile) continue;
 
