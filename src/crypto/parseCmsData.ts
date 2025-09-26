@@ -38,13 +38,35 @@ const derIntegerToUint = (buffer: Uint8Array): number => {
 	return value;
 };
 
-const lenOffset = (buffer: Uint8Array, pos: number): number => {
+const lenCalc = (
+	buffer: Uint8Array,
+	pos: number,
+): [offset: number, length: number] => {
 	const val = buffer[pos + 1];
 	if (val < 0x80) {
-		return 2;
-	} else if (val >= 0x81 && val <= 0x84) {
-		return 2 + (val ^ 0x80);
+		return [2, val];
+	} else if (val === 0x81) {
+		return [3, buffer[pos + 2] << 0o00];
+	} else if (val === 0x82) {
+		return [4, (buffer[pos + 2] << 0o10) | (buffer[pos + 3] << 0o00)];
+	} else if (val === 0x83) {
+		return [
+			5,
+			(buffer[pos + 2] << 0o20) |
+				(buffer[pos + 3] << 0o10) |
+				(buffer[pos + 4] << 0o00),
+		];
+	} else if (val === 0x84) {
+		return [
+			6,
+			((buffer[pos + 2] << 0o30) |
+				(buffer[pos + 3] << 0o20) |
+				(buffer[pos + 4] << 0o10) |
+				(buffer[pos + 5] << 0o00)) >>>
+				0,
+		];
 	}
+
 	throw new Error('Invalid length offset');
 };
 
@@ -52,6 +74,12 @@ const assertEq = <T>(actual: T, expected: T): void => {
 	if (actual !== expected) {
 		throw new Error('assertEq failed');
 	}
+};
+
+const assertLen = (buffer: Uint8Array, pos: number, expectedLen: number) => {
+	const val = lenCalc(buffer, pos);
+	assertEq(val[0] + val[1], expectedLen);
+	return val[0];
 };
 
 const assertDeepEq = <T>(
@@ -80,17 +108,12 @@ const parseCmsData_ = (
 	tag: AllowSharedBufferSource,
 ] => {
 	const u8Buf = sharedBufferToUint8Array(buf);
-	const dataView = new DataView(
-		u8Buf.buffer,
-		u8Buf.byteOffset,
-		u8Buf.byteLength,
-	);
 
 	let pos = 0;
 	// First byte must be a sequence
 	// SEQUENCE
 	assertEq(u8Buf[pos], 0x30);
-	pos += lenOffset(u8Buf, pos);
+	pos += assertLen(u8Buf, pos, u8Buf.byteLength);
 	// OBJECT            :id-smime-ct-authEnvelopedData
 	assertDeepEq(
 		u8Buf.subarray(pos, pos + 2 + 11),
@@ -102,25 +125,34 @@ const parseCmsData_ = (
 	pos += 2 + 11;
 	// cont [ 0 ]
 	assertEq(u8Buf[pos], 0xa0);
-	pos += lenOffset(u8Buf, pos);
+	pos += assertLen(u8Buf, pos, u8Buf.byteLength - pos);
 	// SEQUENCE
 	assertEq(u8Buf[pos], 0x30);
-	pos += lenOffset(u8Buf, pos);
+	pos += assertLen(u8Buf, pos, u8Buf.byteLength - pos);
 	// INTEGER           :00
 	assertDeepEq(u8Buf.subarray(pos, pos + 3), [0x02, 0x01, 0x00]);
 	pos += 3;
 	// SET
 	assertEq(u8Buf[pos], 0x31);
-	pos += lenOffset(u8Buf, pos);
+	const recipientInfosLen = lenCalc(u8Buf, pos);
+	pos += recipientInfosLen[0];
+	const recipientInfosStart = pos;
 	// cont [ 3 ]
 	assertEq(u8Buf[pos], 0xa3);
-	pos += lenOffset(u8Buf, pos);
+	const recipientInfoLen = lenCalc(u8Buf, pos);
+	pos += recipientInfoLen[0];
+	assertEq(
+		pos - recipientInfosStart,
+		recipientInfosLen[1] - recipientInfoLen[1],
+	);
 	// INTEGER           :00
 	assertDeepEq(u8Buf.subarray(pos, pos + 3), [0x02, 0x01, 0x00]);
 	pos += 3;
 	// cont [ 0 ]
 	assertEq(u8Buf[pos], 0xa0);
-	pos += lenOffset(u8Buf, pos);
+	const keyDerivationAlgoLen = lenCalc(u8Buf, pos);
+	pos += keyDerivationAlgoLen[0];
+	const keyDerivationAlgoStart = pos;
 	// OBJECT            :PBKDF2
 	assertDeepEq(
 		u8Buf.subarray(pos, pos + 11),
@@ -129,27 +161,23 @@ const parseCmsData_ = (
 	pos += 11;
 	// SEQUENCE
 	assertEq(u8Buf[pos], 0x30);
-	pos += lenOffset(u8Buf, pos);
+	const pkbdf2ParamsLen = lenCalc(u8Buf, pos);
+	pos += pkbdf2ParamsLen[0];
+	const pkbdf2ParamsStart = pos;
 	// OCTET STRING
 	assertEq(u8Buf[pos], 0x04);
-	pos += lenOffset(u8Buf, pos);
-	const saltLen = u8Buf[pos - 1];
-	if (saltLen >= 0x80) {
-		throw new Error('CMS salt too long');
-	}
-	const salt = u8Buf.subarray(pos, pos + saltLen);
-	pos += saltLen;
+	const saltLen = lenCalc(u8Buf, pos);
+	pos += saltLen[0];
+	const salt = u8Buf.subarray(pos, pos + saltLen[1]);
+	pos += saltLen[1];
 	// INTEGER
 	assertEq(u8Buf[pos], 0x02);
-	pos += lenOffset(u8Buf, pos);
-	const iterationCountLen = u8Buf[pos - 1];
-	if (iterationCountLen >= 0x80) {
-		throw new Error('CMS PBKDF2 iteration count too long');
-	}
+	const iterationCountLen = lenCalc(u8Buf, pos);
+	pos += iterationCountLen[0];
 	const iterationCount = derIntegerToUint(
-		u8Buf.subarray(pos, pos + iterationCountLen),
+		u8Buf.subarray(pos, pos + iterationCountLen[1]),
 	);
-	pos += iterationCountLen;
+	pos += iterationCountLen[1];
 	// SEQUENCE
 	//   OBJECT            :hmacWithSHA256
 	//   NULL
@@ -161,6 +189,8 @@ const parseCmsData_ = (
 		],
 	);
 	pos += 14;
+	assertEq(pos - keyDerivationAlgoStart, keyDerivationAlgoLen[1]);
+	assertEq(pos - pkbdf2ParamsStart, pkbdf2ParamsLen[1]);
 	// SEQUENCE
 	//   OBJECT            :id-alg-PWRI-KEK
 	//   SEQUENCE
@@ -178,16 +208,19 @@ const parseCmsData_ = (
 	const ivPWRI = u8Buf.subarray(pos, pos + 16);
 	pos += 16;
 	assertEq(u8Buf[pos], 0x04);
-	pos += lenOffset(u8Buf, pos);
-	const encryptedPasswordLen = u8Buf[pos - 1];
-	if (encryptedPasswordLen >= 0x80) {
-		throw new Error('CMS encrypted password too long');
-	}
-	const encryptedPassword = u8Buf.subarray(pos, pos + encryptedPasswordLen);
-	pos += encryptedPasswordLen;
+	const encryptedPasswordLen = lenCalc(u8Buf, pos);
+	pos += encryptedPasswordLen[0];
+	const encryptedPassword = u8Buf.subarray(
+		pos,
+		pos + encryptedPasswordLen[1],
+	);
+	pos += encryptedPasswordLen[1];
+	assertEq(pos - recipientInfosStart, recipientInfosLen[1]);
 	// SEQUENCE
 	assertEq(u8Buf[pos], 0x30);
-	pos += lenOffset(u8Buf, pos);
+	const dataSeqLen = lenCalc(u8Buf, pos);
+	pos += dataSeqLen[0];
+	const dataSeqStart = pos;
 	// OBJECT            :pkcs7-data
 	// SEQUENCE
 	assertDeepEq(
@@ -225,23 +258,11 @@ const parseCmsData_ = (
 	}
 	// cont [ 0 ]
 	assertEq(u8Buf[pos], 0x80);
-	const offset = lenOffset(u8Buf, pos);
-	const len =
-		offset === 2
-			? u8Buf[pos + 1]
-			: offset === 3
-				? u8Buf[pos + 2]
-				: offset === 4
-					? dataView.getUint16(pos + 2, false)
-					: offset === 5
-						? dataView.getUint16(pos + 2, false) * 256 +
-							u8Buf[pos + 4]
-						: offset === 6
-							? dataView.getUint32(pos + 2, false)
-							: NaN;
-	pos += offset;
-	const encryptedData = u8Buf.subarray(pos, pos + len);
-	pos += len;
+	const dataLen = lenCalc(u8Buf, pos);
+	pos += dataLen[0];
+	const encryptedData = u8Buf.subarray(pos, pos + dataLen[1]);
+	pos += dataLen[1];
+	assertEq(dataSeqLen[1], pos - dataSeqStart);
 	// OCTET STRING
 	assertEq(u8Buf[pos++], 0x04);
 	assertEq(u8Buf[pos++], tagLength);
