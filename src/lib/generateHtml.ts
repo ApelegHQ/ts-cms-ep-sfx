@@ -73,15 +73,15 @@ const bbtoa = (buf: AllowSharedBufferSource) => {
 	);
 };
 
-const sriDigest = async (buf: AllowSharedBufferSource) => {
+const sriDigest = async (buf: BufferSource) => {
 	const digest = await crypto.subtle.digest({ ['name']: 'SHA-384' }, buf);
 
 	return 'sha384-' + bbtoa(digest);
 };
 
 export const tbsPayload_ = async (
-	mainScriptText: AllowSharedBufferSource,
-	cssText: AllowSharedBufferSource,
+	mainScriptText: BufferSource,
+	cssText: BufferSource,
 ) => {
 	const mainScriptTextSriDigest = await sriDigest(mainScriptText);
 	const cssTextSriDigest = cssText ? await sriDigest(cssText) : '';
@@ -187,8 +187,8 @@ const generateBody_ = (fallback?: number) => {
 };
 
 const generateHtml_ = async (
-	mainScriptText: AllowSharedBufferSource,
-	cssText: AllowSharedBufferSource,
+	mainScriptText: BufferSource,
+	cssText: BufferSource,
 	openPgpSignatureText?: string | null | undefined,
 	encryptedContent?: string,
 	hint?: string,

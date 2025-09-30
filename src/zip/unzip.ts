@@ -309,7 +309,7 @@ const processLocalHeader = (
 
 const unzip_ = (
 	input: AllowSharedBufferSource,
-): [filename: string, data: ArrayBufferLike] => {
+): [filename: string, data: BufferSource] => {
 	if (input.byteLength < 22) {
 		throw new RangeError('Insufficient size');
 	}

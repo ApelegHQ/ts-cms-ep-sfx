@@ -36,7 +36,6 @@ Syntax) standard, PWRI (password recipient info) and AES-256-GCM encryption.
 Using this secure file sharing utility is simple:
 
 1. **Encrypt a File**:
-
     - Open the HTML file in your browser.
     - Select the file you want to encrypt.
     - Enter a password to protect the file.
@@ -44,11 +43,9 @@ Using this secure file sharing utility is simple:
     - The tool will generate a new HTML file containing the encrypted data.
 
 2. **Share the Encrypted File**:
-
     - Share the generated HTML file with your recipient.
 
 3. **Decrypt the File**:
-
     - Your recipient can open the HTML file in their browser.
     - They will be prompted to enter the password you provided and will need to
       click on the "Next &#x2192;" button to decrypt the file and confirm details

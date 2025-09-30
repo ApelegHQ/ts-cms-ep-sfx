@@ -15,6 +15,7 @@
 
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
+import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
 import unzip from './unzip.js';
 import zip from './zip.js';
 
@@ -65,13 +66,19 @@ const externalZip64 = [
 	0x00, 0x00,
 ];
 
+const toBuf = (bs: BufferSource) => {
+	const buf = sharedBufferToUint8Array(bs);
+
+	return Buffer.from(buf);
+};
+
 describe('Unzip', () => {
 	it('Can extract from an archive', () => {
 		const givenFilename = 'abc.dEf0123';
 		const givenData = Buffer.from([1, 2, 3, 255, 254, 253]);
 		const [filename, data] = unzip(zip(givenFilename, givenData));
 		assert.equal(filename, givenFilename);
-		assert.deepEqual(Buffer.from(data), givenData);
+		assert.deepEqual(toBuf(data), givenData);
 	});
 
 	it('Can extract from a ZIP64 archive', () => {
@@ -79,7 +86,7 @@ describe('Unzip', () => {
 		const givenData = Buffer.from([0x20, 0x21, 0x22, 0x23]);
 		const [filename, data] = unzip(zip(givenFilename, givenData, true));
 		assert.equal(filename, givenFilename);
-		assert.deepEqual(Buffer.from(data), givenData);
+		assert.deepEqual(toBuf(data), givenData);
 	});
 
 	it('Can extract from a ZIP64 archive using ZIP64 extra fields', () => {
@@ -87,7 +94,7 @@ describe('Unzip', () => {
 		const givenData = Buffer.from([]);
 		const [filename, data] = unzip(zip(givenFilename, givenData, 2));
 		assert.equal(filename, givenFilename);
-		assert.deepEqual(Buffer.from(data), givenData);
+		assert.deepEqual(toBuf(data), givenData);
 	});
 
 	it('Can extract from an external ZIP archive', () => {
@@ -95,7 +102,7 @@ describe('Unzip', () => {
 		const givenData = Buffer.from('Test Test Test Test\n');
 		const [filename, data] = unzip(Buffer.from(externalZip));
 		assert.equal(filename, givenFilename);
-		assert.deepEqual(Buffer.from(data), givenData);
+		assert.deepEqual(toBuf(data), givenData);
 	});
 
 	it('Can extract from an external ZIP64 archive', () => {
@@ -103,6 +110,6 @@ describe('Unzip', () => {
 		const givenData = Buffer.from('Hello, World!\n');
 		const [filename, data] = unzip(Buffer.from(externalZip64));
 		assert.equal(filename, givenFilename);
-		assert.deepEqual(Buffer.from(data), givenData);
+		assert.deepEqual(toBuf(data), givenData);
 	});
 });

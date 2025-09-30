@@ -17,8 +17,8 @@ import { pwriKeyWrap_ as pwriKeyWrap } from './pwriKeyWrapping.js';
 
 const gcmEncrypt = async (
 	key: CryptoKey,
-	nonce: AllowSharedBufferSource,
-	data: AllowSharedBufferSource,
+	nonce: BufferSource,
+	data: BufferSource,
 ): Promise<
 	[encryptedData: AllowSharedBufferSource, tag: AllowSharedBufferSource]
 > => {
@@ -46,7 +46,7 @@ const fileEncryptionCms_ = async (
 			]
 		>;
 	},
-	data: AllowSharedBufferSource,
+	data: BufferSource,
 ): Promise<
 	[
 		salt: AllowSharedBufferSource,

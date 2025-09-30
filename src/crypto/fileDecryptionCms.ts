@@ -20,9 +20,9 @@ const fileDecryptionCms_ = async (
 	deriveKek: {
 		(): Promise<CryptoKey>;
 	},
-	ivPWRI: AllowSharedBufferSource,
+	ivPWRI: BufferSource,
 	encryptedKey: AllowSharedBufferSource,
-	nonceECI: AllowSharedBufferSource,
+	nonceECI: BufferSource,
 	encryptedContent: AllowSharedBufferSource,
 	tag: AllowSharedBufferSource,
 ): Promise<AllowSharedBufferSource> => {

@@ -20,6 +20,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { TestContext } from 'node:test';
 import { after, before, describe, it } from 'node:test';
+import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
 import zip from './zip.js';
 
 const exeify = (() => {
@@ -91,7 +92,7 @@ describe('ZIP', () => {
 			assert.ok(r.byteLength % 256 === 0);
 
 			const zipPath = join(testTempDir, `${crypto.randomUUID()}.zip`);
-			await writeFile(zipPath, Buffer.from(r));
+			await writeFile(zipPath, Buffer.from(sharedBufferToUint8Array(r)));
 			t.after(() => {
 				return unlink(zipPath);
 			});

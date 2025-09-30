@@ -17,7 +17,7 @@ const deriveKek_ = async (
 	password: string,
 	iterationCount: number,
 	keyUsages: KeyUsage[],
-	salt?: AllowSharedBufferSource | undefined,
+	salt?: BufferSource | undefined,
 ): Promise<
 	[KEK: CryptoKey, salt: AllowSharedBufferSource, iterationCount: number]
 > => {

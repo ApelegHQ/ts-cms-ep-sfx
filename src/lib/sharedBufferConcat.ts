@@ -17,7 +17,7 @@ import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
 
 const sharedBufferConcat_ = (
 	...src: AllowSharedBufferSource[]
-): ArrayBufferLike => {
+): BufferSource => {
 	const result = new Uint8Array(
 		src.reduce((acc, cv) => acc + cv.byteLength, 0),
 	);

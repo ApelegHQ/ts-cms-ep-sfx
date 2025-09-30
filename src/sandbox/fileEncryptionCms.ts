@@ -25,7 +25,7 @@ declare function deriveKek(): Promise<
 if (typeof deriveKek !== 'function') throw new Error('Missing deriveKek');
 
 const entrypoint_ = async (
-	data: AllowSharedBufferSource,
+	data: BufferSource,
 ): Promise<
 	[
 		salt: AllowSharedBufferSource,

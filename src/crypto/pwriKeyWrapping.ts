@@ -19,7 +19,7 @@ import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
 // See RFC 3211, section 2.3
 const pwriKeyWrap_ = async (
 	KEK: CryptoKey,
-	IV: AllowSharedBufferSource,
+	IV: BufferSource,
 	CEK: AllowSharedBufferSource,
 ): Promise<AllowSharedBufferSource> => {
 	const CEKu8 = sharedBufferToUint8Array(CEK);
@@ -62,10 +62,10 @@ const pwriKeyWrap_ = async (
 // See RFC 3211, section 2.3
 const pwriKeyUnwrap_ = async (
 	KEK: CryptoKey,
-	IV: AllowSharedBufferSource,
+	IV: BufferSource,
 	wrappedCEK: AllowSharedBufferSource,
-): Promise<AllowSharedBufferSource> => {
-	const wrappedCEKu8 = sharedBufferToUint8Array(wrappedCEK);
+): Promise<BufferSource> => {
+	const wrappedCEKu8 = sharedBufferToUint8Array(wrappedCEK, true);
 
 	// SubtleCrypto expects PKCS#7 padding, so we need to add it.
 	const reconstructedPkcs7OuterPadding = (

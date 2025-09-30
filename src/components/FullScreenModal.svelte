@@ -68,6 +68,7 @@
 		max-height: 80%;
 		max-width: 80%;
 		overflow: hidden;
+		border: 1px solid transparent;
 	}
 
 	dialog > div > div {

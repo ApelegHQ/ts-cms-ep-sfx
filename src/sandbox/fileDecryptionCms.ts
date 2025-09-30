@@ -23,9 +23,9 @@ declare function deriveKek(): Promise<CryptoKey>;
 if (typeof deriveKek !== 'function') throw new Error('Missing deriveKek');
 
 const entrypoint_ = async (
-	ivPWRI: AllowSharedBufferSource,
+	ivPWRI: BufferSource,
 	encryptedKey: AllowSharedBufferSource,
-	nonceECI: AllowSharedBufferSource,
+	nonceECI: BufferSource,
 	encryptedContent: AllowSharedBufferSource,
 	tag: AllowSharedBufferSource,
 ): Promise<AllowSharedBufferSource> => {
