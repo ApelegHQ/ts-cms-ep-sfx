@@ -15,7 +15,7 @@
 
 import * as assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtemp, rmdir, unlink, writeFile } from 'node:fs/promises';
+import { mkdtemp, rm, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { TestContext } from 'node:test';
@@ -37,7 +37,7 @@ describe('ZIP', () => {
 
 	after(async () => {
 		if (!testTempDir) return;
-		await rmdir(testTempDir);
+		await rm(testTempDir, { force: true, recursive: true });
 	});
 
 	const verifyCmd = (
@@ -150,6 +150,62 @@ describe('ZIP', () => {
 				zipPath,
 				'--',
 				givenFilename,
+			],
+		);
+	});
+
+	it('Python zipfile compatibility', async (t) => {
+		const $python3 = exeify`python3`;
+		const $python = exeify`python`;
+
+		await runTest(
+			t,
+			[$python3, $python],
+			['--version'],
+			(output) => output.subarray(0, 9).toString().trim() === 'Python 3.',
+			(zipPath: string, givenFilename: string) => [
+				'-c',
+				'import sys,zipfile; sys.stdout.buffer.write(zipfile.ZipFile(sys.argv[1]).read(sys.argv[2]))',
+				zipPath,
+				givenFilename,
+			],
+		);
+	});
+
+	it('Perl IO::Uncompress::Unzip compatibility', async (t) => {
+		const $perl5 = exeify`perl5`;
+		const $perl = exeify`perl`;
+
+		await runTest(
+			t,
+			[$perl5, $perl],
+			['-V'],
+			(output) =>
+				output.subarray(0, 19).toString().trim() ===
+				'Summary of my perl5',
+			(zipPath: string, givenFilename: string) => [
+				'-MIO::Uncompress::Unzip',
+				'-e',
+				'die "Usage: $0 archive member\\n" unless @ARGV==2; my($z,$m)=@ARGV; binmode STDOUT; my $u = IO::Uncompress::Unzip->new($z) or die "cannot read zip\\n"; my $status; for ($status = 1; $status > 0; $status = $u->nextStream()) { if ($u->getHeaderInfo->{Name} eq $m) { my $buf; while (my $n = $u->read($buf, 4096)) { print STDOUT $buf } exit 0 } } die "no member $m\\n"',
+				zipPath,
+				givenFilename,
+			],
+		);
+	});
+
+	it('.NET System.IO.Compression.FileSystem (PowerShell)', async (t) => {
+		const $pwsh = exeify`pwsh`;
+		const $powershell = exeify`powershell`;
+
+		await runTest(
+			t,
+			[$pwsh, $powershell],
+			['-h'],
+			(output) => output.toString().includes('PowerShell'),
+			(zipPath: string, givenFilename: string) => [
+				'-NoProfile',
+				'-Command',
+				`$zip=${JSON.stringify(zipPath)}; $member=${JSON.stringify(givenFilename)};Add-Type -AssemblyName System.IO.Compression.FileSystem; $zf=[System.IO.Compression.ZipFile]::OpenRead($zip); $e=$zf.Entries | Where-Object { $_.FullName -eq $member }; if(-not $e) { throw "Member not found: $member"}$stream=$e.Open(); $stdout=[Console]::OpenStandardOutput(); $buffer=New-Object byte[] 81920; while(($r=$stream.Read($buffer,0,$buffer.Length)) -gt 0){ $stdout.Write($buffer,0,$r) } $stream.Dispose(); $zf.Dispose()`,
 			],
 		);
 	});

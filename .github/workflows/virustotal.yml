@@ -16,7 +16,7 @@ jobs:
         timeout-minutes: 5
         steps:
             - name: VirusTotal Scan
-              uses: crazy-max/ghaction-virustotal@92a6081d9aab8f8ef3d9081e8bb264aaccc9e74d
+              uses: crazy-max/ghaction-virustotal@d34968c958ae283fe976efed637081b9f9dcf74f
               with:
                   vt_api_key: ${{ secrets.VIRUSTOTAL_API_KEY }}
                   files: |
