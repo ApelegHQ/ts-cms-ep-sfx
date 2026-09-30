@@ -16,13 +16,13 @@
 const sharedBufferToUint8Array_ = <
 	TB extends AllowSharedBufferSource,
 	TL extends boolean,
-	TR extends TB extends ArrayBuffer
+	TR extends (TB extends ArrayBuffer
 		? ArrayBuffer
 		: TL extends true
 			? ArrayBuffer
 			: TB extends ArrayBufferView<infer P>
 				? P
-				: never,
+				: never),
 >(
 	buf: TB,
 	local?: TL,

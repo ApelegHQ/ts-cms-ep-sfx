@@ -29,8 +29,7 @@
 	import Encrypt from './encrypt.svelte';
 
 	const [mainScript$, mainStylesheet$, openPgpSignature$] = (():
-		| [HTMLScriptElement, HTMLLinkElement, HTMLScriptElement]
-		| [] => {
+		[HTMLScriptElement, HTMLLinkElement, HTMLScriptElement] | [] => {
 		const _mainScript$ = document.getElementById(MAIN_SCRIPT_ELEMENT_ID_);
 		const _mainStylesheet$ = document.getElementById(
 			MAIN_STYLESHEET_ELEMENT_ID_,

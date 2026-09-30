@@ -37,12 +37,29 @@ import commentCdataExtractor from './lib/commentCdataExtractor.js';
 	);
 	const blob = new Blob([text], { ['type']: 'text/javascript' });
 	const script$ = document.createElementNS(ns, 'script');
-	script$.setAttribute('crossorigin', 'anonymous');
 	const integrity = mainScript$.getAttribute('data-integrity');
+	const blobUrl = URL.createObjectURL(blob);
+
+	const cleanupBlobUrl = () => {
+		script$.removeEventListener('error', cleanupBlobUrl, false);
+		script$.removeEventListener('load', cleanupListeners, false);
+		URL.revokeObjectURL(blobUrl);
+	};
+	const cleanupListeners = () => {
+		script$.removeEventListener('error', cleanupBlobUrl, false);
+		script$.removeEventListener('load', cleanupListeners, false);
+	};
+	// Deliberately leak the `blobUrl` on error, because it will be fetched
+	// when encrypting.
+	script$.addEventListener('error', cleanupBlobUrl, false);
+	script$.addEventListener('load', cleanupListeners, false);
+
+	script$.setAttribute('crossorigin', 'anonymous');
+	script$.setAttribute('id', MAIN_SCRIPT_ELEMENT_ID_);
 	if (integrity) {
 		script$.setAttribute('integrity', integrity);
 	}
-	script$.setAttribute('id', MAIN_SCRIPT_ELEMENT_ID_);
-	script$.setAttribute('src', URL.createObjectURL(blob));
+	script$.setAttribute('src', blobUrl);
+
 	document.head.appendChild(script$);
 })();

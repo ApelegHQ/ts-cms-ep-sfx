@@ -7,6 +7,11 @@ on:
     release:
         types:
             - published
+    workflow_run:
+        workflows:
+            - Generate GitHub release
+        types:
+            - completed
 
 jobs:
     virustotal:

@@ -60,7 +60,6 @@
 		SR_ONLY_CLASSNAME_,
 	} from '~/lib/classNames.js';
 	import cmsPemToDer from '~/lib/cmsPemToDer.js';
-	import commentCdataExtractor from '~/lib/commentCdataExtractor.js';
 	import downloadBlob from '~/lib/downloadBlob.js';
 	import {
 		CMS_DATA_ELEMENT_ID_,
@@ -154,12 +153,16 @@
 				}
 
 				if (cmsHint$ && cmsHint$ instanceof HTMLScriptElement) {
-					const hintText = commentCdataExtractor(cmsHint$.text);
+					const hintText = cmsHint$.text;
 					if (hintText) {
 						try {
 							const _hint = JSON.parse(hintText);
-							if (typeof _hint === 'string') {
-								hint = _hint;
+							if (
+								Array.isArray(_hint) &&
+								_hint.length === 3 &&
+								typeof _hint[1] === 'string'
+							) {
+								hint = _hint[1];
 							} else {
 								console.warn(
 									'Unexpected type for hint',

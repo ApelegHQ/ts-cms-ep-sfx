@@ -3,6 +3,7 @@
 		"target": "es2020",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
+		"rootDir": "src",
 		"outDir": "build",
 		"strict": true,
 		"strictNullChecks": true,

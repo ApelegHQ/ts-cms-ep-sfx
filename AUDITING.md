@@ -85,16 +85,16 @@ the PBKDF2 algorithm. This is implemented in the file `src/crypto/deriveKek.ts`.
 User-supplied data (file and file name) are encrypted in two separate steps, one
 for file contents and another for a file name. The base implementation for
 encryption can be found in the file `src/crypto/fileEncryptionCms.ts`.
-Additionally, the file `src/sandbox/fileEncryptionCms.ts` implements the two
-distinct steps used for contents and name.
+
+The CEK generated in `src/crypto/fileEncryptionCms.ts` requires a high quality
+random source, as without it, the content can be easily decrypted, regardless
+of password strength.
 
 #### Data decryption
 
 User-supplied data (file and file name) are decrypted in two separate steps, one
 for file contents and another for a file name. The base implementation for
 decryption can be found in the file `src/crypto/fileDecryptionCms.ts`.
-Additionally, the file `src/sandbox/fileDecryptionCms.ts` implements the two
-distinct steps used for contents and name.
 
 #### Initialisation vector (IV) reuse
 

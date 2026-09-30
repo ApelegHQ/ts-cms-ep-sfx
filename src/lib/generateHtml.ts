@@ -220,9 +220,9 @@ const generateHtml_ = async (
 				`</script>` +
 				(hint
 					? `<script type="application/json" id="${xmlEscapeAttr(CMS_HINT_ELEMENT_ID_)}">` +
-						commentCdataEscapeSequenceStart +
+						'["<![CDATA[><!--",' +
 						xmlEscapeJsonScriptCdata(JSON.stringify(hint)) +
-						commentCdataEscapeSequenceEnd +
+						',"--><!]]>"]' +
 						`</script>`
 					: '')
 			: '') +

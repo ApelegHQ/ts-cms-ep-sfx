@@ -14,6 +14,9 @@
  */
 
 import * as assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
+import { spawnSync } from 'node:child_process';
+import process from 'node:process';
 import { describe, it } from 'node:test';
 import constructCmsData from '../../src/crypto/constructCmsData.js';
 import deriveKek from '../../src/crypto/deriveKek.js';
@@ -21,7 +24,6 @@ import fileDecryptionCms from '../../src/crypto/fileDecryptionCms.js';
 import fileEncryptionCms from '../../src/crypto/fileEncryptionCms.js';
 import parseCmsData from '../../src/crypto/parseCmsData.js';
 import sharedBufferToUint8Array from '../../src/lib/sharedBufferToUint8Array.js';
-import { spawnSync } from 'node:child_process';
 
 class InterceptedError extends Error {}
 
@@ -38,7 +40,7 @@ const testEncryptionDecryption = async (
 ) => {
 	const encryptionResult = await fileEncryptionCms(
 		() => deriveKek(inputPassword, inputIterations, ['encrypt']),
-		inputData,
+		sharedBufferToUint8Array(inputData),
 	).catch((e) => {
 		throw new InterceptedError('Encryption error', { cause: e });
 	});
@@ -108,11 +110,11 @@ const testEncryptionDecryption = async (
 					decryptionPassword ?? inputPassword,
 					iterationCount,
 					['decrypt', 'encrypt'],
-					salt,
+					sharedBufferToUint8Array(salt),
 				).then(([KEK]) => KEK),
-			ivPWRI,
+			sharedBufferToUint8Array(ivPWRI),
 			encryptedKey,
-			nonceECI,
+			sharedBufferToUint8Array(nonceECI),
 			encryptedContent,
 			tag,
 		).catch((e) => {
@@ -127,7 +129,7 @@ const testEncryptionDecryption = async (
 	);
 };
 
-const randomFill = (data: Uint8Array) => {
+const randomFill = (data: Uint8Array<ArrayBuffer>) => {
 	for (let i = 0; i < data.length; i += 4096) {
 		crypto.getRandomValues(
 			data.subarray(i, Math.min(i + 4096, data.length)),
@@ -230,10 +232,11 @@ describe('CMS primitives', () => {
 			process.platform === 'win32' ? 'openssl.exe' : 'openssl';
 
 		try {
-			const { stdout } = spawnSync(openssl, ['version'], {
+			const { status, stdout } = spawnSync(openssl, ['version'], {
 				stdio: ['ignore'],
 			});
 			if (
+				status !== 0 ||
 				stdout.subarray(0, 8).toString() !== 'OpenSSL ' ||
 				!(parseInt(stdout.subarray(8, 12).toString(), 10) >= 3)
 			) {
@@ -245,10 +248,16 @@ describe('CMS primitives', () => {
 		}
 
 		const inputData = randomFill(Buffer.alloc(32));
+		// Windows quirk; avoid problematic LF or CR characters
+		inputData.forEach((v, i) => {
+			if (v === 10 || v === 13) {
+				inputData[i] = v + 32;
+			}
+		});
 
 		const encryptionResult = await fileEncryptionCms(
 			() => deriveKek('MyPassword', 1024, ['encrypt']),
-			inputData,
+			sharedBufferToUint8Array(inputData),
 		);
 		const data = sharedBufferToUint8Array(
 			constructCmsData(...encryptionResult).derEncode(),
@@ -268,6 +277,7 @@ describe('CMS primitives', () => {
 				input: data,
 			},
 		);
+		assert.equal(decryptionResult.status, 0);
 		assert.deepEqual(decryptionResult.stdout, inputData);
 	});
 });

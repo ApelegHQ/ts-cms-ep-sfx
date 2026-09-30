@@ -1,4 +1,4 @@
-/* Copyright © 2024 Apeleg Limited. All rights reserved.
+/* Copyright © 2025 Apeleg Limited. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License") with LLVM
  * exceptions; you may not use this file except in compliance with the
@@ -13,13 +13,5 @@
  * limitations under the License.
  */
 
-import { unzip$SEP_ } from '~/lib/sandboxEntrypoints.js';
-import unzip from '~/zip/unzip.js';
-
-const entrypoint_ = (
-	data: AllowSharedBufferSource,
-): [name: string, contents: BufferSource] => {
-	return unzip(data);
-};
-
-exports[unzip$SEP_] = entrypoint_;
+import './crypto/index.test.js';
+import './zip/index.test.js';

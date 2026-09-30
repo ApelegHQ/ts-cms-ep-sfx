@@ -63,7 +63,7 @@ const setupDecryptionSandbox_ = async (
 			[unzip$SEP_]: {
 				(
 					data: AllowSharedBufferSource,
-				): [name: string, contents: AllowSharedBufferSource];
+				): [name: string, contents: BufferSource];
 			};
 		}>(unzip.default, null, null, signal),
 	]);
@@ -106,7 +106,7 @@ const setupDecryptionSandbox_ = async (
 		nonceECI: AllowSharedBufferSource,
 		encryptedContent: AllowSharedBufferSource,
 		tag: AllowSharedBufferSource,
-	): Promise<[filename: string, contents: AllowSharedBufferSource]> => {
+	): Promise<[filename: string, contents: BufferSource]> => {
 		const data = await decryptionSandbox(
 			fileDecryptionCms$SEP_,
 			ivPWRI,

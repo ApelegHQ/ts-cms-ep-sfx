@@ -33,10 +33,20 @@ test('Basic functionality', async (t) => {
 
 	t.before(async () => {
 		try {
+			console.debug(
+				`Building Selenium instance for ${process.env.BROWSER || Browser.CHROME}`,
+			);
 			driver = await new Builder()
 				.forBrowser(process.env.BROWSER || Browser.CHROME)
 				.build();
+			console.debug(
+				`Built Selenium instance for ${process.env.BROWSER || Browser.CHROME}`,
+			);
 		} catch (e) {
+			console.debug(
+				`Error building Selenium instance for ${process.env.BROWSER || Browser.CHROME}`,
+				e,
+			);
 			if (
 				e &&
 				e instanceof Error &&

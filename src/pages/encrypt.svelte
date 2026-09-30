@@ -100,9 +100,7 @@
 		| Error
 		| undefined;
 	let encryptionSandbox:
-		| Awaited<ReturnType<typeof setupEncryptionSandbox>>
-		| Error
-		| undefined;
+		Awaited<ReturnType<typeof setupEncryptionSandbox>> | Error | undefined;
 	let abort: { (): void } | undefined;
 
 	let mainScript$_: HTMLScriptElement | undefined;

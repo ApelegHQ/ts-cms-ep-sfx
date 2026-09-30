@@ -67,6 +67,9 @@ const fileEncryptionCms_ = async (
 	crypto.getRandomValues(ivPWRI);
 	crypto.getRandomValues(nonceECI);
 
+	// NB: CEK derivation, which is what will be used to encrypt the actual
+	// content. The CEK is, out of other places, the one where high quality
+	// random number generation matters the most.
 	const [encryptedKey, [encryptedContent, tag]] = await crypto.subtle
 		.generateKey({ ['name']: 'AES-GCM', ['length']: 256 }, true, [
 			'encrypt',
