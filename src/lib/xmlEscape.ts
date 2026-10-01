@@ -39,9 +39,7 @@ export const xmlEscapeJsonScriptCdata_ = (input: string): string =>
 	input
 		.split(']]>')
 		.join(']]\\u003e')
-		.split('<!--')
-		.join('<\\u0021--')
-		.split('-->')
-		.join('--\\u003e')
+		.split('--')
+		.join('\\u002d\\u002d')
 		.replace(/<\/(script)/gi, '<\\/$1')
 		.replace(/<(script)/gi, '\\u003c$1');

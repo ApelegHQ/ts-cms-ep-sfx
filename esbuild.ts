@@ -23,10 +23,12 @@ import cssnano from 'cssnano';
 import esbuild from 'esbuild';
 import stylePlugin from 'esbuild-style-plugin';
 import sveltePlugin from 'esbuild-svelte';
+import { Buffer } from 'node:buffer';
 import childProcess from 'node:child_process';
 import { randomUUID, webcrypto } from 'node:crypto';
 import fs from 'node:fs/promises';
 import { join } from 'node:path';
+import process from 'node:process';
 import vm from 'node:vm';
 import type { Plugin } from 'postcss';
 import postcssCssVariables from 'postcss-css-variables';
@@ -607,7 +609,7 @@ const localeTags = [
 	),
 ];
 
-Promise.all(
+void Promise.all(
 	localeTags.map((localeTag) => {
 		build(localeTag).catch((e) => {
 			console.dir(e);

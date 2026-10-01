@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import { Buffer } from 'node:buffer';
 import type { WebDriver } from 'selenium-webdriver';
 
 const interceptDownload_ = async (driver: WebDriver) => {

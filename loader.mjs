@@ -1,3 +1,4 @@
+import process from 'node:process';
 import { register } from 'node:module';
 import { pathToFileURL } from 'node:url';
 

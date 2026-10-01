@@ -14,6 +14,7 @@
  */
 
 import * as assert from 'node:assert/strict';
+import process from 'node:process';
 import { test } from 'node:test';
 import type { WebDriver } from 'selenium-webdriver';
 import { Browser, Builder, By, until } from 'selenium-webdriver';

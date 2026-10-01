@@ -39,6 +39,7 @@ jobs:
             - name: Release
               uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
               with:
+                  token: ${{ secrets.RELEASE_TOKEN }}
                   files: |
                       build/encrypt.html
                       build/encrypt.es.html

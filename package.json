@@ -59,8 +59,8 @@
 		"dist/**/*"
 	],
 	"scripts": {
-		"test:unit": "node --import ./loader.mjs src/index.test.ts",
-		"test:e2e": "node --import ./loader.mjs test/e2e/index.test.ts",
+		"test:unit": "node --import ./loader.mjs --test 'src/**/*.test.ts'",
+		"test:e2e": "node --import ./loader.mjs --test 'test/e2e/**/*.test.ts'",
 		"test": "npm run test:unit && npm run test:e2e",
 		"lint": "eslint . --ext .svelte,.cjs,.cts,.mjs,.mjs,.js,.ts,.json",
 		"lint:fix": "prettier -w . && eslint . --ext .svelte,.cjs,.cts,.mjs,.mjs,.js,.ts,.json --fix",

@@ -13,10 +13,11 @@
  * limitations under the License.
  */
 
+import { Buffer } from 'node:buffer';
+import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
-import fs from 'node:fs/promises';
-import { Buffer } from 'node:buffer';
+import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);

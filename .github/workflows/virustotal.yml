@@ -7,11 +7,6 @@ on:
     release:
         types:
             - published
-    workflow_run:
-        workflows:
-            - Generate GitHub release
-        types:
-            - completed
 
 jobs:
     virustotal:
@@ -21,9 +16,9 @@ jobs:
         timeout-minutes: 5
         steps:
             - name: VirusTotal Scan
-              uses: crazy-max/ghaction-virustotal@d34968c958ae283fe976efed637081b9f9dcf74f
+              uses: crazy-max/ghaction-virustotal@936d8c5c00afe97d3d9a1af26d017cfdf26800a2
               with:
                   vt_api_key: ${{ secrets.VIRUSTOTAL_API_KEY }}
                   files: |
-                      *
+                      \.html$
                   update_release_body: true

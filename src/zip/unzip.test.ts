@@ -14,6 +14,7 @@
  */
 
 import * as assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
 import { describe, it } from 'node:test';
 import sharedBufferToUint8Array from './sharedBufferToUint8Array.js';
 import unzip from './unzip.js';
