@@ -1,6 +1,6 @@
 {
 	"name": "@apeleghq/cms-ep-sfx",
-	"version": "1.1.18",
+	"version": "1.1.19",
 	"description": "Secure File Sharing Utility",
 	"type": "module",
 	"main": "-",
@@ -59,8 +59,8 @@
 		"dist/**/*"
 	],
 	"scripts": {
-		"test:unit": "node --import ./loader.mjs --test 'src/**/*.test.ts'",
-		"test:e2e": "node --import ./loader.mjs --test 'test/e2e/**/*.test.ts'",
+		"test:unit": "node --import ./loader.mjs --test \"src/**/*.test.ts\"",
+		"test:e2e": "node --import ./loader.mjs --test \"test/e2e/**/*.test.ts\"",
 		"test": "npm run test:unit && npm run test:e2e",
 		"lint": "eslint . --ext .svelte,.cjs,.cts,.mjs,.mjs,.js,.ts,.json",
 		"lint:fix": "prettier -w . && eslint . --ext .svelte,.cjs,.cts,.mjs,.mjs,.js,.ts,.json --fix",

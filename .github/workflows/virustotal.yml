@@ -15,6 +15,12 @@ jobs:
             contents: write
         timeout-minutes: 5
         steps:
+            - name: Ensure release has a description
+              if: ${{ !github.event.release.body }}
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  TAG_NAME: ${{ github.event.release.tag_name }}
+              run: gh release edit "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --notes "Release $TAG_NAME"
             - name: VirusTotal Scan
               uses: crazy-max/ghaction-virustotal@936d8c5c00afe97d3d9a1af26d017cfdf26800a2
               with:
