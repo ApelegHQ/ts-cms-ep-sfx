@@ -23,7 +23,8 @@ for tag in $LOCALES; do
         suffix=".${tag}"
     fi
     digest=$(openssl 'dgst' '-binary' '-sha256' "$tbs$suffix" | xxd '-p' '-c' '256')
-    signature=$(gpg2 '--armor' '--clear-sign' '--local-user' "$user" '--digest-algo' 'SHA256' '--output' '-' "$tbs$suffix" | sed "-n" '/^-----BEGIN PGP SIGNATURE-----/,$p' | sed "-e" "s/^/:/g")
+    signature_raw=$(gpg2 '--armor' '--clear-sign' '--local-user' "$user" '--digest-algo' 'SHA256' '--output' '-' "$tbs$suffix")
+    signature=$(printf '%s' "$signature_raw" | sed "-n" '/^-----BEGIN PGP SIGNATURE-----/,$p' | sed "-e" "s/^/:/g")
     signedinfo="$(printf '%s\n::%s\n:%s\n%s\n' "$signedinfo" "$tag" "$digest" "$signature")"
 done
 
